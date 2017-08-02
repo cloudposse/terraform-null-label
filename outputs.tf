@@ -2,15 +2,12 @@ output "id" {
   value = "${null_resource.default.triggers.id}"
 }
 
-output "Name" {
-  value = "${null_resource.default.triggers.name}"
+output "tags" {
+  value = "${
+    map(
+      "Name", "${null_resource.default.triggers.id}",
+      "Namespace", "${null_resource.default.triggers.namespace}",
+      "Stage", "${null_resource.default.triggers.stage}"
+    )
+  }"
 }
-
-output "Namespace" {
-  value = "${null_resource.default.triggers.namespace}"
-}
-
-output "Stage" {
-  value = "${null_resource.default.triggers.stage}"
-}
-
