@@ -16,7 +16,7 @@ module "example_label" {
   name            = "bastion"
   attributes      = "public"
   delimiter       = "-"
-  tags            = {"BusinessUnit": "XYZ"}
+  tags            = "${map("BusinessUnit", "XYZ")}"
 }
 ```
 
@@ -53,7 +53,7 @@ resource "aws_security_group" "default" {
 | stage                        | ``             | Stage (e.g. `prod`, `dev`, `staging`                     | Yes      |
 | name                         | ``             | Name  (e.g. `bastion` or `db`)                           | Yes      | 
 | attributes                   | []             | Additional attributes (e.g. `policy` or `role`)          | No       | 
-| tags                         | {}             | Additional tags  (e.g. `{"BusinessUnit": "XYZ"}`         | No       |
+| tags                         | {}             | Additional tags  (e.g. `map("BusinessUnit","XYZ")`       | No       |
 
 ## Outputs
 
