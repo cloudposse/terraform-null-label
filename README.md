@@ -47,7 +47,7 @@ resource "aws_security_group" "default" {
 
 ## Variables
 
-|  Name                        |  Default       |  Decription                                              | Required |
+|  Name                        |  Default       |  Description                                              | Required |
 |:----------------------------:|:--------------:|:--------------------------------------------------------:|:--------:|
 | namespace                    | ``             | Namespace (e.g. `cp` or `cloudposse`)                    | Yes      |
 | stage                        | ``             | Stage (e.g. `prod`, `dev`, `staging`                     | Yes      |
