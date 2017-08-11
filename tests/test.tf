@@ -3,7 +3,7 @@ module "test" {
   namespace = "Namespace"
   stage = "Stage"
   name = "Name"
-  attributes = ["1", "2", "3"]
+  attributes = ["1", "2", "3", ""]
   tags = "${map("Key", "Value")}"
 }
 
