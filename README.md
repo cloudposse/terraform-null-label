@@ -2,9 +2,13 @@
 
 Terraform module designed to generate consistent label names and tags for resources. Use `tf_label` to implement a strict naming convention. 
 
-All Cloud Posse modules use this module to ensure resources can be instantiated multiple times within an account.
+A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangable. 
+
+All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&type=&language=) use this module to ensure resources can be instantiated multiple times within an account without conflict.
 
 ## Usage
+
+### Simple Example
 
 Include this repository as a module in your existing terraform code:
 
@@ -14,9 +18,9 @@ module "example_label" {
   namespace       = "example"
   stage           = "prod"
   name            = "bastion"
-  attributes      = "public"
+  attributes      = ["public"]
   delimiter       = "-"
-  tags            = "${map("BusinessUnit", "XYZ")}"
+  tags            = "${map("BusinessUnit", "XYZ", "Snapshot", "true")}"
 }
 ```
 
@@ -44,6 +48,70 @@ resource "aws_security_group" "default" {
   }
 }
 ```
+
+
+### Advanced Example
+
+Here is a more complex example with two instances simultaneously would be helpful
+e.g.
+```
+module "eg_prod_bastion_abc_label" {
+  source          = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
+  namespace       = "eg"
+  stage           = "prod"
+  name            = "bastion"
+  attributes      = ["abc]
+  delimiter       = "-"
+  tags            = "${map("BusinessUnit", "ABC")}"
+}
+
+resource "aws_security_group" "eg_prod_bastion_abc" {
+  name          = "module.eg_prod_bastion_abc_label.id"
+  tags          = "${module.eg_prod_bastion_abc_label.tags}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "eg_prod_bastion_abc" {
+   instance_type          = "t1.micro"
+   tags                   = "${module.eg_prod_bastion_abc_label.tags}"
+   vpc_security_group_ids = [aws_security_group.eg_prod_bastion_abc.id]
+} 
+
+module "eg_prod_bastion_xyz_label" {
+  source          = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
+  namespace       = "egample"
+  stage           = "prod"
+  name            = "bastion"
+  attributes      = ["xyz"]
+  delimiter       = "-"
+  tags            = "${map("BusinessUnit", "XYZ")}"
+}
+
+resource "aws_security_group" "eg_prod_bastion_xyz" {
+  name          = "module.eg_prod_bastion_xyz_label.id"
+  tags          = "${module.eg_prod_bastion_xyz_label.tags}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "eg_prod_bastion_xyz" {
+   instance_type          = "t1.micro"
+   tags                   = "${module.xyz_bastion_label.tags}"
+   vpc_security_group_ids = [aws_security_group.eg_prod_bastion_xyz.id]
+}
+```
+
 
 ## Variables
 
