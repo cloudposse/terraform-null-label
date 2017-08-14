@@ -13,9 +13,9 @@ All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&typ
 Include this repository as a module in your existing terraform code:
 
 ```
-module "example_label" {
+module "eg_prod_bastion_label" {
   source          = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
-  namespace       = "example"
+  namespace       = "eg"
   stage           = "prod"
   name            = "bastion"
   attributes      = ["public"]
@@ -24,22 +24,22 @@ module "example_label" {
 }
 ```
 
-This will create an `id` with the value of `example-prod-bastion-public`. 
+This will create an `id` with the value of `eg-prod-bastion-public`. 
 
 Now reference the label when creating an instance (for example):
 ```
-resource "aws_instance" "example" {
+resource "aws_instance" "eg_prod_bastion_public" {
   instance_type = "t1.micro"
-  tags          = "${module.example_label.tags}"
+  tags          = "${module.eg_prod_bastion_label.tags}"
 }
 ```
 
 Or define a security group:
 ```
-resource "aws_security_group" "default" {
+resource "aws_security_group" "eg_prod_bastion_public" {
   vpc_id = "${var.vpc_id}"
-  name   = "${module.example_label.id}"
-  tags   = "${module.example_label.tags}"
+  name   = "${module.eg_prod_bastion_label.id}"
+  tags   = "${module.eg_prod_bastion_label.tags}"
   egress {
     from_port   = 0
     to_port     = 0
@@ -52,8 +52,8 @@ resource "aws_security_group" "default" {
 
 ### Advanced Example
 
-Here is a more complex example with two instances simultaneously would be helpful
-e.g.
+Here is a more complex example with two instances using two different labels. Note how efficiently the tags are defined for both the instance and the security group.
+
 ```
 module "eg_prod_bastion_abc_label" {
   source          = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.2.0"
