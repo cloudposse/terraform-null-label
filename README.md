@@ -1,12 +1,15 @@
-e terraform-null-label
+# terraform-null-label
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention. 
+
 
 A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangable. 
 
 It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type. For example, if you have 10 instances, there should be 10 different labels. However, if you have multiple different kinds of resources (e.g. instances, security groups, file systems, and elastic ips), then they can all share the same label assuming they are logically related. 
 
 All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&type=&language=) use this module to ensure resources can be instantiated multiple times within an account and without conflict.
+
+**NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
 
 ## Usage
 
