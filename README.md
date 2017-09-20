@@ -1,4 +1,4 @@
-# terraform-null-label
+e terraform-null-label
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention. 
 
@@ -16,7 +16,7 @@ Include this repository as a module in your existing terraform code:
 
 ```
 module "eg_prod_bastion_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.0"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -58,7 +58,7 @@ Here is a more complex example with two instances using two different labels. No
 
 ```
 module "eg_prod_bastion_abc_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.0"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -85,7 +85,7 @@ resource "aws_instance" "eg_prod_bastion_abc" {
 } 
 
 module "eg_prod_bastion_xyz_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.0"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
