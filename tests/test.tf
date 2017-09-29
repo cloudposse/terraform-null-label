@@ -1,10 +1,10 @@
 module "test" {
-  source = "../"
-  namespace = "Namespace"
-  stage = "Stage"
-  name = "Name"
+  source     = "../"
+  namespace  = "Namespace"
+  stage      = "Stage"
+  name       = "Name"
   attributes = ["1", "2", "3", ""]
-  tags = "${map("Key", "Value")}"
+  tags       = "${map("Key", "Value")}"
 }
 
 output "id" {
