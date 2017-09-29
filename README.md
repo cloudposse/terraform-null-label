@@ -2,14 +2,16 @@
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention. 
 
+A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable. 
 
-A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangable. 
-
-It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type. For example, if you have 10 instances, there should be 10 different labels. However, if you have multiple different kinds of resources (e.g. instances, security groups, file systems, and elastic ips), then they can all share the same label assuming they are logically related. 
+It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type. 
+For example, if you have 10 instances, there should be 10 different labels. 
+However, if you have multiple different kinds of resources (e.g. instances, security groups, file systems, and elastic ips), then they can all share the same label assuming they are logically related. 
 
 All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&type=&language=) use this module to ensure resources can be instantiated multiple times within an account and without conflict.
 
-**NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
+-**NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
+
 
 ## Usage
 
@@ -17,7 +19,7 @@ All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&typ
 
 Include this repository as a module in your existing terraform code:
 
-```
+```hcl
 module "eg_prod_bastion_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
@@ -32,7 +34,8 @@ module "eg_prod_bastion_label" {
 This will create an `id` with the value of `eg-prod-bastion-public`. 
 
 Now reference the label when creating an instance (for example):
-```
+
+```hcl
 resource "aws_instance" "eg_prod_bastion_public" {
   instance_type = "t1.micro"
   tags          = "${module.eg_prod_bastion_label.tags}"
@@ -40,7 +43,8 @@ resource "aws_instance" "eg_prod_bastion_public" {
 ```
 
 Or define a security group:
-```
+
+```hcl
 resource "aws_security_group" "eg_prod_bastion_public" {
   vpc_id = "${var.vpc_id}"
   name   = "${module.eg_prod_bastion_label.id}"
@@ -59,7 +63,7 @@ resource "aws_security_group" "eg_prod_bastion_public" {
 
 Here is a more complex example with two instances using two different labels. Note how efficiently the tags are defined for both the instance and the security group.
 
-```
+```hcl
 module "eg_prod_bastion_abc_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
@@ -130,7 +134,7 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
 
 ## Outputs
 
-| Name              | Decription            |
+| Name              | Description            |
 |:------------------|:----------------------|
 | id                | Disambiguated ID      |
 | name              | Normalized name       |
