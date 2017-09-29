@@ -1,4 +1,4 @@
-e terraform-null-label
+# terraform-null-label
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention. 
 
