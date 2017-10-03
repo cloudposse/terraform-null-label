@@ -2,9 +2,9 @@
 *.tfstate
 *.tfstate.backup
 
-# Module directory
 .terraform
 .idea
 *.iml
 
-.gitignore
+.build-harness
+build-harness

@@ -1,0 +1,19 @@
+sudo: required
+
+addons:
+  apt:
+    packages:
+      - git
+      - make
+      - curl
+
+install:
+  - make init
+  - git -C build-harness checkout tf-lint
+
+script:
+  - make terraform:get-plugins
+  - make terraform:get-modules
+  - make terraform:lint
+  - make terraform:validate
+
