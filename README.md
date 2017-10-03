@@ -1,4 +1,4 @@
-# terraform-null-label
+# terraform-null-label [![Build Status](https://travis-ci.org/cloudposse/terraform-null-label.svg)](https://travis-ci.org/cloudposse/terraform-null-label)
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention. 
 
