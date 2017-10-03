@@ -1,5 +1,3 @@
-sudo: required
-
 addons:
   apt:
     packages:
@@ -17,4 +15,3 @@ script:
   - make terraform:get-modules
   - make terraform:lint
   - make terraform:validate
-
