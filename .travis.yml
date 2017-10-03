@@ -1,8 +1,5 @@
 sudo: required
 
-env:
-  TERRAFORM: /usr/local/bin/terraform
-
 addons:
   apt:
     packages:
