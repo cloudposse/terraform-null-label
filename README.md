@@ -12,7 +12,6 @@ All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=tf_&typ
 
 -**NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
 
-
 ## Usage
 
 ### Simple Example
