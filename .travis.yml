@@ -7,7 +7,6 @@ addons:
 
 install:
   - make init
-  - git -C build-harness checkout tf-lint
 
 script:
   - make terraform:install
