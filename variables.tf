@@ -2,6 +2,11 @@ variable "namespace" {}
 variable "stage" {}
 variable "name" {}
 
+variable "enabled" {
+  description = "Set to false to prevent the module from creating any resources"
+  default     = true
+}
+
 variable "delimiter" {
   type        = "string"
   default     = "-"
