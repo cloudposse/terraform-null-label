@@ -1,5 +1,5 @@
 resource "null_resource" "default" {
-  count = "${var.enabled == "true" ? 1 : 0}"
+  count = "${var.enabled ? 1 : 0}"
 
   triggers = {
     id         = "${lower(join(var.delimiter, compact(concat(list(var.namespace, var.stage, var.name), var.attributes))))}"
