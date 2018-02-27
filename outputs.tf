@@ -29,9 +29,9 @@ output "tags" {
   value = "${
       merge( 
         map(
-          "Name", "${null_resource.default.triggers.id}",
-          "Namespace", "${null_resource.default.triggers.namespace}",
-          "Stage", "${null_resource.default.triggers.stage}"
+          "Name", "${join("", null_resource.default.*.triggers.id)}",
+          "Namespace", "${join("", null_resource.default.*.triggers.namespace)}",
+          "Stage", "${join("", null_resource.default.*.triggers.stage)}"
         ), var.tags
       )
     }"
