@@ -1,25 +1,25 @@
 output "id" {
-  value       = "${null_resource.default.triggers.id}"
+  value       = "${join("", null_resource.default.*.triggers.id)}"
   description = "Disambiguated ID"
 }
 
 output "name" {
-  value       = "${null_resource.default.triggers.name}"
+  value       = "${join("", null_resource.default.*.triggers.name)}"
   description = "Normalized name"
 }
 
 output "namespace" {
-  value       = "${null_resource.default.triggers.namespace}"
+  value       = "${join("", null_resource.default.*.triggers.namespace)}"
   description = "Normalized namespace"
 }
 
 output "stage" {
-  value       = "${null_resource.default.triggers.stage}"
+  value       = "${join("", null_resource.default.*.triggers.stage)}"
   description = "Normalized stage"
 }
 
 output "attributes" {
-  value       = "${null_resource.default.triggers.attributes}"
+  value       = "${join("", null_resource.default.*.triggers.attributes)}"
   description = "Normalized attributes"
 }
 
