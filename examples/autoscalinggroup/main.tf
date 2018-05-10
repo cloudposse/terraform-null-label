@@ -1,19 +1,18 @@
-
 ###
 ### To test this example, just get a subnet-id, the default security group id and region that subnet is in.
 ###
 
 variable "aws_region" {
- default = "eu-west-2"
+  default = "eu-west-2"
 }
+
 provider "aws" {
   region = "${var.aws_region}"
-
 }
+
 variable "vpc_zone_identifier" {
   description = "A list of subnet IDs to launch resources in"
   type        = "list"
-
 }
 
 variable "create_lc" {
@@ -28,7 +27,7 @@ variable "create_asg" {
 
 variable "name" {
   description = "Creates a unique name beginning with the specified prefix"
-  default = "coolproject"
+  default     = "coolproject"
 }
 
 variable "lc_name" {
@@ -46,11 +45,9 @@ variable "launch_configuration" {
   default     = ""
 }
 
-
-
 variable "instance_type" {
   description = "The size of instance to launch"
-  default = "t2.small"
+  default     = "t2.small"
 }
 
 variable "iam_instance_profile" {
@@ -66,7 +63,6 @@ variable "key_name" {
 variable "security_groups" {
   description = "A list of security group IDs to assign to the launch configuration"
   type        = "list"
-
 }
 
 variable "associate_public_ip_address" {
@@ -120,20 +116,18 @@ variable "placement_tenancy" {
 # Autoscaling group
 variable "max_size" {
   description = "The maximum size of the auto scale group"
-  default = 1
+  default     = 1
 }
 
 variable "min_size" {
   description = "The minimum size of the auto scale group"
-  default = 1
+  default     = 1
 }
 
 variable "desired_capacity" {
   description = "The number of Amazon EC2 instances that should be running in the group"
-  default = 1
+  default     = 1
 }
-
-
 
 variable "default_cooldown" {
   description = "The amount of time, in seconds, after a scaling activity completes before another scaling activity can start"
@@ -147,7 +141,7 @@ variable "health_check_grace_period" {
 
 variable "health_check_type" {
   description = "Controls how health checking is done. Values are - EC2 and ELB"
-  default = "EC2"
+  default     = "EC2"
 }
 
 variable "force_delete" {
@@ -234,26 +228,26 @@ variable "protect_from_scale_in" {
 }
 
 module "label" {
-  source = "../terraform-terraform-label"
+  source    = "../terraform-terraform-label"
   namespace = "awesomeproject"
-  stage = "production"
-  name = "clusterpluck"
+  stage     = "production"
+  name      = "clusterpluck"
 }
 
 data "aws_ami" "ubuntu" {
-    most_recent = true
+  most_recent = true
 
-    filter {
-        name   = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
-    }
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
 
-    filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
-    }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 
-    owners = ["099720109477"] # Canonical
+  owners = ["099720109477"] # Canonical
 }
 
 #######################
@@ -319,6 +313,7 @@ resource "aws_autoscaling_group" "this" {
 output "tags" {
   value = ["${module.label.tags_asg_propagate_true}"]
 }
+
 output "tagsf" {
   value = ["${module.label.tags_asg_propagate_false}"]
 }
