@@ -121,6 +121,72 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
    vpc_security_group_ids = ["${aws_security_group.eg_prod_bastion_xyz.id}"]
 }
 ```
+### Advanced Example 2
+
+Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requres its tags to be in this format:
+```hcl
+tags = [
+    {
+        key = Name,
+        propagate_at_launch = 1,
+        value = namespace-stage-jamie
+    },
+    {
+        key = Namespace,
+        propagate_at_launch = 1,
+        value = namespace
+    },
+    {
+        key = Stage,
+        propagate_at_launch = 1,
+        value = stage
+    }
+]
+```
+
+Autoscaling group using proagating tagging below (full example within the examples folder)
+
+```hcl
+module "eg_prod_asg_abc_label" {
+  source     = "github.com/cloudposse/terraform-null-label.git?ref=master"
+  namespace  = "eg"
+  stage      = "prod"
+  name       = "bastion"
+  attributes = ["abc"]
+  delimiter  = "-"
+  tags       = "${map("BusinessUnit", "ABC")}"
+}
+
+resource "aws_autoscaling_group" "this" {
+  count = "${var.create_asg}"
+
+  name_prefix          = "${module.label.id}-"
+  launch_configuration = "${var.create_lc ? element(aws_launch_configuration.this.*.name, 0) : var.launch_configuration}"
+  vpc_zone_identifier  = ["${var.vpc_zone_identifier}"]
+  max_size             = "${var.max_size}"
+  min_size             = "${var.min_size}"
+  desired_capacity     = "${var.desired_capacity}"
+
+  load_balancers            = ["${var.load_balancers}"]
+  health_check_grace_period = "${var.health_check_grace_period}"
+  health_check_type         = "${var.health_check_type}"
+
+  min_elb_capacity          = "${var.min_elb_capacity}"
+  wait_for_elb_capacity     = "${var.wait_for_elb_capacity}"
+  target_group_arns         = ["${var.target_group_arns}"]
+  default_cooldown          = "${var.default_cooldown}"
+  force_delete              = "${var.force_delete}"
+  termination_policies      = "${var.termination_policies}"
+  suspended_processes       = "${var.suspended_processes}"
+  placement_group           = "${var.placement_group}"
+  enabled_metrics           = ["${var.enabled_metrics}"]
+  metrics_granularity       = "${var.metrics_granularity}"
+  wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
+  protect_from_scale_in     = "${var.protect_from_scale_in}"
+
+  tags = ["${module.eg_prod_asg_abc_label.tags_asg_propagate_true}"]
+}
+```
 
 ## Input
 
@@ -148,6 +214,8 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
 | namespace | Normalized namespace  |
 | stage | Normalized stage  |
 | tags | Merge input tags with our tags. Note: `Name` has a special meaning in AWS and we need to disamgiuate it by using the computed `id`   |
+| tags_asg_propagate_true | a list of maps that contain the ASG format tags with propagation set to false |
+| tags_asg_propagate_false | a list of maps that contain the ASG format tags with propagation set to false |
 
 ## Help
 

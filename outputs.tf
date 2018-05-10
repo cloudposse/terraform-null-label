@@ -26,15 +26,17 @@ output "attributes" {
 # Merge input tags with our tags.
 # Note: `Name` has a special meaning in AWS and we need to disamgiuate it by using the computed `id`
 output "tags" {
-  value = "${
-      merge( 
-        map(
-          "Name", "${local.id}",
-          "Namespace", "${local.namespace}",
-          "Stage", "${local.stage}"
-        ), var.tags
-      )
-    }"
+  value = "${local.tags}"
 
   description = "Normalized Tag map"
+}
+output "tags_asg_propagate_true" {
+
+  value = ["${local.tags_asg_propagate_true}"]
+  description = "Additional tags for adding to EC2 servers in an autoscaling group"
+}
+output "tags_asg_propagate_false" {
+
+  value = ["${local.tags_asg_propagate_false}"]
+  description = "Additional tags for adding to an autoscaling group"
 }
