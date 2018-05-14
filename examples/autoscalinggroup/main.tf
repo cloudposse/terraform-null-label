@@ -8,6 +8,7 @@ variable "aws_region" {
 
 provider "aws" {
   region = "${var.aws_region}"
+  version = "~> 1.17"
 }
 
 variable "vpc_zone_identifier" {
@@ -228,7 +229,7 @@ variable "protect_from_scale_in" {
 }
 
 module "label" {
-  source    = "../terraform-terraform-label"
+  source    = "github.com/cloudposse/terraform-null-label/terraform-terraform-label.git"
   namespace = "awesomeproject"
   stage     = "production"
   name      = "clusterpluck"
