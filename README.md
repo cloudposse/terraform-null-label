@@ -91,7 +91,7 @@ resource "aws_security_group" "eg_prod_bastion_abc" {
 resource "aws_instance" "eg_prod_bastion_abc" {
    instance_type          = "t1.micro"
    tags                   = "${module.eg_prod_bastion_abc_label.tags}"
-   vpc_security_group_ids = ["${aws_security_group.eg_prod_bastion_abc.id"}]
+   vpc_security_group_ids = ["${aws_security_group.eg_prod_bastion_abc.id}"]
 }
 
 module "eg_prod_bastion_xyz_label" {
