@@ -16,7 +16,7 @@ locals {
       )
     }"
 
-  tags_as_list_of_maps  = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
+  tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
 }
 
 provider "null" {
@@ -32,4 +32,3 @@ resource "null_resource" "tags_as_list_of_maps" {
   ),
   var.additional_tag_map)}"
 }
-

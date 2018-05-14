@@ -233,10 +233,12 @@ module "label" {
   namespace = "awesomeproject"
   stage     = "production"
   name      = "clusterpluck"
-  tags      = {
+
+  tags = {
     BusinessUnit = "Finance"
     ManagedBy    = "Terraform"
   }
+
   additional_tag_map = {
     propagate_at_launch = "true"
   }
@@ -321,4 +323,3 @@ resource "aws_autoscaling_group" "this" {
 output "tags" {
   value = ["${module.label.tags_as_list_of_maps}"]
 }
-

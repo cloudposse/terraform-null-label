@@ -34,8 +34,7 @@ variable "tags" {
 }
 
 variable "additional_tag_map" {
-  type = "map"
-  default = {}
+  type        = "map"
+  default     = {}
   description = "Additional tags for appending to each tag map."
 }
-
