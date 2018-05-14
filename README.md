@@ -196,8 +196,10 @@ resource "aws_autoscaling_group" "this" {
 
   # Add tags to ASG that also apply to the servers that it creates
   tags = ["${module.eg_prod_web_label.tags_asg_propagate_true}"]
-  # Add tags that only apply to the ASG
-  tags = ["${module.eg_prod_asg_label.tags_asg_propagate_false}"]
+  # Or add tags that only apply to the ASG
+  #tags = ["${module.eg_prod_asg_label.tags_asg_propagate_false}"]
+  # Or mix them up
+  #tags = ["${module.eg_prod_web_label.tags_asg_propagate_true}", "${module.eg_prod_asg_SOME_OTHER_label.tags_asg_propagate_false}"]
 }
 ```
 
