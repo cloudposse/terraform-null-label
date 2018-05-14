@@ -123,7 +123,7 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
 ```
 ### Advanced Example 2
 
-Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requres its tags to be in this format:
+Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requres its tags to be in this format, which this module can generate:
 ```hcl
 tags = [
     {
@@ -147,14 +147,24 @@ tags = [
 Autoscaling group using proagating tagging below (full example within the examples folder)
 
 ```hcl
-module "eg_prod_asg_abc_label" {
+module "eg_prod_web_label" {
   source     = "github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace  = "eg"
   stage      = "prod"
-  name       = "bastion"
+  name       = "WEB"
   attributes = ["abc"]
   delimiter  = "-"
-  tags       = "${map("BusinessUnit", "ABC")}"
+  tags       = "${map("BusinessUnit", "Servers")}"
+}
+
+module "eg_prod_asg_label" {
+  source     = "github.com/cloudposse/terraform-null-label.git?ref=master"
+  namespace  = "eg"
+  stage      = "prod"
+  name       = "ASG"
+  attributes = ["abc"]
+  delimiter  = "-"
+  tags       = "${map("BusinessUnit", "ScalingGroups")}"
 }
 
 resource "aws_autoscaling_group" "this" {
@@ -184,7 +194,10 @@ resource "aws_autoscaling_group" "this" {
   wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
   protect_from_scale_in     = "${var.protect_from_scale_in}"
 
-  tags = ["${module.eg_prod_asg_abc_label.tags_asg_propagate_true}"]
+  # Add tags to ASG that also apply to the servers that it creates
+  tags = ["${module.eg_prod_web_label.tags_asg_propagate_true}"]
+  # Add tags that only apply to the ASG
+  tags = ["${module.eg_prod_asg_label.tags_asg_propagate_false}"]
 }
 ```
 
@@ -214,7 +227,7 @@ resource "aws_autoscaling_group" "this" {
 | namespace | Normalized namespace  |
 | stage | Normalized stage  |
 | tags | Merge input tags with our tags. Note: `Name` has a special meaning in AWS and we need to disamgiuate it by using the computed `id`   |
-| tags_asg_propagate_true | a list of maps that contain the ASG format tags with propagation set to false |
+| tags_asg_propagate_true | a list of maps that contain the ASG format tags with propagation set to true |
 | tags_asg_propagate_false | a list of maps that contain the ASG format tags with propagation set to false |
 
 ## Help
@@ -281,8 +294,8 @@ or [hire us][hire] to help build your next cloud-platform.
 
 ### Contributors
 
-|[![Erik Osterman][erik_img]][erik_web]<br/>[Erik Osterman][erik_web] |[![Igor Rodionov][igor_img]][igor_web]<br/>[Igor Rodionov][igor_img] |[![Konstantin B][konstantin_img]][konstantin_web]<br/>[Konstantin B][konstantin_web] |[![Andriy Knysh][andriy_img]][andriy_web]<br/>[Andriy Knysh][andriy_web] |[![Sergey Vasilyev][sergey_img]][sergey_web]<br/>[Sergey Vasilyev][sergey_web] |
-|---|---|---|---|---|
+|[![Erik Osterman][erik_img]][erik_web]<br/>[Erik Osterman][erik_web] |[![Igor Rodionov][igor_img]][igor_web]<br/>[Igor Rodionov][igor_img] |[![Konstantin B][konstantin_img]][konstantin_web]<br/>[Konstantin B][konstantin_web] |[![Andriy Knysh][andriy_img]][andriy_web]<br/>[Andriy Knysh][andriy_web] |[![Sergey Vasilyev][sergey_img]][sergey_web]<br/>[Sergey Vasilyev][sergey_web] | [![Jamie Nelson][bitflight_img]][bitflight_web]<br/>[Jamie Nelson][bitflight_web] |
+|---|---|---|---|---|---|
 
 [andriy_img]: https://avatars0.githubusercontent.com/u/7356997?v=4&u=ed9ce1c9151d552d985bdf5546772e14ef7ab617&s=144
 [andriy_web]: https://github.com/aknysh/
@@ -304,3 +317,6 @@ or [hire us][hire] to help build your next cloud-platform.
 
 [vladimir_img]: https://avatars1.githubusercontent.com/u/26582191?v=4&u=ed9ce1c9151d552d985bdf5546772e14ef7ab617&s=144
 [vladimir_web]: https://github.com/SweetOps/
+
+[bitflight_img]: https://avatars0.githubusercontent.com/u/25075504?s=144&u=ac7e53bda3706cb9d51907808574b6d342703b3e&v=4
+[bitflight_web]: https://github.com/Jamie-BitFlight
