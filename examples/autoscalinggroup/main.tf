@@ -233,6 +233,13 @@ module "label" {
   namespace = "awesomeproject"
   stage     = "production"
   name      = "clusterpluck"
+  tags      = {
+    BusinessUnit = "Finance"
+    ManagedBy    = "Terraform"
+  }
+  additional_tag_map = {
+    propagate_at_launch = "true"
+  }
 }
 
 data "aws_ami" "ubuntu" {
@@ -308,13 +315,10 @@ resource "aws_autoscaling_group" "this" {
   wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
   protect_from_scale_in     = "${var.protect_from_scale_in}"
 
-  tags = ["${module.label.tags_asg_propagate_true}"]
+  tags = ["${module.label.tags_as_list_of_maps}"]
 }
 
 output "tags" {
-  value = ["${module.label.tags_asg_propagate_true}"]
+  value = ["${module.label.tags_as_list_of_maps}"]
 }
 
-output "tagsf" {
-  value = ["${module.label.tags_asg_propagate_false}"]
-}

@@ -32,3 +32,10 @@ variable "tags" {
   default     = {}
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
+
+variable "additional_tag_map" {
+  type = "map"
+  default = {}
+  description = "Additional tags for appending to each tag map."
+}
+

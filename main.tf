@@ -16,30 +16,20 @@ locals {
       )
     }"
 
-  tags_asg_propagate_true  = ["${null_resource.tags_asg_propagate_true.*.triggers}"]
-  tags_asg_propagate_false = ["${null_resource.tags_asg_propagate_false.*.triggers}"]
+  tags_as_list_of_maps  = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
 }
 
 provider "null" {
   version = "~> 1.0"
 }
 
-resource "null_resource" "tags_asg_propagate_true" {
+resource "null_resource" "tags_as_list_of_maps" {
   count = "${length(keys(local.tags))}"
 
-  triggers {
-    key                 = "${element(keys(local.tags), count.index)}"
-    value               = "${element(values(local.tags), count.index)}"
-    propagate_at_launch = "true"
-  }
+  triggers = "${merge(map(
+    "key", "${element(keys(local.tags), count.index)}",
+    "value", "${element(values(local.tags), count.index)}"
+  ),
+  var.additional_tag_map)}"
 }
 
-resource "null_resource" "tags_asg_propagate_false" {
-  count = "${length(keys(local.tags))}"
-
-  triggers {
-    key                 = "${element(keys(local.tags), count.index)}"
-    value               = "${element(values(local.tags), count.index)}"
-    propagate_at_launch = "false"
-  }
-}

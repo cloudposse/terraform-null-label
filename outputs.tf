@@ -31,12 +31,8 @@ output "tags" {
   description = "Normalized Tag map"
 }
 
-output "tags_asg_propagate_true" {
-  value       = ["${local.tags_asg_propagate_true}"]
-  description = "Additional tags for adding to EC2 servers in an autoscaling group"
+output "tags_as_list_of_maps" {
+  value       = ["${local.tags_as_list_of_maps}"]
+  description = "Additional tags as a list of maps. Which can be used in several resources."
 }
 
-output "tags_asg_propagate_false" {
-  value       = ["${local.tags_asg_propagate_false}"]
-  description = "Additional tags for adding to an autoscaling group"
-}
