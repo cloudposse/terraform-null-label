@@ -20,7 +20,7 @@ module "label" {
 #######################
 # Launch template     #
 #######################
-resource "aws_launch_template" "this" {
+resource "aws_launch_template" "default" {
   # terraform-null-label example used here: Set template name prefix
   name_prefix                          = "${module.label.id}-"
   image_id                             = "${data.aws_ami.amazon_linux.id}"
@@ -43,7 +43,7 @@ resource "aws_launch_template" "this" {
 ######################
 # Autoscaling group  #
 ######################
-resource "aws_autoscaling_group" "this" {
+resource "aws_autoscaling_group" "default" {
   # terraform-null-label example used here: Set ASG name prefix
   name_prefix         = "${module.label.id}-"
   vpc_zone_identifier = ["${data.aws_subnet_ids.all.ids}"]
@@ -52,7 +52,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity    = "1"
 
   launch_template = {
-    id      = "${aws_launch_template.this.id}"
+    id      = "${aws_launch_template.default.id}"
     version = "$$Latest"
   }
 
