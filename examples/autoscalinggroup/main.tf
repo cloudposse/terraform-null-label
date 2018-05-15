@@ -68,6 +68,10 @@ output "tags" {
   value                                 = ["${module.label.tags}"]
 }
 
+################################
+# Provider                     #
+################################
+
 provider "aws" {
   region = "eu-west-1"
   version = "~> 1.17"

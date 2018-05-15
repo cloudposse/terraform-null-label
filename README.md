@@ -144,52 +144,68 @@ tags = [
 ]
 ```
 
-Autoscaling group using proagating tagging below (full example within the examples folder)
+Autoscaling group using proagating tagging below (full example: examples/autoscalinggroup/main.tf)
 
 ```hcl
-module "eg_prod_web_label" {
-  source     = "github.com/cloudposse/terraform-null-label.git?ref=master"
-  namespace  = "eg"
-  stage      = "prod"
-  name       = "WEB"
-  attributes = ["abc"]
-  delimiter  = "-"
-  tags       = "${map("BusinessUnit", "Servers")}"
+################################
+# terraform-null-label example #
+################################
+module "label" {
+  source    = "../../"
+  namespace = "awesomeproject"
+  stage     = "production"
+  name      = "clusterpluck"
+
+  tags = {
+    BusinessUnit = "Finance"
+    ManagedBy    = "Terraform"
+  }
+
   additional_tag_map = {
     propagate_at_launch = "true"
   }
 }
 
+#######################
+# Launch template     #
+#######################
+resource "aws_launch_template" "this" {
+  # terraform-null-label example used here: Set template name prefix
+  name_prefix                           = "${module.label.id}-"
+  image_id                              = "${data.aws_ami.amazon_linux.id}"
+  instance_type                         = "t2.micro"
+  instance_initiated_shutdown_behavior  = "terminate"
 
+  vpc_security_group_ids                = ["${data.aws_security_group.default.id}"]
+
+  monitoring {
+    enabled                             = false
+  }
+  # terraform-null-label example used here: Set tags on volumes
+  tag_specifications {
+    resource_type                       = "volume"
+    tags                                = "${module.label.tags}"
+  }
+}
+
+######################
+# Autoscaling group  #
+######################
 resource "aws_autoscaling_group" "this" {
-  count = "${var.create_asg}"
+  # terraform-null-label example used here: Set ASG name prefix
+  name_prefix                           = "${module.label.id}-"
+  vpc_zone_identifier                   = ["${data.aws_subnet_ids.all.ids}"]
+  max_size                              = "1"
+  min_size                              = "1"
+  desired_capacity                      = "1"
 
-  name_prefix          = "${module.label.id}-"
-  launch_configuration = "${var.create_lc ? element(aws_launch_configuration.this.*.name, 0) : var.launch_configuration}"
-  vpc_zone_identifier  = ["${var.vpc_zone_identifier}"]
-  max_size             = "${var.max_size}"
-  min_size             = "${var.min_size}"
-  desired_capacity     = "${var.desired_capacity}"
-
-  load_balancers            = ["${var.load_balancers}"]
-  health_check_grace_period = "${var.health_check_grace_period}"
-  health_check_type         = "${var.health_check_type}"
-
-  min_elb_capacity          = "${var.min_elb_capacity}"
-  wait_for_elb_capacity     = "${var.wait_for_elb_capacity}"
-  target_group_arns         = ["${var.target_group_arns}"]
-  default_cooldown          = "${var.default_cooldown}"
-  force_delete              = "${var.force_delete}"
-  termination_policies      = "${var.termination_policies}"
-  suspended_processes       = "${var.suspended_processes}"
-  placement_group           = "${var.placement_group}"
-  enabled_metrics           = ["${var.enabled_metrics}"]
-  metrics_granularity       = "${var.metrics_granularity}"
-  wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
-  protect_from_scale_in     = "${var.protect_from_scale_in}"
-
-  # Add tags to ASG that also apply to the servers that it creates
-  tags = ["${module.eg_prod_web_label.tags_as_list_of_maps}"]
+  launch_template = {
+    id                                  = "${aws_launch_template.this.id}"
+    version                             = "$$Latest"
+  }
+  
+  # terraform-null-label example used here: Set tags on ASG and EC2 Servers
+  tags                                  = ["${module.label.tags_as_list_of_maps}"]
 }
 ```
 
