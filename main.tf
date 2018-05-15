@@ -19,10 +19,6 @@ locals {
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
 }
 
-provider "null" {
-  version = "~> 1.0"
-}
-
 resource "null_resource" "tags_as_list_of_maps" {
   count = "${length(keys(local.tags))}"
 
