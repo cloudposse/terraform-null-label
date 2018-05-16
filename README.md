@@ -105,7 +105,7 @@ module "eg_prod_bastion_xyz_label" {
 }
 
 resource "aws_security_group" "eg_prod_bastion_xyz" {
-  name = "module.eg_prod_bastion_xyz_label.id"
+  name = "${module.eg_prod_bastion_xyz_label.id}"
   tags = "${module.eg_prod_bastion_xyz_label.tags}"
   ingress {
     from_port   = 22
