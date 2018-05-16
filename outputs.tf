@@ -23,11 +23,8 @@ output "attributes" {
   description = "Normalized attributes"
 }
 
-# Merge input tags with our tags.
-# Note: `Name` has a special meaning in AWS and we need to disamgiuate it by using the computed `id`
 output "tags" {
-  value = "${local.tags}"
-
+  value       = "${local.tags}"
   description = "Normalized Tag map"
 }
 
