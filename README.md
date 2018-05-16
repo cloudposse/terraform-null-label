@@ -123,7 +123,7 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
 ```
 ### Advanced Example 2
 
-Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requres its tags to be in this format, which this module can generate:
+Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requires its tags to be in this format, which this module can generate:
 ```hcl
 tags = [
     {
@@ -144,7 +144,7 @@ tags = [
 ]
 ```
 
-Autoscaling group using proagating tagging below (full example: examples/autoscalinggroup/main.tf)
+Autoscaling group using propagating tagging below (full example: examples/autoscalinggroup/main.tf)
 
 ```hcl
 ################################
@@ -152,9 +152,9 @@ Autoscaling group using proagating tagging below (full example: examples/autosca
 ################################
 module "label" {
   source    = "../../"
-  namespace = "awesomeproject"
-  stage     = "production"
-  name      = "clusterpluck"
+  namespace = "cp"
+  stage     = "prod"
+  name      = "app"
 
   tags = {
     BusinessUnit = "Finance"
@@ -169,7 +169,7 @@ module "label" {
 #######################
 # Launch template     #
 #######################
-resource "aws_launch_template" "this" {
+resource "aws_launch_template" "default" {
   # terraform-null-label example used here: Set template name prefix
   name_prefix                           = "${module.label.id}-"
   image_id                              = "${data.aws_ami.amazon_linux.id}"
@@ -191,7 +191,7 @@ resource "aws_launch_template" "this" {
 ######################
 # Autoscaling group  #
 ######################
-resource "aws_autoscaling_group" "this" {
+resource "aws_autoscaling_group" "default" {
   # terraform-null-label example used here: Set ASG name prefix
   name_prefix                           = "${module.label.id}-"
   vpc_zone_identifier                   = ["${data.aws_subnet_ids.all.ids}"]
@@ -200,7 +200,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity                      = "1"
 
   launch_template = {
-    id                                  = "${aws_launch_template.this.id}"
+    id                                  = "${aws_launch_template.default.id}"
     version                             = "$$Latest"
   }
   

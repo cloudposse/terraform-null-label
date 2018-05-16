@@ -3,9 +3,9 @@
 ################################
 module "label" {
   source    = "../../"
-  namespace = "awesomeproject"
-  stage     = "production"
-  name      = "clusterpluck"
+  namespace = "cp"
+  stage     = "prod"
+  name      = "app"
 
   tags = {
     BusinessUnit = "Finance"
