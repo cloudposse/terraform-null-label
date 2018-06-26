@@ -15,6 +15,11 @@ variable "enabled" {
   default     = "true"
 }
 
+variable "exclude_generated_tags" {
+  description = "Set to true to exclude generated tags: Name/Namespace/Stage."
+  default     = false
+}
+
 variable "delimiter" {
   type        = "string"
   default     = "-"

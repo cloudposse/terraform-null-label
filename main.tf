@@ -6,25 +6,29 @@ locals {
   stage      = "${local.enabled ? lower(format("%v", var.stage)) : ""}"
   attributes = "${local.enabled ? lower(format("%v", join(var.delimiter, compact(var.attributes)))) : ""}"
 
-  tags = "${
-      merge( 
-        map(
-          "Name", "${local.id}",
-          "Namespace", "${local.namespace}",
-          "Stage", "${local.stage}"
-        ), var.tags
-      )
-    }"
+  generated_tags = {
+    Name = "${local.id}",
+    Namespace = "${local.namespace}",
+    Stage = "${local.stage}"    
+  }
 
-  tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
+  _tags = {
+    tags      = "${var.tags}"
+    generated = "${merge(var.tags, local.generated_tags)}"
+  }
+
+  tags = "${local._tags[var.exclude_generated_tags ? "tags" : "generated"]}"
+
+  tags_as_list_of_maps = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
 }
 
-resource "null_resource" "tags_as_list_of_maps" {
+data "null_data_source" "tags_as_list_of_maps" {
   count = "${length(keys(local.tags))}"
 
-  triggers = "${merge(map(
-    "key", "${element(keys(local.tags), count.index)}",
-    "value", "${element(values(local.tags), count.index)}"
-  ),
-  var.additional_tag_map)}"
+  inputs = "${merge(map(
+      "key", "${element(keys(local.tags), count.index)}",
+      "value", "${element(values(local.tags), count.index)}"
+    ),
+    var.additional_tag_map
+  )}"
 }
