@@ -15,7 +15,7 @@ locals {
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   attributes          = "${split("~^~", lower(join("~^~", local.selected_attributes)))}"
   selected_delimiter  = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
-  delimiter           = "${lower(join("", split(" ", join("",local.selected_delimiter[0]))))}"
+  delimiter           = "${lower(join("", split(" ", local.selected_delimiter[0])))}"
   context_local       = "${merge(local.context_context, var.context)}"
   context_context = {
     name        = []
