@@ -1,13 +1,16 @@
 variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
+  default = ""
 }
 
 variable "stage" {
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
+  default = ""
 }
 
 variable "name" {
   description = "Solution name, e.g. 'app' or 'jenkins'"
+  default = ""
 }
 
 variable "enabled" {
@@ -38,3 +41,11 @@ variable "additional_tag_map" {
   default     = {}
   description = "Additional tags for appending to each tag map."
 }
+
+variable "context" {
+  type        = "map"
+  default     = {}
+  description = "Default context to use for passing state between label invocations"
+}
+
+

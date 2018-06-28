@@ -32,3 +32,10 @@ output "tags_as_list_of_maps" {
   value       = ["${local.tags_as_list_of_maps}"]
   description = "Additional tags as a list of maps, which can be used in several AWS resources"
 }
+
+output "context" {
+  value       = "${local.context}"
+  description = "Context of this module to pass between other modules"
+}
+
+

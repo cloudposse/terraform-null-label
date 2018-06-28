@@ -1,10 +1,11 @@
 locals {
   enabled    = "${var.enabled == "true" ? true : false }"
-  id         = "${local.enabled ? lower(join(var.delimiter, compact(concat(list(var.namespace, var.stage, var.name), var.attributes)))) : ""}"
-  name       = "${local.enabled ? lower(format("%v", var.name)) : ""}"
-  namespace  = "${local.enabled ? lower(format("%v", var.namespace)) : ""}"
-  stage      = "${local.enabled ? lower(format("%v", var.stage)) : ""}"
-  attributes = "${local.enabled ? lower(format("%v", join(var.delimiter, compact(var.attributes)))) : ""}"
+
+  id         = "${lower(join(var.delimiter, compact(concat(list(local.namespace, local.stage, local.name, local.attributes)))))}"
+  name       = "${var.name == "" ? lookup(var.context, "name", "") : lower(format("%v", var.name))}"
+  namespace  = "${var.namespace == "" ? lookup(var.context, "namespace", "") : lower(format("%v", var.namespace))}"
+  stage      = "${var.stage == "" ? lookup(var.context, "stage", "") : lower(format("%v", var.stage))}"
+  attributes = "${length(var.attributes) == 0 ? lookup(var.context, "attributes", "") : lower(format("%v", join(var.delimiter, compact(var.attributes))))}"
 
   tags = "${
       merge( 
@@ -17,10 +18,19 @@ locals {
     }"
 
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
+
+  context    = {
+    name       = "${local.name}"
+    namespace  = "${local.namespace}"
+    stage      = "${local.stage}"
+    attributes = "${local.attributes}"
+    tags       = "${local.tags}"
+    delimiter  = "${var.delimiter}"
+  }
 }
 
 resource "null_resource" "tags_as_list_of_maps" {
-  count = "${length(keys(local.tags))}"
+  count = "${local.enabled ? length(keys(local.tags)) : 0}"
 
   triggers = "${merge(map(
     "key", "${element(keys(local.tags), count.index)}",
