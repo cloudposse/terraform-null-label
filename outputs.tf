@@ -37,5 +37,3 @@ output "context" {
   value       = "${local.context}"
   description = "Context of this module to pass between other modules"
 }
-
-

@@ -1,5 +1,5 @@
 locals {
-  enabled    = "${var.enabled == "true" ? true : false }"
+  enabled = "${var.enabled == "true" ? true : false }"
 
   id         = "${lower(join(var.delimiter, compact(concat(list(local.namespace, local.stage, local.name, local.attributes)))))}"
   name       = "${var.name == "" ? lookup(var.context, "name", "") : lower(format("%v", var.name))}"
@@ -10,20 +10,20 @@ locals {
   generated_tags = {
     "Name"      = "${local.enabled ? local.id : ""}"
     "Namespace" = "${local.enabled ? local.namespace : ""}"
-    "Stage"    = "${local.enabled ? local.stage : ""}"
+    "Stage"     = "${local.enabled ? local.stage : ""}"
   }
 
   tags = "${merge(local.generated_tags, var.tags)}"
 
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
 
-  null_tags    = {
-    Name       = ""
-    Namespace  = ""
-    Stage      = ""
+  null_tags = {
+    Name      = ""
+    Namespace = ""
+    Stage     = ""
   }
 
-  context    = {
+  context = {
     name       = "${local.name}"
     namespace  = "${local.namespace}"
     stage      = "${local.stage}"

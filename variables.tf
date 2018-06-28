@@ -1,16 +1,16 @@
 variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
-  default = ""
+  default     = ""
 }
 
 variable "stage" {
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default = ""
+  default     = ""
 }
 
 variable "name" {
   description = "Solution name, e.g. 'app' or 'jenkins'"
-  default = ""
+  default     = ""
 }
 
 variable "enabled" {
@@ -47,5 +47,3 @@ variable "context" {
   default     = {}
   description = "Default context to use for passing state between label invocations"
 }
-
-
