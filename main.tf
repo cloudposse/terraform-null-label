@@ -6,16 +6,16 @@ locals {
   # selected_name : Select which value to use, the one from context, or the one from the var
   # name: Remove spaces, make lowercase
 
-  selected_name       = ["${compact(concat(local.context_local["name"], list(var.name)))}"]
-  name                = "${lower(join("", split(" ", join("",local.selected_name))))}"
+  selected_name       = ["${compact(concat(list(var.name), local.context_local["name"]))}"]
+  name                = "${lower(join("", split(" ", local.selected_name[0])))}"
   selected_namespace  = ["${compact(concat(local.context_local["namespace"], list(var.namespace)))}"]
-  namespace           = "${lower(join("", split(" ", join("",local.selected_namespace))))}"
+  namespace           = "${lower(join("", split(" ", local.selected_namespace[0])))}"
   selected_stage      = ["${compact(concat(local.context_local["stage"], list(var.stage)))}"]
-  stage               = "${lower(join("", split(" ", join("",local.selected_stage))))}"
+  stage               = "${lower(join("", split(" ", local.selected_stage[0])))}"
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   attributes          = "${split("~^~", lower(join("~^~", local.selected_attributes)))}"
-  selected_delimiter  = ["${compact(concat(local.context_local["delimiter"], list(var.delimiter)))}"]
-  delimiter           = "${lower(join("", split(" ", join("",distinct(local.selected_delimiter)))))}"
+  selected_delimiter  = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
+  delimiter           = "${lower(join("", split(" ", join("",local.selected_delimiter[0]))))}"
   context_local       = "${merge(local.context_context, var.context)}"
   context_context = {
     name        = []
