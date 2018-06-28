@@ -1,25 +1,25 @@
 output "id" {
-  value       = "${local.id}"
+  value       = "${local.enabled ? local.id : ""}"
   description = "Disambiguated ID"
 }
 
 output "name" {
-  value       = "${local.name}"
+  value       = "${local.enabled ? local.name : ""}"
   description = "Normalized name"
 }
 
 output "namespace" {
-  value       = "${local.namespace}"
+  value       = "${local.enabled ? local.namespace : ""}"
   description = "Normalized namespace"
 }
 
 output "stage" {
-  value       = "${local.stage}"
+  value       = "${local.enabled ? local.stage : ""}"
   description = "Normalized stage"
 }
 
 output "attributes" {
-  value       = "${local.attributes}"
+  value       = "${local.enabled ? local.attributes : ""}"
   description = "Normalized attributes"
 }
 

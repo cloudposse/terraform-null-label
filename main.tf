@@ -7,17 +7,21 @@ locals {
   stage      = "${var.stage == "" ? lookup(var.context, "stage", "") : lower(format("%v", var.stage))}"
   attributes = "${length(var.attributes) == 0 ? lookup(var.context, "attributes", "") : lower(format("%v", join(var.delimiter, compact(var.attributes))))}"
 
-  tags = "${
-      merge( 
-        map(
-          "Name", "${local.id}",
-          "Namespace", "${local.namespace}",
-          "Stage", "${local.stage}"
-        ), var.tags
-      )
-    }"
+  generated_tags = {
+    "Name"      = "${local.enabled ? local.id : ""}"
+    "Namespace" = "${local.enabled ? local.namespace : ""}"
+    "Stage"    = "${local.enabled ? local.stage : ""}"
+  }
+
+  tags = "${merge(local.generated_tags, var.tags)}"
 
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
+
+  null_tags    = {
+    Name       = ""
+    Namespace  = ""
+    Stage      = ""
+  }
 
   context    = {
     name       = "${local.name}"
@@ -30,7 +34,7 @@ locals {
 }
 
 resource "null_resource" "tags_as_list_of_maps" {
-  count = "${local.enabled ? length(keys(local.tags)) : 0}"
+  count = "${length(keys(local.tags))}"
 
   triggers = "${merge(map(
     "key", "${element(keys(local.tags), count.index)}",

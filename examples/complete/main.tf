@@ -4,7 +4,9 @@ module "label1" {
   stage      = "Stage"
   name       = "Name"
   attributes = ["1", "2", "3", ""]
-  tags       = "${map("Key", "Value")}"
+  tags       = {
+    "SomeKey" = "SomeValue"
+  }
 }
 
 module "label2" {
