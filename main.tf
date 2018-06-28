@@ -32,7 +32,7 @@ locals {
     "Namespace" = "${local.namespace}"
     "Stage"     = "${local.stage}"
   }
-  tags                 = "${merge(local.generated_tags, zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]),var.tags, )}"
+  tags                 = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]),local.generated_tags, var.tags )}"
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
   null_tags = {
     Name      = ""
