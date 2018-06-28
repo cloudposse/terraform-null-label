@@ -2,7 +2,7 @@ module "label1" {
   source     = "../../"
   namespace  = "CloudPosse"
   stage      = "Production"
-  name       = "Winston"
+  name       = "Winston Churchroom"
   attributes = ["fire", "water", "earth", "air"]
 
   tags = {
