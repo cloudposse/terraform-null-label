@@ -19,7 +19,7 @@ output "stage" {
 }
 
 output "attributes" {
-  value       = "${local.attributes}"
+  value       = "${local.enabled ? local.attributes : ""}"
   description = "Normalized attributes"
 }
 

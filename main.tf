@@ -2,7 +2,7 @@ locals {
   enabled          = "${var.enabled == "true" ? true : false }"
   unique_seperator = "~^~"
 
-  id = "${lower(join(local.delimiter, compact(concat(list(local.namespace, local.stage, local.name), local.attributes))))}"
+  id = "${lower(join(local.delimiter, compact(concat(list(local.namespace, local.stage, local.name, local.attributes)))))}"
 
   # selected_name : Select which value to use, the one from context, or the one from the var
   # name: Remove spaces, make lowercase
@@ -16,7 +16,7 @@ locals {
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   # The unique seperator is used to join all the attributes together into a single string, so that it can be converted to lowercase
   # Then it is used again to split the string into a list again.
-  attributes = "${split(local.unique_seperator, lower(join(local.unique_seperator, local.selected_attributes)))}"
+  attributes = "${lower(join(local.delimiter, local.selected_attributes))}"
   selected_delimiter = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
   delimiter          = "${local.selected_delimiter[0]}"
   # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
