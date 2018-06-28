@@ -1,5 +1,6 @@
 locals {
-  enabled = "${var.enabled == "true" ? true : false }"
+  enabled          = "${var.enabled == "true" ? true : false }"
+  unique_seperator = "~^~"
 
   id = "${lower(join(local.delimiter, compact(concat(list(local.namespace, local.stage, local.name), local.attributes))))}"
 
@@ -13,13 +14,15 @@ locals {
   selected_stage      = ["${compact(concat(local.context_local["stage"], list(var.stage)))}"]
   stage               = "${lower(join("", split(" ", local.selected_stage[0])))}"
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
-  attributes          = "${split("~^~", lower(join("~^~", local.selected_attributes)))}"
-  selected_delimiter  = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
-  delimiter           = "${join("", split(" ", local.selected_delimiter[0]))}"
+  # The unique seperator is used to join all the attributes together into a single string, so that it can be converted to lowercase
+  # Then it is used again to split the string into a list again.
+  attributes = "${split(local.unique_seperator, lower(join(local.unique_seperator, local.selected_attributes)))}"
+  selected_delimiter = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
+  delimiter          = "${join("", split(" ", local.selected_delimiter[0]))}"
   # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
-  context_local = "${merge(local.context_context, var.context)}"
+  context_local = "${merge(local.context_struct, var.context)}"
   # Only maps that contain all the same attribute types can be merged, so they have been set to list
-  context_context = {
+  context_struct = {
     name        = []
     namespace   = []
     stage       = []
