@@ -16,7 +16,9 @@ locals {
   attributes          = "${split("~^~", lower(join("~^~", local.selected_attributes)))}"
   selected_delimiter  = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
   delimiter           = "${lower(join("", split(" ", local.selected_delimiter[0])))}"
-  context_local       = "${merge(local.context_context, var.context)}"
+  # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
+  context_local = "${merge(local.context_context, var.context)}"
+  # Only maps that contain all the same attribute types can be merged, so they have been set to list
   context_context = {
     name        = []
     namespace   = []
@@ -26,7 +28,6 @@ locals {
     tags_values = []
     delimiter   = []
   }
-  list_attrb = ["${local.context_local["attributes"]}"]
   generated_tags = {
     "Name"      = "${local.id}"
     "Namespace" = "${local.namespace}"
@@ -34,11 +35,6 @@ locals {
   }
   tags                 = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]),local.generated_tags, var.tags )}"
   tags_as_list_of_maps = ["${null_resource.tags_as_list_of_maps.*.triggers}"]
-  null_tags = {
-    Name      = ""
-    Namespace = ""
-    Stage     = ""
-  }
   context = {
     name        = ["${local.name}"]
     namespace   = ["${local.namespace}"]
