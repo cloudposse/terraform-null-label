@@ -15,7 +15,7 @@ locals {
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   attributes          = "${split("~^~", lower(join("~^~", local.selected_attributes)))}"
   selected_delimiter  = ["${distinct(compact(concat(local.context_local["delimiter"], list(var.delimiter))))}"]
-  delimiter           = "${lower(join("", split(" ", local.selected_delimiter[0])))}"
+  delimiter           = "${join("", split(" ", local.selected_delimiter[0]))}"
   # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
   context_local = "${merge(local.context_context, var.context)}"
   # Only maps that contain all the same attribute types can be merged, so they have been set to list
