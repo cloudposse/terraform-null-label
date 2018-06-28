@@ -6,11 +6,11 @@ locals {
   # selected_name : Select which value to use, the one from context, or the one from the var
   # name: Remove spaces, make lowercase
 
-  selected_name       = ["${compact(concat(list(var.name), local.context_local["name"]))}"]
+  selected_name       = ["${concat(compact(concat(list(var.name), local.context_local["name"])), list(""))}"]
   name                = "${lower(replace(local.selected_name[0], "/[^a-zA-Z0-9]/", ""))}"
-  selected_namespace  = ["${compact(concat(local.context_local["namespace"], list(var.namespace)))}"]
+  selected_namespace  = ["${concat(compact(concat(local.context_local["namespace"], list(var.namespace))), list(""))}"]
   namespace           = "${lower(replace(local.selected_namespace[0], "/[^a-zA-Z0-9]/", ""))}"
-  selected_stage      = ["${compact(concat(local.context_local["stage"], list(var.stage)))}"]
+  selected_stage      = ["${concat(compact(concat(local.context_local["stage"], list(var.stage))),list(""))}"]
   stage               = "${lower(replace(local.selected_stage[0], "/[^a-zA-Z0-9]/", ""))}"
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   attributes          = "${lower(join(local.delimiter, local.selected_attributes))}"

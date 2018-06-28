@@ -21,3 +21,13 @@ module "label2" {
     "Environment" = "Public"
   }
 }
+
+module "label3" {
+  source = "../../"
+  name   = "Starfish"
+
+  tags = {
+    "Eat"    = "Carrot"
+    "Animal" = "Rabbit"
+  }
+}

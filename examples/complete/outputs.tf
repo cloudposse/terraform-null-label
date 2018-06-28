@@ -18,6 +18,16 @@ output "label2" {
   }
 }
 
+output "label3" {
+  value = {
+    id         = "${module.label3.id}"
+    name       = "${module.label3.name}"
+    namespace  = "${module.label3.namespace}"
+    stage      = "${module.label3.stage}"
+    attributes = "${module.label3.attributes}"
+  }
+}
+
 output "label1_tags" {
   value = "${module.label1.tags}"
 }
@@ -32,4 +42,12 @@ output "label2_tags" {
 
 output "label2_context" {
   value = "${module.label2.context}"
+}
+
+output "label3_tags" {
+  value = "${module.label3.tags}"
+}
+
+output "label3_context" {
+  value = "${module.label3.context}"
 }
