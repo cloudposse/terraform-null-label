@@ -1,17 +1,23 @@
 module "label1" {
   source     = "../../"
-  namespace  = "Namespace"
-  stage      = "Stage"
-  name       = "Name1"
-  attributes = ["1", "2", "3", ""]
+  namespace  = "CloudPosse"
+  stage      = "Production"
+  name       = "Winston"
+  attributes = ["fire", "water", "earth", "air"]
 
   tags = {
-    "SomeKey" = "SomeValue"
+    "City"        = "Dublin"
+    "Environment" = "Private"
   }
 }
 
 module "label2" {
   source  = "../../"
   context = "${module.label1.context}"
-  name    = "Name2"
+  name    = "Charlie"
+
+  tags = {
+    "City"        = "London"
+    "Environment" = "Public"
+  }
 }
