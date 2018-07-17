@@ -37,3 +37,8 @@ output "context" {
   value       = "${local.context}"
   description = "Context of this module to pass between other modules"
 }
+
+output "delimiter" {
+  value       = "${local.delimiter}"
+  description = "Delimiter used in label ID"
+}
