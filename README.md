@@ -7,7 +7,9 @@
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
-A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+The label items are all optional. So if you perfer the term `stage` to `environment` you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
+If attributes are excluded but `stage` and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`
 
 It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type.
 For example, if you have 10 instances, there should be 10 different labels.
@@ -226,6 +228,97 @@ resource "aws_autoscaling_group" "default" {
   tags                                  = ["${module.label.tags_as_list_of_maps}"]
 }
 ```
+### Advanced Example 3 as per the [complete example](./examples/complete)
+This example shows how you can pass the `context` output of one label module to the next label_module.
+Allowing you to create one label that has the base set of values, and then creating every extra label
+as a derivative of that.
+
+```hcl
+module "label1" {
+  source      = "../../"
+  namespace   = "CloudPosse"
+  environment = "UAT"
+  stage       = "build"
+  name        = "Winston Churchroom"
+  attributes  = ["fire", "water", "earth", "air"]
+
+  tags = {
+    "City"        = "Dublin"
+    "Environment" = "Private"
+  }
+}
+
+module "label2" {
+  source  = "../../"
+  context = "${module.label1.context}"
+  name    = "Charlie"
+  stage   = "test"
+
+  tags = {
+    "City"        = "London"
+    "Environment" = "Public"
+  }
+}
+
+module "label3" {
+  source = "../../"
+  name   = "Starfish"
+  stage  = "release"
+
+  tags = {
+    "Eat"    = "Carrot"
+    "Animal" = "Rabbit"
+  }
+}
+```
+
+This creates label outputs like this.
+```hcl
+Outputs:
+label1 = {
+  attributes = fire-water-earth-air
+  id = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+  name = winstonchurchroom
+  namespace = cloudposse
+  stage = build
+}
+label1_tags = {
+  City = Dublin
+  Environment = Private
+  Name = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+  Namespace = cloudposse
+  Stage = build
+}
+label2 = {
+  attributes = fire-water-earth-air
+  id = cloudposse-uat-build-charlie-fire-water-earth-air
+  name = charlie
+  namespace = cloudposse
+  stage = build
+}
+label2_tags = {
+  City = London
+  Environment = Public
+  Name = cloudposse-uat-build-charlie-fire-water-earth-air
+  Namespace = cloudposse
+  Stage = build
+}
+label3 = {
+  attributes = 
+  id = release-starfish
+  name = starfish
+  namespace = 
+  stage = release
+}
+label3_tags = {
+  Animal = Rabbit
+  Eat = Carrot
+  Environment = 
+  Name = release-starfish
+  Namespace = 
+  Stage = release
+}
+```
 
 
 
@@ -248,11 +341,13 @@ Available targets:
 |------|-------------|:----:|:-----:|:-----:|
 | additional_tag_map | Additional tags for appending to each tag map. | map | `<map>` | no |
 | attributes | Additional attributes (e.g. `policy` or `role`) | list | `<list>` | no |
+| context | Default context to use for passing state between label invocations | map | `<map>` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | string | - | yes |
-| namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | - | yes |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
+| name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
+| namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
 
 ## Outputs
@@ -260,6 +355,8 @@ Available targets:
 | Name | Description |
 |------|-------------|
 | attributes | Normalized attributes |
+| context | Context of this module to pass between other modules |
+| delimiter | Delimiter used in label ID |
 | id | Disambiguated ID |
 | name | Normalized name |
 | namespace | Normalized namespace |
@@ -274,7 +371,7 @@ Available targets:
 
 Check out these related projects.
 
-- [terraform-terraform-label](https://github.com/cloudposse/terraform-terraform-label) - Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])
+- [terraform-terraform-label](https://github.com/cloudposse/terraform-terraform-label) - Terraform Module to define a consistent naming convention by (namespace, environment, stage, name, [attributes])
 
 
 
