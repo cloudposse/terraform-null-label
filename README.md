@@ -357,6 +357,7 @@ Available targets:
 | attributes | Normalized attributes |
 | context | Context of this module to pass between other modules |
 | delimiter | Delimiter used in label ID |
+| environment | Normalized environment |
 | id | Disambiguated ID |
 | name | Normalized name |
 | namespace | Normalized namespace |
