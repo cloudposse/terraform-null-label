@@ -30,14 +30,16 @@ badges:
 
 related:
   - name: "terraform-terraform-label"
-    description: "Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])"
+    description: "Terraform Module to define a consistent naming convention by (namespace, environment, stage, name, [attributes])"
     url: "https://github.com/cloudposse/terraform-terraform-label"
 
 # Short description of this project
 description: |-
   Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
-  A label follows the following convention: `{namespace}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+  A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+  The label items are all optional. So if you perfer the term `stage` to `environment` you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
+  If attributes are excluded but `stage` and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`
 
   It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type.
   For example, if you have 10 instances, there should be 10 different labels.
@@ -239,6 +241,98 @@ usage: |-
     tags                                  = ["${module.label.tags_as_list_of_maps}"]
   }
   ```
+  ### Advanced Example 3 as per the [complete example](./examples/complete)
+  This example shows how you can pass the `context` output of one label module to the next label_module.
+  Allowing you to create one label that has the base set of values, and then creating every extra label
+  as a derivative of that.
+
+  ```hcl
+  module "label1" {
+    source      = "../../"
+    namespace   = "CloudPosse"
+    environment = "UAT"
+    stage       = "build"
+    name        = "Winston Churchroom"
+    attributes  = ["fire", "water", "earth", "air"]
+
+    tags = {
+      "City"        = "Dublin"
+      "Environment" = "Private"
+    }
+  }
+
+  module "label2" {
+    source  = "../../"
+    context = "${module.label1.context}"
+    name    = "Charlie"
+    stage   = "test"
+
+    tags = {
+      "City"        = "London"
+      "Environment" = "Public"
+    }
+  }
+
+  module "label3" {
+    source = "../../"
+    name   = "Starfish"
+    stage  = "release"
+
+    tags = {
+      "Eat"    = "Carrot"
+      "Animal" = "Rabbit"
+    }
+  }
+  ```
+  
+  This creates label outputs like this.
+  ```hcl
+  Outputs:
+  label1 = {
+    attributes = fire-water-earth-air
+    id = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+    name = winstonchurchroom
+    namespace = cloudposse
+    stage = build
+  }
+  label1_tags = {
+    City = Dublin
+    Environment = Private
+    Name = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+    Namespace = cloudposse
+    Stage = build
+  }
+  label2 = {
+    attributes = fire-water-earth-air
+    id = cloudposse-uat-build-charlie-fire-water-earth-air
+    name = charlie
+    namespace = cloudposse
+    stage = build
+  }
+  label2_tags = {
+    City = London
+    Environment = Public
+    Name = cloudposse-uat-build-charlie-fire-water-earth-air
+    Namespace = cloudposse
+    Stage = build
+  }
+  label3 = {
+    attributes = 
+    id = release-starfish
+    name = starfish
+    namespace = 
+    stage = release
+  }
+  label3_tags = {
+    Animal = Rabbit
+    Eat = Carrot
+    Environment = 
+    Name = release-starfish
+    Namespace = 
+    Stage = release
+  }
+  ```
+
 
 include:
   - "docs/targets.md"

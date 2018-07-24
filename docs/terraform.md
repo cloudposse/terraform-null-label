@@ -8,9 +8,10 @@
 | context | Default context to use for passing state between label invocations | map | `<map>` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
 
 ## Outputs
@@ -19,6 +20,7 @@
 |------|-------------|
 | attributes | Normalized attributes |
 | context | Context of this module to pass between other modules |
+| delimiter | Delimiter used in label ID |
 | id | Disambiguated ID |
 | name | Normalized name |
 | namespace | Normalized namespace |

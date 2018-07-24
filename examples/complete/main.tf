@@ -1,9 +1,10 @@
 module "label1" {
-  source     = "../../"
-  namespace  = "CloudPosse"
-  stage      = "Production"
-  name       = "Winston Churchroom"
-  attributes = ["fire", "water", "earth", "air"]
+  source      = "../../"
+  namespace   = "CloudPosse"
+  environment = "UAT"
+  stage       = "build"
+  name        = "Winston Churchroom"
+  attributes  = ["fire", "water", "earth", "air"]
 
   tags = {
     "City"        = "Dublin"
@@ -15,6 +16,7 @@ module "label2" {
   source  = "../../"
   context = "${module.label1.context}"
   name    = "Charlie"
+  stage   = "test"
 
   tags = {
     "City"        = "London"
@@ -25,6 +27,7 @@ module "label2" {
 module "label3" {
   source = "../../"
   name   = "Starfish"
+  stage  = "release"
 
   tags = {
     "Eat"    = "Carrot"

@@ -3,8 +3,13 @@ variable "namespace" {
   default     = ""
 }
 
+variable "environment" {
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+  default     = ""
+}
+
 variable "stage" {
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
+  description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
   default     = ""
 }
 
