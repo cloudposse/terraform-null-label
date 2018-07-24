@@ -42,7 +42,7 @@ locals {
     attributes  = ["${local.attributes}"]
     tags_keys   = ["${keys(local.tags)}"]
     tags_values = ["${values(local.tags)}"]
-    delimiter   = ["${var.delimiter}"]
+    delimiter   = ["${local.delimiter}"]
   }
 }
 
