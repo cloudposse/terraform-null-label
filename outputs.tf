@@ -18,6 +18,11 @@ output "stage" {
   description = "Normalized stage"
 }
 
+output "environment" {
+  value       = "${local.enabled ? local.environment : ""}"
+  description = "Normalized environment"
+}
+
 output "attributes" {
   value       = "${local.enabled ? local.attributes : ""}"
   description = "Normalized attributes"
