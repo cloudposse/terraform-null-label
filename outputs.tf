@@ -47,3 +47,8 @@ output "delimiter" {
   value       = "${local.delimiter}"
   description = "Delimiter used in label ID"
 }
+
+output "label_order" {
+  description = "The naming order of the id output and Name tag."
+  value       = "${local.label_order}"
+}

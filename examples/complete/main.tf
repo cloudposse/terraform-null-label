@@ -6,6 +6,8 @@ module "label1" {
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
 
+  label_order = ["name", "environment", "stage"]
+
   tags = {
     "City"        = "Dublin"
     "Environment" = "Private"

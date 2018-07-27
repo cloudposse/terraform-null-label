@@ -52,3 +52,9 @@ variable "context" {
   default     = {}
   description = "Default context to use for passing state between label invocations"
 }
+
+variable "label_order" {
+  type        = "list"
+  description = "The naming order of the id output and Name tag."
+  default     = []
+}
