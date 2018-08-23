@@ -2,7 +2,7 @@
 # terraform-null-label example #
 ################################
 module "label" {
-  source    = "../../"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace = "cp"
   stage     = "prod"
   name      = "app"
@@ -72,7 +72,6 @@ output "tags" {
 ################################
 # Provider                     #
 ################################
-
 provider "aws" {
   region  = "eu-west-1"
   version = "~> 1.17"

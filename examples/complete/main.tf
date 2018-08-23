@@ -1,5 +1,5 @@
 module "label1" {
-  source      = "../../"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
