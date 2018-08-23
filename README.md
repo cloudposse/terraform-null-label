@@ -52,7 +52,7 @@ module "eg_prod_bastion_label" {
 }
 ```
 
-This will create an `id` with the value of `eg-prod-bastion-public`.
+This will create an `id` with the value of `eg_prod_bastion_label`.
 
 Now reference the label when creating an instance:
 
