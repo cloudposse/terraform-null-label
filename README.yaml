@@ -370,8 +370,8 @@ usage: |-
     Name = release-starfish
     Namespace =
     Stage = release
-  }  ```
-
+  }
+  ```
 
 include:
   - "docs/targets.md"
