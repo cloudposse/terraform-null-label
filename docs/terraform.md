@@ -24,7 +24,7 @@
 | delimiter | Delimiter used in label ID |
 | environment | Normalized environment |
 | id | Disambiguated ID |
-| label_order | The naming order of the id output and Name tag. |
+| label_order | The naming order of the id output and Name tag |
 | name | Normalized name |
 | namespace | Normalized namespace |
 | stage | Normalized stage |
