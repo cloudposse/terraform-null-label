@@ -2,7 +2,7 @@
 # terraform-null-label example #
 ################################
 module "label" {
-  source    = "../../"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace = "cp"
   stage     = "prod"
   name      = "app"
@@ -60,19 +60,9 @@ resource "aws_autoscaling_group" "default" {
   tags = ["${module.label.tags_as_list_of_maps}"]
 }
 
-# terraform-null-label example used here: Output list of tags applied in each format
-output "tags_as_list_of_maps" {
-  value = ["${module.label.tags_as_list_of_maps}"]
-}
-
-output "tags" {
-  value = ["${module.label.tags}"]
-}
-
 ################################
 # Provider                     #
 ################################
-
 provider "aws" {
   region  = "eu-west-1"
   version = "~> 1.17"

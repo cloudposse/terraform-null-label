@@ -1,5 +1,5 @@
 variable "namespace" {
-  description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
+  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
   default     = ""
 }
 
@@ -32,7 +32,7 @@ variable "delimiter" {
 variable "attributes" {
   type        = "list"
   default     = []
-  description = "Additional attributes (e.g. `policy` or `role`)"
+  description = "Additional attributes (e.g. `1`)"
 }
 
 variable "tags" {
@@ -44,11 +44,17 @@ variable "tags" {
 variable "additional_tag_map" {
   type        = "map"
   default     = {}
-  description = "Additional tags for appending to each tag map."
+  description = "Additional tags for appending to each tag map"
 }
 
 variable "context" {
   type        = "map"
   default     = {}
   description = "Default context to use for passing state between label invocations"
+}
+
+variable "label_order" {
+  type        = "list"
+  description = "The naming order of the id output and Name tag"
+  default     = []
 }

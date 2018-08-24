@@ -1,10 +1,12 @@
 module "label1" {
-  source      = "../../"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
+
+  label_order = ["name", "environment", "stage", "attributes"]
 
   tags = {
     "City"        = "Dublin"
@@ -13,7 +15,7 @@ module "label1" {
 }
 
 module "label2" {
-  source  = "../../"
+  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   context = "${module.label1.context}"
   name    = "Charlie"
   stage   = "test"
@@ -25,7 +27,7 @@ module "label2" {
 }
 
 module "label3" {
-  source = "../../"
+  source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   name   = "Starfish"
   stage  = "release"
 

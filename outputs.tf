@@ -28,6 +28,11 @@ output "attributes" {
   description = "Normalized attributes"
 }
 
+output "delimiter" {
+  value       = "${local.enabled ? local.delimiter : ""}"
+  description = "Delimiter used in label ID"
+}
+
 output "tags" {
   value       = "${local.tags}"
   description = "Normalized Tag map"
@@ -39,11 +44,11 @@ output "tags_as_list_of_maps" {
 }
 
 output "context" {
-  value       = "${local.context}"
+  value       = "${local.output_context}"
   description = "Context of this module to pass between other modules"
 }
 
-output "delimiter" {
-  value       = "${local.delimiter}"
-  description = "Delimiter used in label ID"
+output "label_order" {
+  value       = "${local.label_order_final_list}"
+  description = "The naming order of the id output and Name tag"
 }

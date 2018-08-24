@@ -52,7 +52,8 @@ module "eg_prod_bastion_label" {
 }
 ```
 
-This will create an `id` with the value of `eg-prod-bastion-public`.
+This will create an `id` with the value of `eg-prod-bastion-public` because when generating `id`, the default order is `namespace`, `environment`, `stage`,  `name`, `attributes`
+(you can override it by using the `label_order` variable, see [Advanced Example 3](#advanced-example-3)).
 
 Now reference the label when creating an instance:
 
@@ -228,19 +229,25 @@ resource "aws_autoscaling_group" "default" {
   tags                                  = ["${module.label.tags_as_list_of_maps}"]
 }
 ```
-### Advanced Example 3 as per the [complete example](./examples/complete)
-This example shows how you can pass the `context` output of one label module to the next label_module.
-Allowing you to create one label that has the base set of values, and then creating every extra label
+
+### Advanced Example 3
+
+See [complete example](./examples/complete)
+
+This example shows how you can pass the `context` output of one label module to the next label_module,
+allowing you to create one label that has the base set of values, and then creating every extra label
 as a derivative of that.
 
 ```hcl
 module "label1" {
-  source      = "../../"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
+
+  label_order = ["name", "environment", "stage", "attributes"]
 
   tags = {
     "City"        = "Dublin"
@@ -249,7 +256,7 @@ module "label1" {
 }
 
 module "label2" {
-  source  = "../../"
+  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   context = "${module.label1.context}"
   name    = "Charlie"
   stage   = "test"
@@ -261,7 +268,7 @@ module "label2" {
 }
 
 module "label3" {
-  source = "../../"
+  source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   name   = "Starfish"
   stage  = "release"
 
@@ -272,50 +279,83 @@ module "label3" {
 }
 ```
 
-This creates label outputs like this.
+This creates label outputs like this:
+
 ```hcl
-Outputs:
 label1 = {
   attributes = fire-water-earth-air
-  id = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+  id = winstonchurchroom-uat-build-fire-water-earth-air
   name = winstonchurchroom
   namespace = cloudposse
   stage = build
 }
+label1_context = {
+  attributes = [fire-water-earth-air]
+  delimiter = [-]
+  environment = [uat]
+  label_order = [name environment stage attributes]
+  name = [winstonchurchroom]
+  namespace = [cloudposse]
+  stage = [build]
+  tags_keys = [City Environment Name Namespace Stage]
+  tags_values = [Dublin Private winstonchurchroom-uat-build-fire-water-earth-air cloudposse build]
+}
 label1_tags = {
   City = Dublin
   Environment = Private
-  Name = cloudposse-uat-build-winstonchurchroom-fire-water-earth-air
+  Name = winstonchurchroom-uat-build-fire-water-earth-air
   Namespace = cloudposse
   Stage = build
 }
 label2 = {
   attributes = fire-water-earth-air
-  id = cloudposse-uat-build-charlie-fire-water-earth-air
+  id = charlie-uat-test-fire-water-earth-air
   name = charlie
   namespace = cloudposse
-  stage = build
+  stage = test
+}
+label2_context = {
+  attributes = [fire-water-earth-air]
+  delimiter = [-]
+  environment = [uat]
+  label_order = [name environment stage attributes]
+  name = [charlie]
+  namespace = [cloudposse]
+  stage = [test]
+  tags_keys = [City Environment Name Namespace Stage]
+  tags_values = [London Public charlie-uat-test-fire-water-earth-air cloudposse test]
 }
 label2_tags = {
   City = London
   Environment = Public
-  Name = cloudposse-uat-build-charlie-fire-water-earth-air
+  Name = charlie-uat-test-fire-water-earth-air
   Namespace = cloudposse
-  Stage = build
+  Stage = test
 }
 label3 = {
-  attributes = 
+  attributes =
   id = release-starfish
   name = starfish
-  namespace = 
+  namespace =
   stage = release
+}
+label3_context = {
+  attributes = []
+  delimiter = [-]
+  environment = []
+  label_order = [namespace environment stage name attributes]
+  name = [starfish]
+  namespace = []
+  stage = [release]
+  tags_keys = [Animal Eat Environment Name Namespace Stage]
+  tags_values = [Rabbit Carrot  release-starfish  release]
 }
 label3_tags = {
   Animal = Rabbit
   Eat = Carrot
-  Environment = 
+  Environment =
   Name = release-starfish
-  Namespace = 
+  Namespace =
   Stage = release
 }
 ```
@@ -329,8 +369,9 @@ label3_tags = {
 ```
 Available targets:
 
-  help                                This help screen
+  help                                Help screen
   help/all                            Display help for all targets
+  help/short                          This help short screen
   lint                                Lint terraform code
 
 ```
@@ -339,14 +380,15 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| additional_tag_map | Additional tags for appending to each tag map. | map | `<map>` | no |
-| attributes | Additional attributes (e.g. `policy` or `role`) | list | `<list>` | no |
+| additional_tag_map | Additional tags for appending to each tag map | map | `<map>` | no |
+| attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | context | Default context to use for passing state between label invocations | map | `<map>` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
+| label_order | The naming order of the id output and Name tag | list | `<list>` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `` | no |
+| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
 
@@ -359,6 +401,7 @@ Available targets:
 | delimiter | Delimiter used in label ID |
 | environment | Normalized environment |
 | id | Disambiguated ID |
+| label_order | The naming order of the id output and Name tag |
 | name | Normalized name |
 | namespace | Normalized namespace |
 | stage | Normalized stage |
