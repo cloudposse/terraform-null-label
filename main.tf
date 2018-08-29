@@ -17,41 +17,50 @@ locals {
   # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
   context_local = "${merge(local.context_struct, var.context)}"
 
-  # Provided variables take precedence over the variables from the provided context
-  selected_name = ["${coalescelist(compact(list(var.name)), compact(local.context_local["name"]), list(""))}"]
-  name          = "${lower(replace(local.selected_name[0], "/[^a-zA-Z0-9]/", ""))}"
+  # Provided variables take precedence over the variables from the provided context _if_ they're not the default
+  # if thing == default and if local_context[thing] != ""
+  #   local_context[thing]
+  # else
+  #   thing
 
-  selected_namespace = ["${coalescelist(compact(list(var.namespace)), compact(local.context_local["namespace"]), list(""))}"]
-  namespace          = "${lower(replace(local.selected_namespace[0], "/[^a-zA-Z0-9]/", ""))}"
-
-  selected_environment = ["${coalescelist(compact(list(var.environment)), compact(local.context_local["environment"]), list(""))}"]
-  environment          = "${lower(replace(local.selected_environment[0], "/[^a-zA-Z0-9]/", ""))}"
-
-  selected_stage = ["${coalescelist(compact(list(var.stage)), compact(local.context_local["stage"]), list(""))}"]
-  stage          = "${lower(replace(local.selected_stage[0], "/[^a-zA-Z0-9]/", ""))}"
-
-  selected_delimiter = ["${coalescelist(compact(list(var.delimiter)), compact(local.context_local["delimiter"]), list(""))}"]
-  delimiter          = "${local.selected_delimiter[0]}"
-
+  # Workaround Terraform's inability to figure out a type if it's empty
+  names = "${concat(local.context_local["name"], list(""))}"
+  # Workaround Terraform's inability to handle nested conditionals
+  name_context_or_default = "${length(local.names) > 0? local.names[0] : var.name}"
+  name_or_context         = "${var.name != ""? var.name : local.name_context_or_default}"
+  # Normalise
+  name                           = "${lower(replace(local.name_or_context, "/[^a-zA-Z0-9]/", ""))}"
+  namespaces                     = "${concat(local.context_local["namespace"], list(""))}"
+  namespace_context_or_default   = "${length(local.namespaces[0]) > 0? local.namespaces[0] : var.namespace}"
+  namespace_or_context           = "${var.namespace != ""? var.namespace : local.namespace_context_or_default}"
+  namespace                      = "${lower(replace(local.namespace_or_context, "/[^a-zA-Z0-9]/", ""))}"
+  environments                   = "${concat(local.context_local["environment"], list(""))}"
+  environment_context_or_default = "${length(local.environments[0]) > 0? local.environments[0] : var.environment}"
+  environment_or_context         = "${var.environment != ""? var.environment : local.environment_context_or_default}"
+  environment                    = "${lower(replace(local.environment_or_context, "/[^a-zA-Z0-9]/", ""))}"
+  stages                         = "${concat(local.context_local["stage"], list(""))}"
+  stage_context_or_default       = "${length(local.stages[0]) > 0? local.stages[0] : var.stage}"
+  stage_or_context               = "${var.stage != ""? var.stage : local.stage_context_or_default}"
+  stage                          = "${lower(replace(local.stage_or_context, "/[^a-zA-Z0-9]/", ""))}"
+  delimiters                     = "${concat(local.context_local["delimiter"], list(""))}"
+  delimiter_context_or_default   = "${length(local.delimiters[0]) > 0? local.delimiters[0] : var.delimiter}"
+  delimiter                      = "${var.delimiter != "-"? var.delimiter : local.delimiter_context_or_default}"
+  # Merge attributes
   selected_attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   attributes          = "${lower(join(local.delimiter, local.selected_attributes))}"
-
   generated_tags = {
     "Name"        = "${local.id}"
     "Namespace"   = "${local.namespace}"
     "Environment" = "${local.environment}"
     "Stage"       = "${local.stage}"
   }
-
-  tags                 = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]), local.generated_tags, var.tags)}"
-  tags_count           = "${length(keys(local.tags))}"
-  tags_as_list_of_maps = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
-
+  tags                     = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]), local.generated_tags, var.tags)}"
+  tags_count               = "${length(keys(local.tags))}"
+  tags_as_list_of_maps     = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
   label_order_default_list = "${list("namespace", "environment", "stage", "name", "attributes")}"
   label_order_context_list = "${distinct(compact(local.context_local["label_order"]))}"
   label_order_final_list   = ["${distinct(compact(coalescelist(var.label_order, local.label_order_context_list, local.label_order_default_list)))}"]
   label_order_length       = "${(length(local.label_order_final_list))}"
-
   # Context of this module to pass between other modules
   output_context = {
     name        = ["${local.name}"]
@@ -64,7 +73,6 @@ locals {
     delimiter   = ["${local.delimiter}"]
     label_order = ["${local.label_order_final_list}"]
   }
-
   id_context = {
     name        = "${local.name}"
     namespace   = "${local.namespace}"
@@ -72,7 +80,6 @@ locals {
     stage       = "${local.stage}"
     attributes  = "${local.attributes}"
   }
-
   id = "${lower(join(local.delimiter, compact(list(
     "${local.label_order_length > 0 ? local.id_context[element(local.label_order_final_list, 0)] : ""}",
     "${local.label_order_length > 1 ? local.id_context[element(local.label_order_final_list, 1)] : ""}",
