@@ -259,6 +259,7 @@ usage: |-
     stage       = "build"
     name        = "Winston Churchroom"
     attributes  = ["fire", "water", "earth", "air"]
+    delimiter   = "."
 
     label_order = ["name", "environment", "stage", "attributes"]
 
@@ -269,10 +270,11 @@ usage: |-
   }
 
   module "label2" {
-    source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-    context = "${module.label1.context}"
-    name    = "Charlie"
-    stage   = "test"
+    source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    context   = "${module.label1.context}"
+    name      = "Charlie"
+    stage     = "test"
+    delimiter = "+"
 
     tags = {
       "City"        = "London"
@@ -281,9 +283,10 @@ usage: |-
   }
 
   module "label3" {
-    source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-    name   = "Starfish"
-    stage  = "release"
+    source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    name    = "Starfish"
+    stage   = "release"
+    context = "${module.label1.context}"
 
     tags = {
       "Eat"    = "Carrot"
@@ -296,79 +299,80 @@ usage: |-
 
   ```hcl
   label1 = {
-    attributes = fire-water-earth-air
-    id = winstonchurchroom-uat-build-fire-water-earth-air
+    attributes = [fire water earth air]
+    id = winstonchurchroom.uat.build.fire.water.earth.air
     name = winstonchurchroom
     namespace = cloudposse
     stage = build
   }
   label1_context = {
-    attributes = [fire-water-earth-air]
-    delimiter = [-]
+    attributes = [fire water earth air]
+    delimiter = [.]
     environment = [uat]
     label_order = [name environment stage attributes]
     name = [winstonchurchroom]
     namespace = [cloudposse]
     stage = [build]
     tags_keys = [City Environment Name Namespace Stage]
-    tags_values = [Dublin Private winstonchurchroom-uat-build-fire-water-earth-air cloudposse build]
+    tags_values = [Dublin Private winstonchurchroom.uat.build.fire.water.earth.air cloudposse build]
   }
   label1_tags = {
     City = Dublin
     Environment = Private
-    Name = winstonchurchroom-uat-build-fire-water-earth-air
+    Name = winstonchurchroom.uat.build.fire.water.earth.air
     Namespace = cloudposse
     Stage = build
   }
   label2 = {
-    attributes = fire-water-earth-air
-    id = charlie-uat-test-fire-water-earth-air
+    attributes = [fire water earth air]
+    id = charlie+uat+test+fire+water+earth+air
     name = charlie
     namespace = cloudposse
     stage = test
   }
   label2_context = {
-    attributes = [fire-water-earth-air]
-    delimiter = [-]
+    attributes = [fire water earth air]
+    delimiter = [+]
     environment = [uat]
     label_order = [name environment stage attributes]
     name = [charlie]
     namespace = [cloudposse]
     stage = [test]
     tags_keys = [City Environment Name Namespace Stage]
-    tags_values = [London Public charlie-uat-test-fire-water-earth-air cloudposse test]
+    tags_values = [London Public charlie+uat+test+fire+water+earth+air cloudposse test]
   }
   label2_tags = {
     City = London
     Environment = Public
-    Name = charlie-uat-test-fire-water-earth-air
+    Name = charlie+uat+test+fire+water+earth+air
     Namespace = cloudposse
     Stage = test
   }
   label3 = {
-    attributes =
-    id = release-starfish
+    attributes = [fire water earth air]
+    id = starfish.uat.release.fire.water.earth.air
     name = starfish
-    namespace =
+    namespace = cloudposse
     stage = release
   }
   label3_context = {
-    attributes = []
-    delimiter = [-]
-    environment = []
-    label_order = [namespace environment stage name attributes]
+    attributes = [fire water earth air]
+    delimiter = [.]
+    environment = [uat]
+    label_order = [name environment stage attributes]
     name = [starfish]
-    namespace = []
+    namespace = [cloudposse]
     stage = [release]
-    tags_keys = [Animal Eat Environment Name Namespace Stage]
-    tags_values = [Rabbit Carrot  release-starfish  release]
+    tags_keys = [Animal City Eat Environment Name Namespace Stage]
+    tags_values = [Rabbit Dublin Carrot uat starfish.uat.release.fire.water.earth.air cloudposse release]
   }
   label3_tags = {
     Animal = Rabbit
+    City = Dublin
     Eat = Carrot
-    Environment =
-    Name = release-starfish
-    Namespace =
+    Environment = uat
+    Name = starfish.uat.release.fire.water.earth.air
+    Namespace = cloudposse
     Stage = release
   }
   ```

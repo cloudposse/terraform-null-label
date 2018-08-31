@@ -24,7 +24,7 @@ output "environment" {
 }
 
 output "attributes" {
-  value       = "${local.enabled ? local.attributes : ""}"
+  value       = "${local.attributes}"
   description = "Normalized attributes"
 }
 
