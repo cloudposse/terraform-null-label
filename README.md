@@ -246,7 +246,7 @@ module "label1" {
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
-  delimiter   = "."
+  delimiter   = "-"
 
   label_order = ["name", "environment", "stage", "attributes"]
 
@@ -270,10 +270,11 @@ module "label2" {
 }
 
 module "label3" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-  name    = "Starfish"
-  stage   = "release"
-  context = "${module.label1.context}"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  name      = "Starfish"
+  stage     = "release"
+  context   = "${module.label1.context}"
+  delimiter = "."
 
   tags = {
     "Eat"    = "Carrot"
@@ -287,26 +288,26 @@ This creates label outputs like this:
 ```hcl
 label1 = {
   attributes = [fire water earth air]
-  id = winstonchurchroom.uat.build.fire.water.earth.air
+  id = winstonchurchroom-uat-build-fire-water-earth-air
   name = winstonchurchroom
   namespace = cloudposse
   stage = build
 }
 label1_context = {
   attributes = [fire water earth air]
-  delimiter = [.]
+  delimiter = [-]
   environment = [uat]
   label_order = [name environment stage attributes]
   name = [winstonchurchroom]
   namespace = [cloudposse]
   stage = [build]
   tags_keys = [City Environment Name Namespace Stage]
-  tags_values = [Dublin Private winstonchurchroom.uat.build.fire.water.earth.air cloudposse build]
+  tags_values = [Dublin Private winstonchurchroom-uat-build-fire-water-earth-air cloudposse build]
 }
 label1_tags = {
   City = Dublin
   Environment = Private
-  Name = winstonchurchroom.uat.build.fire.water.earth.air
+  Name = winstonchurchroom-uat-build-fire-water-earth-air
   Namespace = cloudposse
   Stage = build
 }

@@ -5,7 +5,7 @@ module "label1" {
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
-  delimiter   = "."
+  delimiter   = "-"
 
   label_order = ["name", "environment", "stage", "attributes"]
 
@@ -29,10 +29,11 @@ module "label2" {
 }
 
 module "label3" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-  name    = "Starfish"
-  stage   = "release"
-  context = "${module.label1.context}"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  name      = "Starfish"
+  stage     = "release"
+  context   = "${module.label1.context}"
+  delimiter = "."
 
   tags = {
     "Eat"    = "Carrot"
