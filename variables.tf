@@ -1,32 +1,37 @@
 variable "namespace" {
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
+  type        = "string"
   default     = ""
+  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
 }
 
 variable "environment" {
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+  type        = "string"
   default     = ""
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
 }
 
 variable "stage" {
-  description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
+  type        = "string"
   default     = ""
+  description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
 }
 
 variable "name" {
-  description = "Solution name, e.g. 'app' or 'jenkins'"
+  type        = "string"
   default     = ""
+  description = "Solution name, e.g. 'app' or 'jenkins'"
 }
 
 variable "enabled" {
-  description = "Set to false to prevent the module from creating any resources"
+  type        = "string"
   default     = "true"
+  description = "Set to false to prevent the module from creating any resources"
 }
 
 variable "delimiter" {
   type        = "string"
   default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
+  description = "Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
 }
 
 variable "attributes" {
@@ -55,6 +60,6 @@ variable "context" {
 
 variable "label_order" {
   type        = "list"
-  description = "The naming order of the id output and Name tag"
   default     = []
+  description = "The naming order of the id output and Name tag"
 }

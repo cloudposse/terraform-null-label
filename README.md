@@ -246,6 +246,7 @@ module "label1" {
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
+  delimiter   = "-"
 
   label_order = ["name", "environment", "stage", "attributes"]
 
@@ -256,10 +257,11 @@ module "label1" {
 }
 
 module "label2" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-  context = "${module.label1.context}"
-  name    = "Charlie"
-  stage   = "test"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  context   = "${module.label1.context}"
+  name      = "Charlie"
+  stage     = "test"
+  delimiter = "+"
 
   tags = {
     "City"        = "London"
@@ -268,9 +270,11 @@ module "label2" {
 }
 
 module "label3" {
-  source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-  name   = "Starfish"
-  stage  = "release"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  name      = "Starfish"
+  stage     = "release"
+  context   = "${module.label1.context}"
+  delimiter = "."
 
   tags = {
     "Eat"    = "Carrot"
@@ -283,14 +287,14 @@ This creates label outputs like this:
 
 ```hcl
 label1 = {
-  attributes = fire-water-earth-air
+  attributes = [fire water earth air]
   id = winstonchurchroom-uat-build-fire-water-earth-air
   name = winstonchurchroom
   namespace = cloudposse
   stage = build
 }
 label1_context = {
-  attributes = [fire-water-earth-air]
+  attributes = [fire water earth air]
   delimiter = [-]
   environment = [uat]
   label_order = [name environment stage attributes]
@@ -308,54 +312,55 @@ label1_tags = {
   Stage = build
 }
 label2 = {
-  attributes = fire-water-earth-air
-  id = charlie-uat-test-fire-water-earth-air
+  attributes = [fire water earth air]
+  id = charlie+uat+test+fire+water+earth+air
   name = charlie
   namespace = cloudposse
   stage = test
 }
 label2_context = {
-  attributes = [fire-water-earth-air]
-  delimiter = [-]
+  attributes = [fire water earth air]
+  delimiter = [+]
   environment = [uat]
   label_order = [name environment stage attributes]
   name = [charlie]
   namespace = [cloudposse]
   stage = [test]
   tags_keys = [City Environment Name Namespace Stage]
-  tags_values = [London Public charlie-uat-test-fire-water-earth-air cloudposse test]
+  tags_values = [London Public charlie+uat+test+fire+water+earth+air cloudposse test]
 }
 label2_tags = {
   City = London
   Environment = Public
-  Name = charlie-uat-test-fire-water-earth-air
+  Name = charlie+uat+test+fire+water+earth+air
   Namespace = cloudposse
   Stage = test
 }
 label3 = {
-  attributes =
-  id = release-starfish
+  attributes = [fire water earth air]
+  id = starfish.uat.release.fire.water.earth.air
   name = starfish
-  namespace =
+  namespace = cloudposse
   stage = release
 }
 label3_context = {
-  attributes = []
-  delimiter = [-]
-  environment = []
-  label_order = [namespace environment stage name attributes]
+  attributes = [fire water earth air]
+  delimiter = [.]
+  environment = [uat]
+  label_order = [name environment stage attributes]
   name = [starfish]
-  namespace = []
+  namespace = [cloudposse]
   stage = [release]
-  tags_keys = [Animal Eat Environment Name Namespace Stage]
-  tags_values = [Rabbit Carrot  release-starfish  release]
+  tags_keys = [Animal City Eat Environment Name Namespace Stage]
+  tags_values = [Rabbit Dublin Carrot uat starfish.uat.release.fire.water.earth.air cloudposse release]
 }
 label3_tags = {
   Animal = Rabbit
+  City = Dublin
   Eat = Carrot
-  Environment =
-  Name = release-starfish
-  Namespace =
+  Environment = uat
+  Name = starfish.uat.release.fire.water.earth.air
+  Namespace = cloudposse
   Stage = release
 }
 ```
@@ -383,12 +388,12 @@ Available targets:
 | additional_tag_map | Additional tags for appending to each tag map | map | `<map>` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | context | Default context to use for passing state between label invocations | map | `<map>` | no |
-| delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
+| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes` | string | `-` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | label_order | The naming order of the id output and Name tag | list | `<list>` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
+| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | string | `` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
 
