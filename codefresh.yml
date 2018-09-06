@@ -12,7 +12,7 @@ steps:
   terraform_lint_1:
     title: Test 1 - terraform lint
     registry: cfcr
-    image: cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
+    image: testing.cloudposse.co:tests
     working_directory: examples/complete
     commands:
     - ls
