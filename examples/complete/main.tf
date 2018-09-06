@@ -5,7 +5,7 @@ module "label1" {
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
-  delimiter   = "-"
+  delimiter     = "-"
 
   label_order = ["name", "environment", "stage", "attributes"]
 
