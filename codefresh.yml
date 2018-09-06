@@ -14,6 +14,7 @@ steps:
     commands:
     - cp -r /conf/tests/terraform/ /codefresh/volume/terraform-null-label/examples/complete/
     - cd /codefresh/volume/terraform-null-label/examples/complete
+    - ls
     - bats --tap 01.init.bats
     - bats --tap 00.get-modules.bats
     - bats --tap 00.get-plugins.bats
