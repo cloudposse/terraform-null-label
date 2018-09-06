@@ -14,4 +14,7 @@ steps:
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
     working_directory: /codefresh/volume/
     commands:
+    - cd /codefresh/volume/terraform-null-label
+    - ls
+    - cd /conf
     - ls
