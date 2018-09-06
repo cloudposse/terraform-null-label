@@ -12,9 +12,9 @@ steps:
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
     working_directory: /
     commands:
-    - cd /codefresh/volume/terraform-null-label/examples/complete
-    - bats --tap /conf/tests/terraform/00.lint.bats
-    - bats --tap /conf/tests/terraform/01.validate.bats
-    - bats --tap /conf/tests/terraform/02.plan.bats
-    #- bats --tap /conf/tests/terraform/03.apply.bats
-    # Add custom tests here, e.g. - bats --tap check_outputs.bats
+    - cd /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
+    - bats /conf/tests/terraform/00.lint.bats
+    - bats /conf/tests/terraform/01.validate.bats
+    - bats /conf/tests/terraform/02.plan.bats
+    #- bats /conf/tests/terraform/03.apply.bats
+    # Add custom tests here, e.g. - bats check_outputs.bats
