@@ -12,6 +12,6 @@ steps:
   terraform_lint_1:
     title: Test 1 - terraform lint
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
-#    working_directory: examples/complete
+    working_directory: /
     commands:
     - ls
