@@ -10,8 +10,9 @@ steps:
   terraform_lint_1:
     title: Test 1 - terraform lint "examples/complete"
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
-    working_directory: examples/complete
+    working_directory: /
     commands:
+    - cd /codefresh/volume/terraform-null-label/examples/complete
     - bats --tap /conf/tests/01.init.bats
     - bats --tap /conf/tests/00.get-modules.bats
     - bats --tap /conf/tests/00.get-plugins.bats
