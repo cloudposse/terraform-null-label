@@ -9,7 +9,7 @@ module "label1" {
 
   label_order = ["name", "environment", "stage", "attributes"]
 
-  tags = {
+  tags    = {
     "City"        = "Dublin"
     "Environment" = "Private"
   }

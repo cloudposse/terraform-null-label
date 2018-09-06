@@ -13,6 +13,7 @@ steps:
     working_directory: /
     commands:
     - cd /codefresh/volume/terraform-null-label/examples/complete
+    - ls
     - bats --tap /conf/tests/terraform/01.init.bats
     - bats --tap /conf/tests/terraform/00.get-modules.bats
     - bats --tap /conf/tests/terraform/00.get-plugins.bats
