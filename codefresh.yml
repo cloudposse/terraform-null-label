@@ -5,16 +5,14 @@ steps:
     title: Init variables
     image: alpine
     commands:
-    - cf_export BUILD_HARNESS_VERSION=0.10.2
     - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
-    - cf_export GIT_BRANCH=${{CF_BRANCH}}
 
   terraform_lint_1:
-    title: Test 1 - terraform lint
+    title: Test 1 - terraform lint "examples/complete"
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
-    working_directory: /codefresh/volume/
+    working_directory: examples/complete
     commands:
-    - cd /codefresh/volume/terraform-null-label
-    - ls
-    - cd /conf
-    - ls
+    - bats --tap /conf/tests/01.init.bats
+    - bats --tap /conf/tests/00.get-modules.bats
+    - bats --tap /conf/tests/00.get-plugins.bats
+    - bats --tap /conf/tests/00.lint.bats
