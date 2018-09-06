@@ -48,7 +48,11 @@ module "eg_prod_bastion_label" {
   name       = "bastion"
   attributes = ["public"]
   delimiter  = "-"
-  tags       = "${map("BusinessUnit", "XYZ", "Snapshot", "true")}"
+
+  tags = {
+    "BusinessUnit" = "XYZ",
+    "Snapshot"     = "true"
+  }
 }
 ```
 
@@ -93,7 +97,11 @@ module "eg_prod_bastion_abc_label" {
   name       = "bastion"
   attributes = ["abc"]
   delimiter  = "-"
-  tags       = "${map("BusinessUnit", "ABC")}"
+
+  tags = {
+    "BusinessUnit" = "XYZ",
+    "Snapshot"     = "true"
+  }
 }
 
 resource "aws_security_group" "eg_prod_bastion_abc" {
@@ -120,7 +128,11 @@ module "eg_prod_bastion_xyz_label" {
   name       = "bastion"
   attributes = ["xyz"]
   delimiter  = "-"
-  tags       = "${map("BusinessUnit", "XYZ")}"
+
+  tags = {
+    "BusinessUnit" = "XYZ",
+    "Snapshot"     = "true"
+  }
 }
 
 resource "aws_security_group" "eg_prod_bastion_xyz" {
