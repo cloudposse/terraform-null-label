@@ -1,0 +1,19 @@
+version: '1.0'
+
+steps:
+  init_variables:
+    title: Init variables
+    image: alpine
+    commands:
+    - cf_export BUILD_HARNESS_VERSION=0.10.2
+    - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
+    - cf_export GIT_BRANCH=${{CF_BRANCH}}
+
+  terraform_lint_1:
+    title: Test: terraform lint
+    registry: cfcr
+    image: cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
+    working_directory: ${{CF_VOLUME_PATH}}
+    commands:
+    - cd examples/complete
+    - ls
