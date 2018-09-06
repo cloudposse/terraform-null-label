@@ -10,7 +10,7 @@ steps:
     - cf_export GIT_BRANCH=${{CF_BRANCH}}
 
   terraform_lint_1:
-    title: Test: terraform lint
+    title: Test 1 - terraform lint
     registry: cfcr
     image: cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
     working_directory: ${{CF_VOLUME_PATH}}
