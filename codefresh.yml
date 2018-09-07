@@ -1,11 +1,11 @@
 version: '1.0'
 
 steps:
-  init_variables:
-    title: Init variables
-    image: alpine
-    commands:
-    - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
+#  init_variables:
+#    title: Init variables
+#    image: alpine
+#    commands:
+#    - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
 
   terraform_test_examples_complete:
     title: Test "examples/complete"
