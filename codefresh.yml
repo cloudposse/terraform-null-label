@@ -7,6 +7,7 @@ steps:
 #    commands:
 #    - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
 
+
   terraform_test_examples_complete:
     title: Test "examples/complete"
     image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
