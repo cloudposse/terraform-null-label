@@ -44,13 +44,11 @@ locals {
   delimiter                      = "${var.delimiter != "-" ? var.delimiter : local.delimiter_context_or_default}"
   # Merge attributes
   attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
-  # Generate tags
-  generated_tags = {
-    "Name"        = "${local.id}"
-    "Namespace"   = "${local.namespace}"
-    "Environment" = "${local.environment}"
-    "Stage"       = "${local.stage}"
-  }
+  # Generate tags (don't include tags with empty values)
+  generated_tags = "${zipmap(
+    compact(list("Name", local.namespace != "" ? "Namespace" : "", local.environment != "" ? "Environment" : "", local.stage != "" ? "Stage" : "")),
+    compact(list(local.id, local.namespace, local.environment, local.stage))
+    )}"
   tags                     = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]), local.generated_tags, var.tags)}"
   tags_as_list_of_maps     = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
   label_order_default_list = "${list("namespace", "environment", "stage", "name", "attributes")}"
