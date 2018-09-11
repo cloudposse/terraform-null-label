@@ -20,7 +20,7 @@ github_repo: cloudposse/terraform-null-label
 badges:
   - name: "Build Status"
     image: "https://travis-ci.org/cloudposse/terraform-null-label.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-null-label-cloudtrail"
+    url: "https://travis-ci.org/cloudposse/terraform-null-label"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-null-label.svg"
     url: "https://github.com/cloudposse/terraform-null-label/releases/latest"

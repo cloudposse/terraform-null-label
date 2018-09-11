@@ -2,7 +2,7 @@
 
 [![Cloud Posse](https://cloudposse.com/logo-300x69.svg)](https://cloudposse.com)
 
-# terraform-null-label [![Build Status](https://travis-ci.org/cloudposse/terraform-null-label.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-null-label-cloudtrail) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-null-label [![Build Status](https://travis-ci.org/cloudposse/terraform-null-label.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-null-label) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
@@ -401,9 +401,9 @@ Available targets:
 
 | Name | Description |
 |------|-------------|
-| attributes | Normalized attributes |
-| context | Context of this module to pass between other modules |
-| delimiter | Delimiter used in label ID |
+| attributes | List of attributes |
+| context | Context of this module to pass to other label modules |
+| delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | environment | Normalized environment |
 | id | Disambiguated ID |
 | label_order | The naming order of the id output and Name tag |

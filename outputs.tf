@@ -25,12 +25,12 @@ output "environment" {
 
 output "attributes" {
   value       = "${local.attributes}"
-  description = "Normalized attributes"
+  description = "List of attributes"
 }
 
 output "delimiter" {
   value       = "${local.enabled ? local.delimiter : ""}"
-  description = "Delimiter used in label ID"
+  description = "Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes`"
 }
 
 output "tags" {
@@ -45,7 +45,7 @@ output "tags_as_list_of_maps" {
 
 output "context" {
   value       = "${local.output_context}"
-  description = "Context of this module to pass between other modules"
+  description = "Context of this module to pass to other label modules"
 }
 
 output "label_order" {

@@ -19,9 +19,9 @@
 
 | Name | Description |
 |------|-------------|
-| attributes | Normalized attributes |
-| context | Context of this module to pass between other modules |
-| delimiter | Delimiter used in label ID |
+| attributes | List of attributes |
+| context | Context of this module to pass to other label modules |
+| delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | environment | Normalized environment |
 | id | Disambiguated ID |
 | label_order | The naming order of the id output and Name tag |
