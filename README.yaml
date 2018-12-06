@@ -7,6 +7,21 @@
 # Name of this project
 name: terraform-null-label
 
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - supported
+  - naming-convention
+  - name
+  - namespace
+  - stage
+
+# Categories of this project
+categories:
+  - terraform-modules/supported
+
 # Logo for this project
 #logo: docs/logo.png
 
