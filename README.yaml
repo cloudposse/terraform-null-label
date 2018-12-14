@@ -12,7 +12,6 @@ tags:
   - aws
   - terraform
   - terraform-modules
-  - supported
   - naming-convention
   - name
   - namespace
