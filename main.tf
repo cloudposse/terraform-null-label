@@ -46,7 +46,7 @@ locals {
   attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
   # Generate tags (don't include tags with empty values)
   generated_tags = "${zipmap(
-    compact(list("Name", local.namespace != "" ? "Namespace" : "", local.environment != "" ? "Environment" : "", local.stage != "" ? "Stage" : "")),
+    compact(list("name", local.namespace != "" ? "namespace" : "", local.environment != "" ? "environment" : "", local.stage != "" ? "stage" : "")),
     compact(list(local.id, local.namespace, local.environment, local.stage))
     )}"
   tags                     = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]), local.generated_tags, var.tags)}"
@@ -86,7 +86,7 @@ data "null_data_source" "tags_as_list_of_maps" {
   count = "${local.enabled ? length(keys(local.tags)) : 0}"
 
   inputs = "${merge(map(
-    "key", "${element(keys(local.tags), count.index)}",
+    "key", "${lower(element(keys(local.tags), count.index))}",
     "value", "${element(values(local.tags), count.index)}"
   ),
   var.additional_tag_map)}"
