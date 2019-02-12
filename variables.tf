@@ -67,5 +67,5 @@ variable "label_order" {
 variable "regex_allowed" {
   type        = "string"
   default     = "^[a-zA-Z0-9!@#$&()\\-`.+,/\"]*$"
-  description  = "By default these special characters are allowed in in name, environment, namespace and stage"
+  description = "By default these special characters are allowed in in name, environment, namespace and stage"
 }
