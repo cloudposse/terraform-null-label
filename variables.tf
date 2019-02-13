@@ -63,3 +63,9 @@ variable "label_order" {
   default     = []
   description = "The naming order of the id output and Name tag"
 }
+
+variable "regex_replace_chars" {
+  type        = "string"
+  default     = "[^a-zA-Z0-9]"
+  description = "By default only letters and digits are allowed in `namespace`, `environment`, `stage` and `name`. All other chars are removed"
+}
