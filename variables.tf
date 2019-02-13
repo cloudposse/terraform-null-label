@@ -64,8 +64,8 @@ variable "label_order" {
   description = "The naming order of the id output and Name tag"
 }
 
-variable "regex_allowed" {
+variable "regex_allowed_chars" {
   type        = "string"
-  default     = "^[a-zA-Z0-9!@#$&()\\-`.+,/\"]*$"
-  description = "By default these special characters are allowed in in name, environment, namespace and stage"
+  default     = "[^a-zA-Z0-9]"
+  description = "By default only these characters are allowed in `namespace`, `environment`, `stage` and `name`"
 }

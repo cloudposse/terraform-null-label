@@ -1,4 +1,3 @@
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -12,6 +11,7 @@
 | label_order | The naming order of the id output and Name tag | list | `<list>` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
 | namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | string | `` | no |
+| regex_allowed_chars | By default only these characters are allowed in `namespace`, `environment`, `stage` and `name` | string | `[^a-zA-Z0-9]` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
 
