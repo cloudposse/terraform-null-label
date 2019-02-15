@@ -66,6 +66,6 @@ variable "label_order" {
 
 variable "regex_replace_chars" {
   type        = "string"
-  default     = "[^a-zA-Z0-9]"
-  description = "By default only letters and digits are allowed in `namespace`, `environment`, `stage` and `name`. All other chars are removed"
+  default     = "/[^a-zA-Z0-9]/"
+  description = "Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only letters and digits are allowed, all other chars are removed"
 }
