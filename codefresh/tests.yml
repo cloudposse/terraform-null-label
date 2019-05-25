@@ -23,25 +23,15 @@ steps:
     git: CF-default
     revision: master
 
-  ls:
-    title: 'List directory'
-    image: alpine:latest
-    stage: Test
-    commands:
-    - 'set -x'
-    - 'ls -al ${{test_harness_clone}}'
-
   test_examples_complete:
     title: Test "examples/complete"
     image: ${{TEST_IMAGE}}
     stage: Test
     working_directory: /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
+    environment:
+    - TESTS=/codefresh/volume/test-harness/tests
     commands:
     - set -ex
-    - bats --tap /conf/tests/terraform/00.lint.bats
-    - bats --tap /conf/tests/terraform/01.validate.bats
-    - bats --tap /conf/tests/terraform/02.plan.bats
-    #- bats --tap /conf/tests/terraform/03.apply.bats
-    # Add custom tests here, e.g. - bats --tap check_outputs.bats
-    #
-    #
+    - bats --tap ${{TESTS}}/terraform/00.lint.bats
+    - bats --tap ${{TESTS}}/terraform/01.validate.bats
+    - bats --tap ${{TESTS}}/terraform/02.plan.bats
