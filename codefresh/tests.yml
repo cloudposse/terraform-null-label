@@ -28,7 +28,8 @@ steps:
     image: alpine:latest
     stage: Test
     commands:
-    - 'ls -al'
+    - 'set -x'
+    - 'ls -al ${{test_harness_clone}}'
 
   test_examples_complete:
     title: Test "examples/complete"
@@ -36,7 +37,7 @@ steps:
     stage: Test
     working_directory: /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
     commands:
-    - set -x
+    - set -ex
     - bats --tap /conf/tests/terraform/00.lint.bats
     - bats --tap /conf/tests/terraform/01.validate.bats
     - bats --tap /conf/tests/terraform/02.plan.bats
