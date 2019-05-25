@@ -33,10 +33,12 @@ steps:
     commands:
     - set -ex
     - apk add --update terraform-docs@cloudposse
-    - bats --tap ${TESTS}/terraform/00.lint.bats
-    - bats --tap ${TESTS}/terraform/01.validate.bats
-    - bats --tap ${TESTS}/terraform/00.output-descriptions.bats
-    - bats --tap ${TESTS}/terraform/00.terraform-docs.bats
+    - |
+      bats --tap \
+        ${TESTS}/terraform/00.lint.bats \
+        ${TESTS}/terraform/01.validate.bats \
+        ${TESTS}/terraform/00.output-descriptions.bats \
+        ${TESTS}/terraform/00.terraform-docs.bats
 
   test_examples_complete:
     title: Test "examples/complete"
@@ -47,6 +49,8 @@ steps:
     - TESTS=/codefresh/volume/test-harness/tests
     commands:
     - set -ex
-    - bats --tap ${TESTS}/terraform/00.lint.bats
-    - bats --tap ${TESTS}/terraform/01.validate.bats
-    - bats --tap ${TESTS}/terraform/02.plan.bats
+    - |
+      bats --tap \
+        ${TESTS}/terraform/00.lint.bats \
+        ${TESTS}/terraform/01.validate.bats \
+        ${TESTS}/terraform/02.plan.bats
