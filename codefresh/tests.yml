@@ -35,6 +35,7 @@ steps:
     - apk add --update terraform-docs@cloudposse
     - |
       bats --pretty \
+        ${TESTS}/terraform/00.installed.bats \
         ${TESTS}/terraform/00.lint.bats \
         ${TESTS}/terraform/00.get-modules.bats \
         ${TESTS}/terraform/00.get-plugins.bats \
@@ -54,6 +55,8 @@ steps:
     - set -ex
     - |
       bats --pretty \
-        ${TESTS}/terraform/00.lint.bats \
-        ${TESTS}/terraform/01.validate.bats \
-        ${TESTS}/terraform/02.plan.bats
+        ${TESTS}/terraform/01.init.bats \
+        ${TESTS}/terraform/02.plan.bats \
+        ${TESTS}/terraform/02.apply.bats \
+        ${TESTS}/terraform/02.idempotent.bats
+
