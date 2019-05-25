@@ -21,7 +21,7 @@ steps:
     description: "Initialize"
     repo: ${{CF_REPO_OWNER}}/test-harness
     git: CF-default
-    revision: master
+    revision: tf-tests
 
   test_module:
     title: Test module
