@@ -23,6 +23,20 @@ steps:
     git: CF-default
     revision: master
 
+  test_module:
+    title: Test module
+    image: ${{TEST_IMAGE}}
+    stage: Test
+    working_directory: /codefresh/volume/${{CF_REPO_NAME}}
+    environment:
+    - TESTS=/codefresh/volume/test-harness/tests
+    commands:
+    - set -ex
+    - bats --tap ${TESTS}/terraform/00.lint.bats
+    - bats --tap ${TESTS}/terraform/01.validate.bats
+    - bats --tap ${TESTS}/terraform/00.output-descriptions.bats
+    - bats --tap ${TESTS}/terraform/00.terraform-docs.bats
+
   test_examples_complete:
     title: Test "examples/complete"
     image: ${{TEST_IMAGE}}
