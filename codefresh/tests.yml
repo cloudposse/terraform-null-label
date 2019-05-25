@@ -1,6 +1,30 @@
 version: '1.0'
 
 steps:
+  main_clone:
+    title: "Clone repository"
+    type: git-clone
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    git: CF-default
+    revision: ${{CF_REVISION}}
+
+  test_harness_clone:
+    title: "Clone test-harness repository"
+    type: git-clone
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/test-harness
+    git: CF-default
+    revision: master
+
+  ls:
+    title: 'List directory'
+    image: alpine:latest
+    commands:
+    - 'ls -al'
+
   test_examples_complete:
     title: Test "examples/complete"
     image: ${{TEST_IMAGE}}
@@ -12,3 +36,5 @@ steps:
     - bats --tap /conf/tests/terraform/02.plan.bats
     #- bats --tap /conf/tests/terraform/03.apply.bats
     # Add custom tests here, e.g. - bats --tap check_outputs.bats
+    #
+    #
