@@ -32,6 +32,7 @@ steps:
     - TESTS=/codefresh/volume/test-harness/tests
     commands:
     - set -ex
+    - apk add --update terraform-docs@cloudposse
     - bats --tap ${TESTS}/terraform/00.lint.bats
     - bats --tap ${TESTS}/terraform/01.validate.bats
     - bats --tap ${TESTS}/terraform/00.output-descriptions.bats
