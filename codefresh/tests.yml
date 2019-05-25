@@ -58,5 +58,5 @@ steps:
         ${TESTS}/terraform/01.init.bats \
         ${TESTS}/terraform/02.plan.bats \
         ${TESTS}/terraform/02.apply.bats \
-        ${TESTS}/terraform/03.itempotent.bats
+        ${TESTS}/terraform/03.idempotent.bats
 
