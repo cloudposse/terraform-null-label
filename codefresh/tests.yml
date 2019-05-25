@@ -32,6 +32,6 @@ steps:
     - TESTS=/codefresh/volume/test-harness/tests
     commands:
     - set -ex
-    - bats --tap ${{TESTS}}/terraform/00.lint.bats
-    - bats --tap ${{TESTS}}/terraform/01.validate.bats
-    - bats --tap ${{TESTS}}/terraform/02.plan.bats
+    - bats --tap ${TESTS}/terraform/00.lint.bats
+    - bats --tap ${TESTS}/terraform/01.validate.bats
+    - bats --tap ${TESTS}/terraform/02.plan.bats
