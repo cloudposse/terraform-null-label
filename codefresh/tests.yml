@@ -1,18 +1,12 @@
 version: '1.0'
 
 steps:
-#  init_variables:
-#    title: Init variables
-#    image: alpine
-#    commands:
-#    - cf_export TESTING_CLOUDPOSSE_CO_VERSION=tests
-
-  terraform_test_examples_complete:
+  test_examples_complete:
     title: Test "examples/complete"
-    image: r.cfcr.io/cloudposse/testing.cloudposse.co:${{TESTING_CLOUDPOSSE_CO_VERSION}}
-    working_directory: /
+    image: ${{TEST_IMAGE}}
+    working_directory: /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
     commands:
-    - cd /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
+    - set -x
     - bats --tap /conf/tests/terraform/00.lint.bats
     - bats --tap /conf/tests/terraform/01.validate.bats
     - bats --tap /conf/tests/terraform/02.plan.bats
