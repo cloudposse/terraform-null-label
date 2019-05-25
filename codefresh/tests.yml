@@ -34,7 +34,7 @@ steps:
     - set -ex
     - apk add --update terraform-docs@cloudposse
     - |
-      bats --pretty --tap \
+      bats --pretty \
         ${TESTS}/terraform/00.lint.bats \
         ${TESTS}/terraform/00.get-modules.bats \
         ${TESTS}/terraform/00.get-plugins.bats \
@@ -53,7 +53,7 @@ steps:
     commands:
     - set -ex
     - |
-      bats --pretty --tap \
+      bats --pretty \
         ${TESTS}/terraform/00.lint.bats \
         ${TESTS}/terraform/01.validate.bats \
         ${TESTS}/terraform/02.plan.bats
