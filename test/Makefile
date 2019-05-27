@@ -1,28 +1,38 @@
 TEST_HARNESS ?= https://github.com/cloudposse/test-harness.git
 TEST_HARNESS_BRANCH ?= tf-tests
-TEST_HARNESS_PATH = $(realpath .test-harness/tests/terraform)
+TEST_HARNESS_PATH = $(realpath .test-harness)
 
-default: init all
- 
+# Define a macro to run the tests
+define RUN_TESTS 
+@echo "Running tests in $(1)"; cd $(1) && bats --pretty $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/test/terraform/,$(TESTS)))
+endef
+
+default: all
+
+# Provision the test-harnesss
 .test-harness:
 	[ -d $@ ] || git clone --depth=1 -b $(TEST_HARNESS_BRANCH) $(TEST_HARNESS) $@
 
+# Initialize the tests
 init: .test-harness
 
+# Clean up the test harness
 clean:
-	rm -rf .test-harness
+	[ "$(TEST_HARNESS_PATH)" == "/" ] || rm -rf $(TEST_HARNESS_PATH)
   
-all: module examples 
+# Run all tests
+all: module examples/complete
 
+# Install all dependencies (OS specific)
 deps: init
 	@[ ! -x /sbin/apk ] || apk add --update terraform-docs@cloudposse
 
-module: export TESTS=00.installed 00.lint 00.get-modules 01.validate 00.terraform-docs 00.input-descriptions 00.output-descriptions
+# Run basic sanity checks against the module itself
+module: export TESTS ?= installed lint get-modules validate terraform-docs input-descriptions output-descriptions
 module: deps
-	@cd .. && \
-	bats --pretty $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/,$(TESTS)))
+	$(call RUN_TESTS, ../)
 
-examples/complete: export TESTS=01.init 02.plan 02.apply
+# Run tests against example
+examples/complete: export TESTS ?= init plan apply
 examples/complete: deps
-	@cd ../$@ && \
-	bats --pretty $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/,$(TESTS)))
+	$(call RUN_TESTS, ../$@)
