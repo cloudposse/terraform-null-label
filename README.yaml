@@ -32,9 +32,9 @@ github_repo: cloudposse/terraform-null-label
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/terraform-null-label.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-null-label"
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/cloudposse%2Fterraform-null-label%2Ftest?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/cloudposse/terraform-null-label/test"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-null-label.svg"
     url: "https://github.com/cloudposse/terraform-null-label/releases/latest"
@@ -75,7 +75,11 @@ usage: |-
     name       = "bastion"
     attributes = ["public"]
     delimiter  = "-"
-    tags       = "${map("BusinessUnit", "XYZ", "Snapshot", "true")}"
+
+    tags = {
+      "BusinessUnit" = "XYZ",
+      "Snapshot"     = "true"
+    }
   }
   ```
 
@@ -120,7 +124,11 @@ usage: |-
     name       = "bastion"
     attributes = ["abc"]
     delimiter  = "-"
-    tags       = "${map("BusinessUnit", "ABC")}"
+
+    tags = {
+      "BusinessUnit" = "XYZ",
+      "Snapshot"     = "true"
+    }
   }
 
   resource "aws_security_group" "eg_prod_bastion_abc" {
@@ -147,7 +155,11 @@ usage: |-
     name       = "bastion"
     attributes = ["xyz"]
     delimiter  = "-"
-    tags       = "${map("BusinessUnit", "XYZ")}"
+
+    tags = {
+      "BusinessUnit" = "XYZ",
+      "Snapshot"     = "true"
+    }
   }
 
   resource "aws_security_group" "eg_prod_bastion_xyz" {

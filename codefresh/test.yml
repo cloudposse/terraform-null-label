@@ -1,0 +1,51 @@
+version: '1.0'
+
+stages:
+- Prepare
+- Test
+
+steps:
+  main_clone:
+    title: "Clone repository"
+    type: git-clone
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    git: CF-default
+    revision: ${{CF_REVISION}}
+
+  clean_init:
+    title: Prepare build-harness and test-harness
+    image: ${{TEST_IMAGE}}
+    stage: Prepare
+    commands:
+    - make init
+    - make -C test/ clean init
+
+  test:
+    type: "parallel"
+    title: "Run tests"
+    description: "Run all tests in parallel"
+    stage: Test
+    steps:
+      test_readme_lint:
+        title: "Test README.md updated"
+        stage: "Test"
+        image: ${{TEST_IMAGE}}
+        description: Test "readme/lint"
+        commands:
+        - make readme/lint
+
+      test_module:
+        title: Test module
+        image: ${{TEST_IMAGE}}
+        stage: Test
+        commands:
+        - make -C test/ module
+
+      test_examples_complete:
+        title: Test "examples/complete"
+        image: ${{TEST_IMAGE}}
+        stage: Test
+        commands:
+        - make -C test/ examples/complete
