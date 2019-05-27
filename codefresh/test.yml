@@ -25,11 +25,11 @@ steps:
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ init module
+        - make -C test/ clean init module
 
       test_examples_complete:
         title: Test "examples/complete"
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ init examples/complete
+        - make -C test/ clean init examples/complete
