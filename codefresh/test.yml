@@ -14,16 +14,18 @@ steps:
     git: CF-default
     revision: ${{CF_REVISION}}
 
-  test_module:
-    title: Test module
-    image: ${{TEST_IMAGE}}
-    stage: Test
-    commands:
-    - make -C test/ module
+  test:
+    type: "parallel"
+    test_module:
+      title: Test module
+      image: ${{TEST_IMAGE}}
+      stage: Test
+      commands:
+      - make -C test/ module
 
-  test_examples_complete:
-    title: Test "examples/complete"
-    image: ${{TEST_IMAGE}}
-    stage: Test
-    commands:
-    - make -C test/ examples/complete
+    test_examples_complete:
+      title: Test "examples/complete"
+      image: ${{TEST_IMAGE}}
+      stage: Test
+      commands:
+      - make -C test/ examples/complete
