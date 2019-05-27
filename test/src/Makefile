@@ -9,6 +9,7 @@ PATH 	:= $(PATH):$(GOBIN)
 export GOPATH
 
 .PHONY: all
+## Default target
 all: test
 
 ## Prepare the GOPATH
