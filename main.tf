@@ -1,6 +1,8 @@
 locals {
   enabled = "${var.enabled == "true" ? true : false }"
 
+asd
+
   # Only maps that contain all the same attribute types can be merged, so the values have been set to list
   context_struct = {
     name                = []

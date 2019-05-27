@@ -1,7 +1,7 @@
 TEST_HARNESS ?= https://github.com/cloudposse/test-harness.git
 TEST_HARNESS_BRANCH ?= tf-tests
 TEST_HARNESS_PATH = $(realpath .test-harness)
-BATS_ARGS ?= 
+BATS_ARGS ?= --tap
 BATS_LOG ?= test.log
 
 # Define a macro to run the tests
