@@ -23,7 +23,7 @@ deps::
 
 .PHONY : init
 ## Initialize tests
-init: | $(BASE) ensure
+init: | $(BASE)
 
 .PHONY : ensure
 ## Install test dependencies
@@ -32,7 +32,7 @@ ensure:
 
 .PHONY : test
 ## Run tests
-test: deps
+test: deps enure
 	cd $(BASE) && go test -v -timeout 30m -run TestExamplesComplete
 
 ## Clean up files
