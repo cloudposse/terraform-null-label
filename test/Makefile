@@ -1,10 +1,13 @@
 TEST_HARNESS ?= https://github.com/cloudposse/test-harness.git
 TEST_HARNESS_BRANCH ?= tf-tests
 TEST_HARNESS_PATH = $(realpath .test-harness)
+BATS_ARGS ?= 
+BATS_LOG ?= test.log
 
 # Define a macro to run the tests
 define RUN_TESTS 
-@echo "Running tests in $(1)"; cd $(1) && bats --pretty $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/test/terraform/,$(TESTS)))
+@echo "Running tests in $(1)"
+@cd $(1) && bats $(BATS_ARGS) $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/test/terraform/,$(TESTS)))
 endef
 
 default: all
