@@ -15,7 +15,7 @@ clean:
 all: module examples 
 
 deps: init
-	@[ ! -x /usr/bin/apk ] || apk add --update terraform-docs@cloudposse
+	@[ ! -x /sbin/apk ] || apk add --update terraform-docs@cloudposse
 
 module: export TESTS=00.installed 00.lint 00.get-modules 01.validate 00.terraform-docs 00.input-descriptions 00.output-descriptions
 module: deps
