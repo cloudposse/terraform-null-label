@@ -21,6 +21,7 @@ steps:
     commands:
     - make init
     - make -C test/ clean init
+    - make -C test/src clean init
 
   test:
     type: "parallel"
@@ -37,15 +38,22 @@ steps:
         - make readme/lint
 
       test_module:
-        title: Test module
+        title: Test module with bats
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
         - make -C test/ module
 
       test_examples_complete:
-        title: Test "examples/complete"
+        title: Test "examples/complete" with bats
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
         - make -C test/ examples/complete
+
+      test_examples_complete_terratest:
+        title: Test "examples/complete" with terratest
+        image: ${{TEST_IMAGE}}
+        stage: Test
+        commands:
+        - make -C test/src
