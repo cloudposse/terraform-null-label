@@ -3,7 +3,7 @@
 
 [![Cloud Posse][logo]](https://cpco.io/homepage)
 
-# terraform-null-label [![Build Status](https://travis-ci.org/cloudposse/terraform-null-label.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-null-label-cloudtrail) [![Codefresh Build Status](https://g.codefresh.io/api/badges/build?repoOwner=cloudposse&repoName=terraform-null-label&branch=master&pipelineName=terraform-null-label&accountName=cloudposse&type=cf-1)](https://g.codefresh.io/pipelines/terraform-null-label/builds) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-null-label [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/cloudposse%2Fterraform-null-label%2Ftest?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/cloudposse/terraform-null-label/test) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
@@ -53,6 +53,11 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 
 ## Usage
+
+
+**IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
+Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-null-label/releases).
+
 
 ### Simple Example
 
