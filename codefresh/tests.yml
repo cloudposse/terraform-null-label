@@ -14,7 +14,7 @@ steps:
     git: CF-default
     revision: ${{CF_REVISION}}
 
- test_module:
+  test_module:
     title: Test module
     image: ${{TEST_IMAGE}}
     stage: Test
