@@ -28,8 +28,8 @@ steps:
     description: "Run all tests in parallel"
     stage: Test
     steps:
-      run_tests:
-        title: "Test README.md update"
+      test_readme_lint:
+        title: "Test README.md updated"
         stage: "Test"
         image: ${{TEST_IMAGE}}
         description: Test "readme/lint"
