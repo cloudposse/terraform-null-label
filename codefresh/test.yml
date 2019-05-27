@@ -14,6 +14,13 @@ steps:
     git: CF-default
     revision: ${{CF_REVISION}}
 
+  clean_init:
+    title: Prepare test-harness
+    image: ${{TEST_IMAGE}}
+    stage: Prepare
+    commands:
+    - make -C test/ clean init
+
   test:
     type: "parallel"
     title: "Run tests"
@@ -25,11 +32,11 @@ steps:
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ clean init module
+        - make -C test/ module
 
       test_examples_complete:
         title: Test "examples/complete"
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ clean init examples/complete
+        - make -C test/ examples/complete
