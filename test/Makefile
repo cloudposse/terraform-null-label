@@ -24,5 +24,5 @@ module: deps
 
 examples/complete: export TESTS=01.init 02.plan 02.apply
 examples/complete: deps
-	@cd ../examples/complete && \
+	@cd ../$@ && \
 	bats --pretty $(addsuffix .bats,$(addprefix $(TEST_HARNESS_PATH)/,$(TESTS)))
