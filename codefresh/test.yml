@@ -16,6 +16,8 @@ steps:
 
   test:
     type: "parallel"
+    title: "Run tests"
+    description: "Run all tests in parallel"
     stage: Test
     steps:
       test_module:
@@ -23,11 +25,11 @@ steps:
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ module
+        - make -C test/ init module
 
       test_examples_complete:
         title: Test "examples/complete"
         image: ${{TEST_IMAGE}}
         stage: Test
         commands:
-        - make -C test/ examples/complete
+        - make -C test/ init examples/complete
