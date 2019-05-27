@@ -32,7 +32,7 @@ ensure:
 
 .PHONY : test
 ## Run tests
-test: deps enure
+test: deps ensure
 	cd $(BASE) && go test -v -timeout 30m -run TestExamplesComplete
 
 ## Clean up files
