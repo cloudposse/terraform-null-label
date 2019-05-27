@@ -15,10 +15,11 @@ steps:
     revision: ${{CF_REVISION}}
 
   clean_init:
-    title: Prepare test-harness
+    title: Prepare build-harness and test-harness
     image: ${{TEST_IMAGE}}
     stage: Prepare
     commands:
+    - make init
     - make -C test/ clean init
 
   test:
@@ -27,6 +28,14 @@ steps:
     description: "Run all tests in parallel"
     stage: Test
     steps:
+      run_tests:
+        title: "Test README.md update"
+        stage: "Test"
+        image: ${{TEST_IMAGE}}
+        description: Test "readme/lint"
+        commands:
+        - make readme/lint
+
       test_module:
         title: Test module
         image: ${{TEST_IMAGE}}
