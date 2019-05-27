@@ -4,13 +4,13 @@ GOBIN    = $(GOPATH)/bin
 BASE     = $(GOPATH)/src/$(PACKAGE)
 PATH 	:= $(PATH):$(GOBIN)
 
--include Makefile.*
-
-export GOPATH
-
 .PHONY: all
 ## Default target
 all: test
+
+-include Makefile.*
+
+export GOPATH
 
 ## Prepare the GOPATH
 $(BASE):
@@ -23,16 +23,16 @@ deps::
 
 .PHONY : init
 ## Initialize tests
-init: deps | $(BASE) 
+init: | $(BASE) deps ensure
 
 .PHONY : ensure
 ## Install test dependencies
-ensure: init
+ensure:
 	cd $(BASE) && dep ensure
 
 .PHONY : test
 ## Run tests
-test: ensure
+test:
 	cd $(BASE) && go test -v -timeout 30m -run TestExamplesComplete
 
 ## Clean up files
