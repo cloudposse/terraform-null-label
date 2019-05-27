@@ -14,49 +14,16 @@ steps:
     git: CF-default
     revision: ${{CF_REVISION}}
 
-  test_harness_clone:
-    title: "Clone test-harness repository"
-    type: git-clone
-    stage: Prepare
-    description: "Initialize"
-    repo: ${{CF_REPO_OWNER}}/test-harness
-    git: CF-default
-    revision: tf-tests
-
-  test_module:
+ test_module:
     title: Test module
     image: ${{TEST_IMAGE}}
     stage: Test
-    working_directory: /codefresh/volume/${{CF_REPO_NAME}}
-    environment:
-    - TESTS=/codefresh/volume/test-harness/tests
     commands:
-    - set -ex
-    - apk add --update terraform-docs@cloudposse
-    - |
-      bats --pretty \
-        ${TESTS}/terraform/00.installed.bats \
-        ${TESTS}/terraform/00.lint.bats \
-        ${TESTS}/terraform/00.get-modules.bats \
-        ${TESTS}/terraform/00.get-plugins.bats \
-        ${TESTS}/terraform/01.validate.bats \
-        ${TESTS}/terraform/00.terraform-docs.bats \
-        ${TESTS}/terraform/00.input-descriptions.bats \
-        ${TESTS}/terraform/00.output-descriptions.bats
+    - make -C test/ module
 
   test_examples_complete:
     title: Test "examples/complete"
     image: ${{TEST_IMAGE}}
     stage: Test
-    working_directory: /codefresh/volume/${{CF_REPO_NAME}}/examples/complete
-    environment:
-    - TESTS=/codefresh/volume/test-harness/tests
     commands:
-    - set -ex
-    - |
-      bats --pretty \
-        ${TESTS}/terraform/01.init.bats \
-        ${TESTS}/terraform/02.plan.bats \
-        ${TESTS}/terraform/02.apply.bats \
-        ${TESTS}/terraform/03.idempotent.bats
-
+    - make -C test/ examples/complete
