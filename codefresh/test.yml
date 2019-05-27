@@ -16,6 +16,7 @@ steps:
 
   test:
     type: "parallel"
+    stage: Test
     steps:
       test_module:
         title: Test module
