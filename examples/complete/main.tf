@@ -1,5 +1,5 @@
 module "label1" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source      = "../../"
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
@@ -16,7 +16,7 @@ module "label1" {
 }
 
 module "label2" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source    = "../../"
   context   = "${module.label1.context}"
   name      = "Charlie"
   stage     = "test"
@@ -29,7 +29,7 @@ module "label2" {
 }
 
 module "label3" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source    = "../../"
   name      = "Starfish"
   stage     = "release"
   context   = "${module.label1.context}"

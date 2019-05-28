@@ -1,3 +1,3 @@
-provider "null_resource" {
+provider "null" {
   version = "~> 2.1"
 }

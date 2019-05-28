@@ -22,6 +22,8 @@ steps:
     - make init
     - make -C test/ clean init
     - make -C test/src clean init
+    - find . -type d -name '.terraform' | xargs rm -rf
+    - find . -type f -name 'terraform.tfstate*' -exec rm -f {} \;
 
   test:
     type: "parallel"
