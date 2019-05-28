@@ -1,0 +1,8 @@
+ifneq (,$(wildcard /sbin/apk))
+.PHONY : deps
+deps::
+	mkdir -p $(GOBIN)
+	apk add --update go
+	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+endif
+
