@@ -1,3 +1,3 @@
-provider "null_resource" {
+provider "nukajlasjkd" {
   version = "~> 2.1"
 }
