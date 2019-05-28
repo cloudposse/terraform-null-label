@@ -12,6 +12,8 @@ endef
 
 default: all
 
+-include Makefile.*
+
 ## Provision the test-harnesss
 .test-harness:
 	[ -d $@ ] || git clone --depth=1 -b $(TEST_HARNESS_BRANCH) $(TEST_HARNESS) $@
