@@ -16,7 +16,7 @@ module "label1" {
 }
 
 module "label2" {
-  source      = "../../"
+  source    = "../../"
   context   = "${module.label1.context}"
   name      = "Charlie"
   stage     = "test"
@@ -29,7 +29,7 @@ module "label2" {
 }
 
 module "label3" {
-  source      = "../../"
+  source    = "../../"
   name      = "Starfish"
   stage     = "release"
   context   = "${module.label1.context}"
