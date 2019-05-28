@@ -12,12 +12,18 @@ endef
 
 default: all
 
+-include Makefile.*
+
 ## Provision the test-harnesss
 .test-harness:
 	[ -d $@ ] || git clone --depth=1 -b $(TEST_HARNESS_BRANCH) $(TEST_HARNESS) $@
 
 ## Initialize the tests
 init: .test-harness
+
+## Install all dependencies (OS specific)
+deps::
+	@exit 0
 
 ## Clean up the test harness
 clean:
@@ -26,16 +32,12 @@ clean:
 ## Run all tests
 all: module examples/complete
 
-## Install all dependencies (OS specific)
-deps: init
-	@[ ! -x /sbin/apk ] || apk add --update terraform-docs@cloudposse
-
 ## Run basic sanity checks against the module itself
-module: export TESTS ?= installed lint get-modules validate terraform-docs input-descriptions output-descriptions
+module: export TESTS ?= installed lint get-modules module-pinning get-plugins provider-pinning validate terraform-docs input-descriptions output-descriptions
 module: deps
 	$(call RUN_TESTS, ../)
 
 ## Run tests against example
-examples/complete: export TESTS ?= init plan apply
+examples/complete: export TESTS ?= installed lint get-modules get-plugins validate init plan apply
 examples/complete: deps
 	$(call RUN_TESTS, ../$@)
