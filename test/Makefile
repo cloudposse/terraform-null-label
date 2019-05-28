@@ -19,16 +19,16 @@ default: all
 ## Initialize the tests
 init: .test-harness
 
+## Install all dependencies (OS specific)
+deps::
+	@exit 0
+
 ## Clean up the test harness
 clean:
 	[ "$(TEST_HARNESS_PATH)" == "/" ] || rm -rf $(TEST_HARNESS_PATH)
   
 ## Run all tests
 all: module examples/complete
-
-## Install all dependencies (OS specific)
-deps: init
-	@[ ! -x /sbin/apk ] || apk add --update terraform-docs@cloudposse
 
 ## Run basic sanity checks against the module itself
 module: export TESTS ?= installed lint get-modules module-pinning get-plugins provider-pinning validate terraform-docs input-descriptions output-descriptions
