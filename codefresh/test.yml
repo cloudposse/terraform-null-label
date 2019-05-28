@@ -21,6 +21,7 @@ steps:
     commands:
     - make init
     - make -C test/ clean init
+    - rm -rf test/src/vendor
 
   test:
     type: "parallel"
