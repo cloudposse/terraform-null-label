@@ -1,5 +1,5 @@
 TEST_HARNESS ?= https://github.com/cloudposse/test-harness.git
-TEST_HARNESS_BRANCH ?= master
+TEST_HARNESS_BRANCH ?= version-pinning
 TEST_HARNESS_PATH = $(realpath .test-harness)
 BATS_ARGS ?= --tap
 BATS_LOG ?= test.log
@@ -31,7 +31,7 @@ deps: init
 	@[ ! -x /sbin/apk ] || apk add --update terraform-docs@cloudposse
 
 ## Run basic sanity checks against the module itself
-module: export TESTS ?= installed lint get-modules validate terraform-docs input-descriptions output-descriptions
+module: export TESTS ?= installed lint get-modules module-pinning get-plugins provider-pinning validate terraform-docs input-descriptions output-descriptions
 module: deps
 	$(call RUN_TESTS, ../)
 
