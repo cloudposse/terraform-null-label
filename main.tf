@@ -12,9 +12,21 @@ locals {
   regex_replace_chars = coalesce(var.regex_replace_chars, var.context.regex_replace_chars)
 
   name                = lower(replace(coalesce(var.name, var.context.name), local.regex_replace_chars, local.defaults.replacement))
-  namespace           = lower(replace(coalesce(var.namespace, var.context.namespace), local.regex_replace_chars, local.defaults.replacement))
-  environment         = lower(replace(coalesce(var.environment, var.context.environment), local.regex_replace_chars, local.defaults.replacement))
-  stage               = lower(replace(coalesce(var.stage, var.context.stage), local.regex_replace_chars, local.defaults.replacement))
+  namespace           = (
+    var.namespace != "" || var.context.namespace != ""
+      ? lower(replace(coalesce(var.namespace, var.context.namespace), local.regex_replace_chars, local.defaults.replacement))
+      : ""
+  )
+  environment         = (
+    var.environment != "" || var.context.environment != ""
+      ? lower(replace(coalesce(var.environment, var.context.environment), local.regex_replace_chars, local.defaults.replacement))
+      : ""
+  )
+  stage               = (
+    var.stage != "" || var.context.stage != ""
+    ? lower(replace(coalesce(var.stage, var.context.stage), local.regex_replace_chars, local.defaults.replacement))
+    : ""
+  )
   delimiter           = coalesce(var.delimiter, var.context.delimiter, local.defaults.delimiter)
   label_order         = length(var.label_order) > 0 ? var.label_order : (length(var.context.label_order) > 0 ? var.context.label_order : local.defaults.label_order)
   additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
