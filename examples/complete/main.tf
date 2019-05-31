@@ -17,7 +17,7 @@ module "label1" {
 
 module "label2" {
   source    = "../../"
-  context   = "${module.label1.context}"
+  context   = module.label1.context
   name      = "Charlie"
   stage     = "test"
   delimiter = "+"
@@ -32,7 +32,7 @@ module "label3" {
   source    = "../../"
   name      = "Starfish"
   stage     = "release"
-  context   = "${module.label1.context}"
+  context   = module.label1.context
   delimiter = "."
 
   tags = {
@@ -40,3 +40,4 @@ module "label3" {
     "Animal" = "Rabbit"
   }
 }
+

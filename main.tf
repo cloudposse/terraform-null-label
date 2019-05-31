@@ -1,98 +1,72 @@
 locals {
-  enabled = "${var.enabled == "true" ? true : false }"
 
-  # Only maps that contain all the same attribute types can be merged, so the values have been set to list
-  context_struct = {
-    name                = []
-    namespace           = []
-    environment         = []
-    stage               = []
-    attributes          = []
-    tags_keys           = []
-    tags_values         = []
-    delimiter           = []
-    label_order         = []
-    regex_replace_chars = []
+  defaults = {
+    label_order = ["namespace", "environment", "stage", "name", "attributes"]
+    delimiter   = "-"
   }
 
-  # Merge the map of empty values, with the variable context, so that context_local always contains all map keys
-  context_local = "${merge(local.context_struct, var.context)}"
+  # Provided values provided by variables superceed values inherited from the context
 
-  # Provided variables take precedence over the variables from the provided context IF they're not the default
-  # if thing == default and if local_context[thing] != ""
-  #   local_context[thing]
-  # else
-  #   thing
+  enabled             = var.enabled
+  name                = coalesce(var.name, var.context.name)
+  namespace           = coalesce(var.namespace, var.context.namespace)
+  environment         = coalesce(var.environment, var.context.environment)
+  stage               = coalesce(var.stage, var.context.stage)
+  regex_replace_chars = coalesce(var.regex_replace_chars, var.context.regex_replace_chars)
+  delimiter           = coalesce(var.delimiter, var.context.delimiter, local.defaults.delimiter)
+  label_order         = length(var.label_order) > 0 ? var.label_order : (length(var.context.label_order) > 0 ? var.context.label_order : local.defaults.label_order)
+  additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
 
-  regex_replace_chars_context            = "${concat(local.context_local["regex_replace_chars"], list(""))}"
-  regex_replace_chars_context_or_default = "${length(local.regex_replace_chars_context[0]) > 0 ? local.regex_replace_chars_context[0] : var.regex_replace_chars}"
-  regex_replace_chars                    = "${var.regex_replace_chars != "" ? var.regex_replace_chars : local.regex_replace_chars_context_or_default}"
-  names                                  = "${concat(local.context_local["name"], list(""))}"
-  name_context_or_default                = "${length(local.names[0]) > 0 ? local.names[0] : var.name}"
-  name_or_context                        = "${var.name != "" ? var.name : local.name_context_or_default}"
-  name                                   = "${lower(replace(local.name_or_context, local.regex_replace_chars, ""))}"
-  namespaces                             = "${concat(local.context_local["namespace"], list(""))}"
-  namespace_context_or_default           = "${length(local.namespaces[0]) > 0 ? local.namespaces[0] : var.namespace}"
-  namespace_or_context                   = "${var.namespace != "" ? var.namespace : local.namespace_context_or_default}"
-  namespace                              = "${lower(replace(local.namespace_or_context, local.regex_replace_chars, ""))}"
-  environments                           = "${concat(local.context_local["environment"], list(""))}"
-  environment_context_or_default         = "${length(local.environments[0]) > 0 ? local.environments[0] : var.environment}"
-  environment_or_context                 = "${var.environment != "" ? var.environment : local.environment_context_or_default}"
-  environment                            = "${lower(replace(local.environment_or_context, local.regex_replace_chars, ""))}"
-  stages                                 = "${concat(local.context_local["stage"], list(""))}"
-  stage_context_or_default               = "${length(local.stages[0]) > 0 ? local.stages[0] : var.stage}"
-  stage_or_context                       = "${var.stage != "" ? var.stage : local.stage_context_or_default}"
-  stage                                  = "${lower(replace(local.stage_or_context, local.regex_replace_chars, ""))}"
-  delimiters                             = "${concat(local.context_local["delimiter"], list(""))}"
-  delimiter_context_or_default           = "${length(local.delimiters[0]) > 0 ? local.delimiters[0] : var.delimiter}"
-  delimiter                              = "${var.delimiter != "-" ? var.delimiter : local.delimiter_context_or_default}"
   # Merge attributes
-  attributes = ["${distinct(compact(concat(var.attributes, local.context_local["attributes"])))}"]
-  # Generate tags (don't include tags with empty values)
-  generated_tags = "${zipmap(
-    compact(list("Name", local.namespace != "" ? "Namespace" : "", local.environment != "" ? "Environment" : "", local.stage != "" ? "Stage" : "")),
-    compact(list(local.id, local.namespace, local.environment, local.stage))
-    )}"
-  tags                     = "${merge(zipmap(local.context_local["tags_keys"], local.context_local["tags_values"]), local.generated_tags, var.tags)}"
-  tags_as_list_of_maps     = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
-  label_order_default_list = "${list("namespace", "environment", "stage", "name", "attributes")}"
-  label_order_context_list = "${distinct(compact(local.context_local["label_order"]))}"
-  label_order_final_list   = ["${distinct(compact(coalescelist(var.label_order, local.label_order_context_list, local.label_order_default_list)))}"]
-  label_order_length       = "${(length(local.label_order_final_list))}"
+  attributes = distinct(
+    compact(concat(var.attributes, var.context.attributes))
+  )
+
+  # FIXME: need to filter out empty tags
+  generated_tags = { for l in keys(local.id_context) : title(l) => local.id_context[l] }
+
+  tags                 = merge(var.context.tags, local.generated_tags, var.tags)
+  tags_as_list_of_maps = data.null_data_source.tags_as_list_of_maps.*.outputs
+
   # Context of this label to pass to other label modules
   output_context = {
-    name                = ["${local.name}"]
-    namespace           = ["${local.namespace}"]
-    environment         = ["${local.environment}"]
-    stage               = ["${local.stage}"]
-    attributes          = ["${local.attributes}"]
-    tags_keys           = ["${keys(local.tags)}"]
-    tags_values         = ["${values(local.tags)}"]
-    delimiter           = ["${local.delimiter}"]
-    label_order         = ["${local.label_order_final_list}"]
-    regex_replace_chars = ["${local.regex_replace_chars}"]
+    enabled             = local.enabled
+    name                = local.name
+    namespace           = local.namespace
+    environment         = local.environment
+    stage               = local.stage
+    attributes          = local.attributes
+    tags                = local.tags
+    delimiter           = local.delimiter
+    label_order         = local.label_order
+    regex_replace_chars = local.regex_replace_chars
+    additional_tag_map  = local.additional_tag_map
+
   }
+
   id_context = {
-    name        = "${local.name}"
-    namespace   = "${local.namespace}"
-    environment = "${local.environment}"
-    stage       = "${local.stage}"
-    attributes  = "${lower(join(local.delimiter, local.attributes))}"
+    name        = local.name
+    namespace   = local.namespace
+    environment = local.environment
+    stage       = local.stage
+    attributes  = lower(join(local.delimiter, local.attributes))
   }
-  id = "${lower(join(local.delimiter, compact(list(
-    "${local.label_order_length > 0 ? local.id_context[element(local.label_order_final_list, 0)] : ""}",
-    "${local.label_order_length > 1 ? local.id_context[element(local.label_order_final_list, 1)] : ""}",
-    "${local.label_order_length > 2 ? local.id_context[element(local.label_order_final_list, 2)] : ""}",
-    "${local.label_order_length > 3 ? local.id_context[element(local.label_order_final_list, 3)] : ""}",
-    "${local.label_order_length > 4 ? local.id_context[element(local.label_order_final_list, 4)] : ""}"))))}"
+
+  labels = [for l in local.label_order : local.id_context[l]]
+
+  id = lower(join(local.delimiter, local.labels))
+
 }
 
 data "null_data_source" "tags_as_list_of_maps" {
-  count = "${local.enabled ? length(keys(local.tags)) : 0}"
+  count = local.enabled ? length(keys(local.tags)) : 0
 
-  inputs = "${merge(map(
-    "key", "${element(keys(local.tags), count.index)}",
-    "value", "${element(values(local.tags), count.index)}"
-  ),
-  var.additional_tag_map)}"
+  inputs = merge(
+    {
+      "key"   = element(keys(local.tags), count.index)
+      "value" = element(values(local.tags), count.index)
+    },
+    var.additional_tag_map,
+  )
 }
+
