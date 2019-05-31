@@ -19,13 +19,17 @@ locals {
   label_order         = length(var.label_order) > 0 ? var.label_order : (length(var.context.label_order) > 0 ? var.context.label_order : local.defaults.label_order)
   additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
 
+  all_attributes      = compact(concat(var.attributes, var.context.attributes))
+
   # Merge attributes
-  attributes = distinct(
-    compact(concat(var.attributes, var.context.attributes))
-  )
+  attributes = length(local.all_attributes) > 0 ? distinct(local.all_attributes) : []
 
   # FIXME: need to filter out empty tags
-  generated_tags = { for l in keys(local.id_context) : title(l) => local.id_context[l] if length(local.id_context[l]) > 0 }
+  generated_tags = {
+    for l in keys(local.id_context) :
+    title(l) => local.id_context[l]
+    if length(local.id_context[l]) > 0
+  }
 
   tags                 = merge(var.context.tags, local.generated_tags, var.tags)
   tags_as_list_of_maps = data.null_data_source.tags_as_list_of_maps.*.outputs
@@ -35,7 +39,11 @@ locals {
     namespace   = local.namespace
     environment = local.environment
     stage       = local.stage
-    attributes  = lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.defaults.replacement))
+    attributes  = (
+      length(local.all_attributes) > 0
+        ? lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.defaults.replacement))
+        : ""
+    )
   }
 
   labels = [for l in local.label_order : local.id_context[l]]
