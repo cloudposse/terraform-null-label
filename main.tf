@@ -4,6 +4,8 @@ locals {
     label_order = ["namespace", "environment", "stage", "name", "attributes"]
     delimiter   = "-"
     replacement = ""
+    # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement`
+    sentinel    = "~~"
   }
 
   # Provided values provided by variables superceed values inherited from the context
@@ -11,10 +13,10 @@ locals {
   enabled             = var.enabled
   regex_replace_chars = coalesce(var.regex_replace_chars, var.context.regex_replace_chars)
 
-  name                = lower(replace(coalesce(var.name, var.context.name), local.regex_replace_chars, local.defaults.replacement))
-  namespace           = lower(replace(coalesce(var.namespace, var.context.namespace), local.regex_replace_chars, local.defaults.replacement))
-  environment         = lower(replace(coalesce(var.environment, var.context.environment), local.regex_replace_chars, local.defaults.replacement))
-  stage               = lower(replace(coalesce(var.stage, var.context.stage), local.regex_replace_chars, local.defaults.replacement))
+  name                = lower(replace(coalesce(var.name, var.context.name, local.defaults.sentinel), local.regex_replace_chars, local.defaults.replacement))
+  namespace           = lower(replace(coalesce(var.namespace, var.context.namespace, local.defaults.sentinel), local.regex_replace_chars, local.defaults.replacement))
+  environment         = lower(replace(coalesce(var.environment, var.context.environment, local.defaults.sentinel), local.regex_replace_chars, local.defaults.replacement))
+  stage               = lower(replace(coalesce(var.stage, var.context.stage, local.defaults.sentinel), local.regex_replace_chars, local.defaults.replacement))
   delimiter           = coalesce(var.delimiter, var.context.delimiter, local.defaults.delimiter)
   label_order         = length(var.label_order) > 0 ? var.label_order : (length(var.context.label_order) > 0 ? var.context.label_order : local.defaults.label_order)
   additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
@@ -38,7 +40,7 @@ locals {
     attributes  = lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.defaults.replacement))
   }
 
-  labels = [for l in local.label_order : local.id_context[l]]
+  labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0 ]
 
   id = lower(join(local.delimiter, local.labels))
 
