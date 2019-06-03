@@ -4,8 +4,8 @@ locals {
     label_order = ["namespace", "environment", "stage", "name", "attributes"]
     delimiter   = "-"
     replacement = ""
-    # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement`
-    sentinel    = "~~"
+    # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
+    sentinel    = "~"
   }
 
   # Provided values provided by variables superceed values inherited from the context

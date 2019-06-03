@@ -24,6 +24,7 @@ steps:
     - make -C test/src clean init
     - find . -type d -name '.terraform' | xargs rm -rf
     - find . -type f -name 'terraform.tfstate*' -exec rm -f {} \;
+    - cf_export PATH=/usr/local/terraform/0.12/bin:${PATH}
 
   test:
     type: "parallel"
