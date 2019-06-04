@@ -4,6 +4,8 @@ GOBIN    = $(GOPATH)/bin
 BASE     = $(GOPATH)/src/$(PACKAGE)
 PATH 	:= $(PATH):$(GOBIN)
 
+export TF_CLI_ARGS_init ?= -get-plugins=true
+
 .PHONY: all
 ## Default target
 all: test
