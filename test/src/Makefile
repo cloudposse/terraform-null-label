@@ -4,6 +4,7 @@ GOBIN    = $(GOPATH)/bin
 BASE     = $(GOPATH)/src/$(PACKAGE)
 PATH 	:= $(PATH):$(GOBIN)
 
+export TF_DATA_DIR ?= $(CURDIR)/.terraform
 export TF_CLI_ARGS_init ?= -get-plugins=true
 
 .PHONY: all
@@ -39,6 +40,6 @@ test: deps ensure
 
 ## Clean up files
 clean:
-	rm -rf .gopath/ vendor/ ../../examples/complete/.terraform
+	rm -rf .gopath/ vendor/ $(TF_DATA_DIR)
 
 
