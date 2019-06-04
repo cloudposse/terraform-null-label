@@ -6,6 +6,7 @@ locals {
     replacement = ""
     # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
     sentinel = "~"
+    attributes = [""]
   }
 
   # Provided values provided by variables superceed values inherited from the context
@@ -22,11 +23,8 @@ locals {
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
 
   # Merge attributes
-  attributes = distinct(
-    compact(concat(var.attributes, var.context.attributes))
-  )
+  attributes = compact(distinct(concat(var.attributes, var.context.attributes, local.defaults.attributes)))
 
-  # FIXME: need to filter out empty tags
   generated_tags = { for l in keys(local.id_context) : title(l) => local.id_context[l] if length(local.id_context[l]) > 0 }
 
   tags                 = merge(var.context.tags, local.generated_tags, var.tags)
