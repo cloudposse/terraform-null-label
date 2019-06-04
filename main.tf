@@ -5,7 +5,7 @@ locals {
     delimiter   = "-"
     replacement = ""
     # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
-    sentinel = "~"
+    sentinel   = "~"
     attributes = [""]
   }
 
