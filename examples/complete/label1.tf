@@ -22,6 +22,7 @@ output "label1" {
     namespace  = module.label1.namespace
     stage      = module.label1.stage
     attributes = module.label1.attributes
+    delimiter  = module.label1.delimiter
   }
 }
 

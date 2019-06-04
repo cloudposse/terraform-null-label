@@ -1,9 +1,10 @@
 module "label2" {
-  source    = "../../"
-  context   = module.label1.context
-  name      = "Charlie"
-  stage     = "test"
-  delimiter = "+"
+  source              = "../../"
+  context             = module.label1.context
+  name                = "Charlie"
+  stage               = "test"
+  delimiter           = "+"
+  regex_replace_chars = "/[^a-zA-Z0-9-+]/"
 
   tags = {
     "City"        = "London"
@@ -18,6 +19,7 @@ output "label2" {
     namespace  = module.label2.namespace
     stage      = module.label2.stage
     attributes = module.label2.attributes
+    delimiter  = module.label2.delimiter
   }
 }
 
