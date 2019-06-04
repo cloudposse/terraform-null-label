@@ -39,6 +39,6 @@ test: deps ensure
 
 ## Clean up files
 clean:
-	rm -rf .gopath/ vendor/
+	rm -rf .gopath/ vendor/ ../../examples/complete/.terraform
 
 
