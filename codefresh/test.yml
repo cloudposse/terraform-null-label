@@ -20,6 +20,7 @@ steps:
     stage: Prepare
     commands:
     - make init
+    - git -C build-harness checkout terraform-docs-hack
     - make -C test/ clean init
     - make -C test/src clean init
     - find . -type d -name '.terraform' | xargs rm -rf
