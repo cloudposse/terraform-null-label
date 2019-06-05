@@ -1,8 +1,6 @@
 ifeq ($(shell uname -s),Linux)
-.PHONY : deps
 ## Install all dependencies for linux
-deps::
+$(GOBIN)/dep:
 	mkdir -p $(GOBIN)
 	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 endif
-
