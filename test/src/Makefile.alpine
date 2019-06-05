@@ -1,6 +1,0 @@
-ifneq (,$(wildcard /sbin/apk))
-## Install all dependencies for alpine
-$(GOEXE):
-	apk add --update go
-endif
-

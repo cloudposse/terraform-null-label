@@ -1,6 +1,0 @@
-ifeq ($(shell uname -s),Linux)
-## Install all dependencies for linux
-$(GOBIN)/dep:
-	mkdir -p $(GOBIN)
-	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-endif
