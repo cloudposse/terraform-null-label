@@ -1,7 +1,6 @@
 ifneq (,$(wildcard /sbin/apk))
-.PHONY : deps
 ## Install all dependencies for alpine
-deps::
+$(GOEXE):
 	apk add --update go
 endif
 

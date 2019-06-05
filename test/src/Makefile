@@ -1,4 +1,5 @@
 PACKAGE  = terraform-null-label
+GOEXE   ?= /usr/bin/go
 GOPATH   = $(CURDIR)/.gopath
 GOBIN    = $(GOPATH)/bin
 BASE     = $(GOPATH)/src/$(PACKAGE)
@@ -16,7 +17,7 @@ all: test
 export GOPATH
 
 ## Prepare the GOPATH
-$(BASE):
+$(BASE): $(GOEXE)
 	@mkdir -p $(dir $@)
 	@ln -sf $(CURDIR) $@
 
