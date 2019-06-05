@@ -19,11 +19,10 @@ steps:
     image: ${{TEST_IMAGE}}
     stage: Prepare
     commands:
-      #    - cf_export PATH=/usr/local/terraform/0.12/bin:${PATH}
     - cf_export PATH="/usr/local/terraform/0.12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     - make init
-    - git -C build-harness checkout terraform-docs-hack
-    - make -C test/ clean init TEST_HARNESS_BRANCH=0.12-support
+    - git -C build-harness checkout master
+    - make -C test/ clean init TEST_HARNESS_BRANCH=master
     - make -C test/src clean init
     - find . -type d -name '.terraform' | xargs rm -rf
     - find . -type f -name 'terraform.tfstate*' -exec rm -f {} \;
