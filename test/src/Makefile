@@ -1,42 +1,50 @@
 PACKAGE  = terraform-null-label
+GOEXE   ?= /usr/bin/go
 GOPATH   = $(CURDIR)/.gopath
 GOBIN    = $(GOPATH)/bin
 BASE     = $(GOPATH)/src/$(PACKAGE)
 PATH 	:= $(PATH):$(GOBIN)
 
+export TF_DATA_DIR ?= $(CURDIR)/.terraform
+export TF_CLI_ARGS_init ?= -get-plugins=true
+export GOPATH
+
 .PHONY: all
 ## Default target
 all: test
 
--include Makefile.*
+ifneq (,$(wildcard /sbin/apk))
+## Install go, if not installed
+$(GOEXE):
+	apk add --update go
+endif
 
-export GOPATH
+ifeq ($(shell uname -s),Linux)
+## Install all `dep`, if not installed
+$(GOBIN)/dep:
+	@mkdir -p $(GOBIN)
+	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+endif
 
 ## Prepare the GOPATH
-$(BASE):
+$(BASE): $(GOEXE)
 	@mkdir -p $(dir $@)
 	@ln -sf $(CURDIR) $@
 
-## install OS-specific dependencies. See Makefile.*
-deps::
-	@exit 0
+## Download vendor dependencies to vendor/
+$(BASE)/vendor: $(BASE) $(GOBIN)/dep
+	cd $(BASE) && dep ensure
 
 .PHONY : init
 ## Initialize tests
-init: | $(BASE)
-
-.PHONY : ensure
-## Install test dependencies
-ensure:
-	cd $(BASE) && dep ensure
+init: $(BASE)/vendor
 
 .PHONY : test
 ## Run tests
-test: deps ensure
+test: init
 	cd $(BASE) && go test -v -timeout 30m -run TestExamplesComplete
 
+.PHONY : clean
 ## Clean up files
 clean:
-	rm -rf .gopath/ vendor/
-
-
+	rm -rf .gopath/ vendor/ $(TF_DATA_DIR)

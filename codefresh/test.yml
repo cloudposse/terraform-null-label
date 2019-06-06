@@ -19,8 +19,10 @@ steps:
     image: ${{TEST_IMAGE}}
     stage: Prepare
     commands:
+    - cf_export PATH="/usr/local/terraform/0.12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     - make init
-    - make -C test/ clean init
+    - git -C build-harness checkout master
+    - make -C test/ clean init TEST_HARNESS_BRANCH=master
     - make -C test/src clean init
     - find . -type d -name '.terraform' | xargs rm -rf
     - find . -type f -name 'terraform.tfstate*' -exec rm -f {} \;
