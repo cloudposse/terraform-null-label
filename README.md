@@ -20,7 +20,7 @@ All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=terrafo
 
 **NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
 
-Releases of this module from `0.12.0` onward support `HCL2` and only support Terraform 0.12.  Releases prior to this are compatible with Terraform 0.11 and earlier.
+Releases of this module from `0.12.0` onward support `HCL2` and only work with Terraform 0.12 or newer.  Releases prior to this are compatible with earlier versions of terraform like Terraform 0.11.
 
 
 ---
