@@ -24,7 +24,7 @@ output "environment" {
 }
 
 output "attributes" {
-  value       = local.attributes
+  value       = local.enabled ? local.attributes : []
   description = "List of attributes"
 }
 
@@ -34,7 +34,7 @@ output "delimiter" {
 }
 
 output "tags" {
-  value       = local.tags
+  value       = local.enabled ? local.tags : {}
   description = "Normalized Tag map"
 }
 

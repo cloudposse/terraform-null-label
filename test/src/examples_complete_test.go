@@ -46,4 +46,10 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "cloudposse-uat-big-fat-honking-cluster", label4["id"])
+
+	// Run `terraform output` to get the value of an output variable
+	label5 := terraform.OutputMap(t, terraformOptions, "label5")
+
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "", label5["id"])
 }
