@@ -20,6 +20,8 @@ All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=terrafo
 
 **NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
 
+Releases of this module from `0.12.0` onward support `HCL2` and only support Terraform 0.12.  Releases prior to this are compatible with Terraform 0.11 and earlier.
+
 
 ---
 
@@ -85,7 +87,7 @@ Now reference the label when creating an instance:
 ```hcl
 resource "aws_instance" "eg_prod_bastion_public" {
   instance_type = "t1.micro"
-  tags          = "${module.eg_prod_bastion_label.tags}"
+  tags          = module.eg_prod_bastion_label.tags
 }
 ```
 
@@ -93,9 +95,9 @@ Or define a security group:
 
 ```hcl
 resource "aws_security_group" "eg_prod_bastion_public" {
-  vpc_id = "${var.vpc_id}"
-  name   = "${module.eg_prod_bastion_label.id}"
-  tags   = "${module.eg_prod_bastion_label.tags}"
+  vpc_id = var.vpc_id
+  name   = module.eg_prod_bastion_label.id
+  tags   = module.eg_prod_bastion_label.tags
   egress {
     from_port   = 0
     to_port     = 0
@@ -126,8 +128,8 @@ module "eg_prod_bastion_abc_label" {
 }
 
 resource "aws_security_group" "eg_prod_bastion_abc" {
-  name = "${module.eg_prod_bastion_abc_label.id}"
-  tags = "${module.eg_prod_bastion_abc_label.tags}"
+  name = module.eg_prod_bastion_abc_label.id
+  tags = module.eg_prod_bastion_abc_label.tags
   ingress {
     from_port   = 22
     to_port     = 22
@@ -138,8 +140,8 @@ resource "aws_security_group" "eg_prod_bastion_abc" {
 
 resource "aws_instance" "eg_prod_bastion_abc" {
    instance_type          = "t1.micro"
-   tags                   = "${module.eg_prod_bastion_abc_label.tags}"
-   vpc_security_group_ids = ["${aws_security_group.eg_prod_bastion_abc.id}"]
+   tags                   = module.eg_prod_bastion_abc_label.tags
+   vpc_security_group_ids = [aws_security_group.eg_prod_bastion_abc.id]
 }
 
 module "eg_prod_bastion_xyz_label" {
@@ -157,8 +159,8 @@ module "eg_prod_bastion_xyz_label" {
 }
 
 resource "aws_security_group" "eg_prod_bastion_xyz" {
-  name = "${module.eg_prod_bastion_xyz_label.id}"
-  tags = "${module.eg_prod_bastion_xyz_label.tags}"
+  name = module.eg_prod_bastion_xyz_label.id
+  tags = module.eg_prod_bastion_xyz_label.tags
   ingress {
     from_port   = 22
     to_port     = 22
@@ -169,8 +171,8 @@ resource "aws_security_group" "eg_prod_bastion_xyz" {
 
 resource "aws_instance" "eg_prod_bastion_xyz" {
    instance_type          = "t1.micro"
-   tags                   = "${module.eg_prod_bastion_xyz_label.tags}"
-   vpc_security_group_ids = ["${aws_security_group.eg_prod_bastion_xyz.id}"]
+   tags                   = module.eg_prod_bastion_xyz_label.tags
+   vpc_security_group_ids = [aws_security_group.eg_prod_bastion_xyz.id]
 }
 ```
 
@@ -226,11 +228,11 @@ module "label" {
 resource "aws_launch_template" "default" {
   # terraform-null-label example used here: Set template name prefix
   name_prefix                           = "${module.label.id}-"
-  image_id                              = "${data.aws_ami.amazon_linux.id}"
+  image_id                              = data.aws_ami.amazon_linux.id
   instance_type                         = "t2.micro"
   instance_initiated_shutdown_behavior  = "terminate"
 
-  vpc_security_group_ids                = ["${data.aws_security_group.default.id}"]
+  vpc_security_group_ids                = [data.aws_security_group.default.id]
 
   monitoring {
     enabled                             = false
@@ -238,7 +240,7 @@ resource "aws_launch_template" "default" {
   # terraform-null-label example used here: Set tags on volumes
   tag_specifications {
     resource_type                       = "volume"
-    tags                                = "${module.label.tags}"
+    tags                                = module.label.tags
   }
 }
 
@@ -248,18 +250,18 @@ resource "aws_launch_template" "default" {
 resource "aws_autoscaling_group" "default" {
   # terraform-null-label example used here: Set ASG name prefix
   name_prefix                           = "${module.label.id}-"
-  vpc_zone_identifier                   = ["${data.aws_subnet_ids.all.ids}"]
+  vpc_zone_identifier                   = data.aws_subnet_ids.all.ids
   max_size                              = "1"
   min_size                              = "1"
   desired_capacity                      = "1"
 
   launch_template = {
-    id                                  = "${aws_launch_template.default.id}"
+    id                                  = "aws_launch_template.default.id
     version                             = "$$Latest"
   }
 
   # terraform-null-label example used here: Set tags on ASG and EC2 Servers
-  tags                                  = ["${module.label.tags_as_list_of_maps}"]
+  tags                                  = module.label.tags_as_list_of_maps
 }
 ```
 
@@ -291,7 +293,7 @@ module "label1" {
 
 module "label2" {
   source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
-  context   = "${module.label1.context}"
+  context   = module.label1.context
   name      = "Charlie"
   stage     = "test"
   delimiter = "+"
@@ -306,7 +308,7 @@ module "label3" {
   source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
   name      = "Starfish"
   stage     = "release"
-  context   = "${module.label1.context}"
+  context   = module.label1.context
   delimiter = "."
 
   tags = {
@@ -320,82 +322,163 @@ This creates label outputs like this:
 
 ```hcl
 label1 = {
-  attributes = [fire water earth air]
-  id = winstonchurchroom-uat-build-fire-water-earth-air
-  name = winstonchurchroom
-  namespace = cloudposse
-  stage = build
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "-"
+  "id" = "winstonchurchroom-uat-build-fire-water-earth-air"
+  "name" = "winstonchurchroom"
+  "namespace" = "cloudposse"
+  "stage" = "build"
 }
 label1_context = {
-  attributes = [fire water earth air]
-  delimiter = [-]
-  environment = [uat]
-  label_order = [name environment stage attributes]
-  name = [winstonchurchroom]
-  namespace = [cloudposse]
-  stage = [build]
-  tags_keys = [City Environment Name Namespace Stage]
-  tags_values = [Dublin Private winstonchurchroom-uat-build-fire-water-earth-air cloudposse build]
+  "additional_tag_map" = {}
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "-"
+  "enabled" = true
+  "environment" = "uat"
+  "label_order" = [
+    "name",
+    "environment",
+    "stage",
+    "attributes",
+  ]
+  "name" = "winstonchurchroom"
+  "namespace" = "cloudposse"
+  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "stage" = "build"
+  "tags" = {
+    "Attributes" = "fire-water-earth-air"
+    "City" = "Dublin"
+    "Environment" = "Private"
+    "Name" = "winstonchurchroom"
+    "Namespace" = "cloudposse"
+    "Stage" = "build"
+  }
 }
 label1_tags = {
-  City = Dublin
-  Environment = Private
-  Name = winstonchurchroom-uat-build-fire-water-earth-air
-  Namespace = cloudposse
-  Stage = build
+  "Attributes" = "fire-water-earth-air"
+  "City" = "Dublin"
+  "Environment" = "Private"
+  "Name" = "winstonchurchroom"
+  "Namespace" = "cloudposse"
+  "Stage" = "build"
 }
 label2 = {
-  attributes = [fire water earth air]
-  id = charlie+uat+test+fire+water+earth+air
-  name = charlie
-  namespace = cloudposse
-  stage = test
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "+"
+  "id" = "charlie+uat+test+firewaterearthair"
+  "name" = "charlie"
+  "namespace" = "cloudposse"
+  "stage" = "test"
 }
 label2_context = {
-  attributes = [fire water earth air]
-  delimiter = [+]
-  environment = [uat]
-  label_order = [name environment stage attributes]
-  name = [charlie]
-  namespace = [cloudposse]
-  stage = [test]
-  tags_keys = [City Environment Name Namespace Stage]
-  tags_values = [London Public charlie+uat+test+fire+water+earth+air cloudposse test]
+  "additional_tag_map" = {}
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "+"
+  "enabled" = true
+  "environment" = "uat"
+  "label_order" = [
+    "name",
+    "environment",
+    "stage",
+    "attributes",
+  ]
+  "name" = "charlie"
+  "namespace" = "cloudposse"
+  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "stage" = "test"
+  "tags" = {
+    "Attributes" = "firewaterearthair"
+    "City" = "London"
+    "Environment" = "Public"
+    "Name" = "charlie"
+    "Namespace" = "cloudposse"
+    "Stage" = "test"
+  }
 }
 label2_tags = {
-  City = London
-  Environment = Public
-  Name = charlie+uat+test+fire+water+earth+air
-  Namespace = cloudposse
-  Stage = test
+  "Attributes" = "firewaterearthair"
+  "City" = "London"
+  "Environment" = "Public"
+  "Name" = "charlie"
+  "Namespace" = "cloudposse"
+  "Stage" = "test"
 }
 label3 = {
-  attributes = [fire water earth air]
-  id = starfish.uat.release.fire.water.earth.air
-  name = starfish
-  namespace = cloudposse
-  stage = release
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "."
+  "id" = "starfish.uat.release.firewaterearthair"
+  "name" = "starfish"
+  "namespace" = "cloudposse"
+  "stage" = "release"
 }
 label3_context = {
-  attributes = [fire water earth air]
-  delimiter = [.]
-  environment = [uat]
-  label_order = [name environment stage attributes]
-  name = [starfish]
-  namespace = [cloudposse]
-  stage = [release]
-  tags_keys = [Animal City Eat Environment Name Namespace Stage]
-  tags_values = [Rabbit Dublin Carrot uat starfish.uat.release.fire.water.earth.air cloudposse release]
+  "additional_tag_map" = {}
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "."
+  "enabled" = true
+  "environment" = "uat"
+  "label_order" = [
+    "name",
+    "environment",
+    "stage",
+    "attributes",
+  ]
+  "name" = "starfish"
+  "namespace" = "cloudposse"
+  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "stage" = "release"
+  "tags" = {
+    "Animal" = "Rabbit"
+    "Attributes" = "firewaterearthair"
+    "City" = "Dublin"
+    "Eat" = "Carrot"
+    "Environment" = "uat"
+    "Name" = "starfish"
+    "Namespace" = "cloudposse"
+    "Stage" = "release"
+  }
 }
 label3_tags = {
-  Animal = Rabbit
-  City = Dublin
-  Eat = Carrot
-  Environment = uat
-  Name = starfish.uat.release.fire.water.earth.air
-  Namespace = cloudposse
-  Stage = release
+  "Animal" = "Rabbit"
+  "Attributes" = "firewaterearthair"
+  "City" = "Dublin"
+  "Eat" = "Carrot"
+  "Environment" = "uat"
+  "Name" = "starfish"
+  "Namespace" = "cloudposse"
+  "Stage" = "release"
 }
+
 ```
 
 
