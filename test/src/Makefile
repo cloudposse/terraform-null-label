@@ -22,7 +22,7 @@ endif
 ifeq ($(shell uname -s),Linux)
 ## Install all `dep`, if not installed
 $(GOBIN)/dep:
-	mkdir -p $(GOBIN)
+	@mkdir -p $(GOBIN)
 	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 endif
 
