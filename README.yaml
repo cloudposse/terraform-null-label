@@ -33,8 +33,8 @@ github_repo: cloudposse/terraform-null-label
 # Badges to display
 badges:
   - name: "Codefresh Build Status"
-    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/cloudposse%2Fterraform-null-label%2Ftest?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/cloudposse/terraform-null-label/test"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-null-label?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d097280a52a3d4ae8db7221"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-null-label.svg"
     url: "https://github.com/cloudposse/terraform-null-label/releases/latest"
@@ -49,7 +49,7 @@ related:
 
 # Short description of this project
 description: |-
-  Terraform module designed to generate consistent label names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
+  Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
   A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
   The label items are all optional. So if you prefer the term `stage` to `environment` you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
