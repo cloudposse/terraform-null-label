@@ -618,3 +618,37 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [share_googleplus]: https://plus.google.com/share?url=https://github.com/cloudposse/terraform-null-label
   [share_email]: mailto:?subject=terraform-null-label&body=https://github.com/cloudposse/terraform-null-label
   [beacon]: https://ga-beacon.cloudposse.com/UA-76589703-4/cloudposse/terraform-null-label?pixel&cs=github&cm=readme&an=terraform-null-label
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| additional\_tag\_map | Additional tags for appending to each tag map | map | `{}` | no |
+| attributes | Additional attributes (e.g. `1`) | list | `[]` | no |
+| context | Default context to use for passing state between label invocations | map | `{}` | no |
+| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes` | string | `"-"` | no |
+| enabled | Set to false to prevent the module from creating any resources | string | `"true"` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `""` | no |
+| label\_order | The naming order of the id output and Name tag | list | `[]` | no |
+| name | Solution name, e.g. 'app' or 'jenkins' | string | `""` | no |
+| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | string | `""` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `""` | no |
+| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| attributes | List of attributes |
+| context | Context of this module to pass to other label modules |
+| delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
+| environment | Normalized environment |
+| id | Disambiguated ID |
+| label\_order | The naming order of the id output and Name tag |
+| name | Normalized name |
+| namespace | Normalized namespace |
+| stage | Normalized stage |
+| tags | Normalized Tag map |
+| tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |
+
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
