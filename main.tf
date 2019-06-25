@@ -73,8 +73,8 @@ data "null_data_source" "tags_as_list_of_maps" {
 
   inputs = merge(
     {
-      "key"   = element(keys(local.tags), count.index)
-      "value" = element(values(local.tags), count.index)
+      "key"   = keys(local.tags)[count.index]
+      "value" = values(local.tags)[count.index]
     },
     var.additional_tag_map
   )
