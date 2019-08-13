@@ -88,7 +88,7 @@ locals {
 }
 
 data "null_data_source" "tags_as_list_of_maps" {
-  count = "${local.enabled ? length(keys(local.tags)) : 0}"
+  count = "${length(keys(var.additional_tag_map)) > 0 && local.enabled ? length(keys(local.tags)) : 0}"
 
   inputs = "${merge(map(
     "key", "${element(keys(local.tags), count.index)}",
