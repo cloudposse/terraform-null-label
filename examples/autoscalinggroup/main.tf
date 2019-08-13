@@ -2,7 +2,7 @@
 # terraform-null-label example #
 ################################
 module "label" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source    = "../../"
   namespace = "cp"
   stage     = "prod"
   name      = "app"

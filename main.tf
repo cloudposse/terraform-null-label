@@ -1,5 +1,5 @@
 locals {
-  enabled = "${var.enabled == "true" ? true : false }"
+  enabled = "${var.enabled == "true" || var.enabled == true ? true : false }"
 
   # Only maps that contain all the same attribute types can be merged, so the values have been set to list
   context_struct = {
@@ -88,7 +88,7 @@ locals {
 }
 
 data "null_data_source" "tags_as_list_of_maps" {
-  count = "${length(keys(var.additional_tag_map)) > 0 && local.enabled ? length(keys(local.tags)) : 0}"
+  count = "${length(keys(var.additional_tag_map)) > 0 && local.enabled == true ? length(keys(local.tags)) : 0}"
 
   inputs = "${merge(map(
     "key", "${element(keys(local.tags), count.index)}",
