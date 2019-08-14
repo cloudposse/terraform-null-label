@@ -6,6 +6,12 @@ module "label2" {
   delimiter           = "+"
   regex_replace_chars = "/[^a-zA-Z0-9-+]/"
 
+  additional_tag_map = {
+    propagate_at_launch = "true"
+    additional_tag      = "yes"
+  }
+
+
   tags = {
     "City"        = "London"
     "Environment" = "Public"
@@ -27,9 +33,10 @@ output "label2_tags" {
   value = module.label2.tags
 }
 
+output "label2_tags_as_list_of_maps" {
+  value = module.label2.tags_as_list_of_maps
+}
+
 output "label2_context" {
   value = module.label2.context
 }
-
-
-
