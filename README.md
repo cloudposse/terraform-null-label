@@ -496,38 +496,6 @@ Available targets:
   lint                                Lint terraform code
 
 ```
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| additional_tag_map | Additional tags for appending to each tag map | map(string) | `<map>` | no |
-| attributes | Additional attributes (e.g. `1`) | list(string) | `<list>` | no |
-| context | Default context to use for passing state between label invocations | object | `<map>` | no |
-| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes` | string | `-` | no |
-| enabled | Set to false to prevent the module from creating any resources | bool | `true` | no |
-| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
-| label_order | The naming order of the id output and Name tag | list(string) | `<list>` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | string | `` | no |
-| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | string | `` | no |
-| regex_replace_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only hyphens, letters and digits are allowed, all other chars are removed | string | `/[^a-zA-Z0-9-]/` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | string | `` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map(string) | `<map>` | no |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| attributes | List of attributes |
-| context | Context of this module to pass to other label modules |
-| delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
-| environment | Normalized environment |
-| id | Disambiguated ID |
-| label_order | The naming order of the id output and Name tag |
-| name | Normalized name |
-| namespace | Normalized namespace |
-| stage | Normalized stage |
-| tags | Normalized Tag map |
-| tags_as_list_of_maps | Additional tags as a list of maps, which can be used in several AWS resources |
 
 
 
@@ -668,23 +636,23 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 |---|---|---|---|---|---|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: https://github.com/osterman.png?size=150
+  [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
   [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://github.com/aknysh.png?size=150
+  [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: https://github.com/goruha.png?size=150
+  [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
   [s2504s_homepage]: https://github.com/s2504s
-  [s2504s_avatar]: https://github.com/s2504s.png?size=150
+  [s2504s_avatar]: https://img.cloudposse.com/150x150/https://github.com/s2504s.png
   [MichaelPereira_homepage]: https://github.com/MichaelPereira
-  [MichaelPereira_avatar]: https://github.com/MichaelPereira.png?size=150
+  [MichaelPereira_avatar]: https://img.cloudposse.com/150x150/https://github.com/MichaelPereira.png
   [Jamie-BitFlight_homepage]: https://github.com/Jamie-BitFlight
-  [Jamie-BitFlight_avatar]: https://github.com/Jamie-BitFlight.png?size=150
+  [Jamie-BitFlight_avatar]: https://img.cloudposse.com/150x150/https://github.com/Jamie-BitFlight.png
   [SweetOps_homepage]: https://github.com/SweetOps
-  [SweetOps_avatar]: https://github.com/SweetOps.png?size=150
+  [SweetOps_avatar]: https://img.cloudposse.com/150x150/https://github.com/SweetOps.png
   [darend_homepage]: https://github.com/darend
-  [darend_avatar]: https://github.com/darend.png?size=150
+  [darend_avatar]: https://img.cloudposse.com/150x150/https://github.com/darend.png
   [maartenvanderhoef_homepage]: https://github.com/maartenvanderhoef
-  [maartenvanderhoef_avatar]: https://github.com/maartenvanderhoef.png?size=150
+  [maartenvanderhoef_avatar]: https://img.cloudposse.com/150x150/https://github.com/maartenvanderhoef.png
 
 
 
