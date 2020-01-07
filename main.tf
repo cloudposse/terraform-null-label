@@ -25,8 +25,15 @@ locals {
   # Merge attributes
   attributes = compact(distinct(concat(var.attributes, var.context.attributes, local.defaults.attributes)))
 
-  tags                 = merge(var.context.tags, local.generated_tags, var.tags)
-  tags_as_list_of_maps = data.null_data_source.tags_as_list_of_maps.*.outputs
+  tags = merge(var.context.tags, local.generated_tags, var.tags)
+
+  tags_as_list_of_maps = flatten([
+    for key in keys(local.tags) : merge(
+      {
+        key   = key
+        value = local.tags[key]
+    }, var.additional_tag_map)
+  ])
 
   tags_context = {
     # For AWS we need `Name` to be disambiguated sine it has a special meaning
@@ -66,16 +73,4 @@ locals {
     additional_tag_map  = local.additional_tag_map
   }
 
-}
-
-data "null_data_source" "tags_as_list_of_maps" {
-  count = local.enabled ? length(keys(local.tags)) : 0
-
-  inputs = merge(
-    {
-      "key"   = keys(local.tags)[count.index]
-      "value" = values(local.tags)[count.index]
-    },
-    var.additional_tag_map
-  )
 }
