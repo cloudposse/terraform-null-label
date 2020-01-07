@@ -668,23 +668,23 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 |---|---|---|---|---|---|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: https://github.com/osterman.png?size=150
+  [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
   [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://github.com/aknysh.png?size=150
+  [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: https://github.com/goruha.png?size=150
+  [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
   [s2504s_homepage]: https://github.com/s2504s
-  [s2504s_avatar]: https://github.com/s2504s.png?size=150
+  [s2504s_avatar]: https://img.cloudposse.com/150x150/https://github.com/s2504s.png
   [MichaelPereira_homepage]: https://github.com/MichaelPereira
-  [MichaelPereira_avatar]: https://github.com/MichaelPereira.png?size=150
+  [MichaelPereira_avatar]: https://img.cloudposse.com/150x150/https://github.com/MichaelPereira.png
   [Jamie-BitFlight_homepage]: https://github.com/Jamie-BitFlight
-  [Jamie-BitFlight_avatar]: https://github.com/Jamie-BitFlight.png?size=150
+  [Jamie-BitFlight_avatar]: https://img.cloudposse.com/150x150/https://github.com/Jamie-BitFlight.png
   [SweetOps_homepage]: https://github.com/SweetOps
-  [SweetOps_avatar]: https://github.com/SweetOps.png?size=150
+  [SweetOps_avatar]: https://img.cloudposse.com/150x150/https://github.com/SweetOps.png
   [darend_homepage]: https://github.com/darend
-  [darend_avatar]: https://github.com/darend.png?size=150
+  [darend_avatar]: https://img.cloudposse.com/150x150/https://github.com/darend.png
   [maartenvanderhoef_homepage]: https://github.com/maartenvanderhoef
-  [maartenvanderhoef_avatar]: https://github.com/maartenvanderhoef.png?size=150
+  [maartenvanderhoef_avatar]: https://img.cloudposse.com/150x150/https://github.com/maartenvanderhoef.png
 
 
 
