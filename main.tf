@@ -27,16 +27,13 @@ locals {
 
   tags = merge(var.context.tags, local.generated_tags, var.tags)
 
-  tags_as_list_of_maps_unmerged_additional_tag_map = flatten([
-    for key in keys(local.tags) : {
-      key   = key
-      value = local.tags[key]
-  }])
-
-  tags_as_list_of_maps = [
-    for tag_set in local.tags_as_list_of_maps_unmerged_additional_tag_map :
-    merge(tag_set, var.additional_tag_map)
-  ]
+  tags_as_list_of_maps = flatten([
+    for key in keys(local.tags) : merge(
+      {
+        key   = key
+        value = local.tags[key]
+    }, var.additional_tag_map)
+  ])
 
   tags_context = {
     # For AWS we need `Name` to be disambiguated since it has a special meaning
