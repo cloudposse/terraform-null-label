@@ -9,7 +9,7 @@ locals {
     attributes = [""]
   }
 
-  # The values provided by variables superceed the values inherited from the context
+  # The values provided by variables supersede the values inherited from the context
 
   enabled             = var.enabled
   regex_replace_chars = coalesce(var.regex_replace_chars, var.context.regex_replace_chars)
