@@ -1,4 +1,4 @@
-# terraform-null-label [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-null-label?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d097280a52a3d4ae8db7221) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-null-label [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 [![README Header][readme_header_img]][readme_header_link]
 
@@ -522,6 +522,7 @@ Available targets:
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.0, < 0.14.0 |
+
 
 ## Providers
 

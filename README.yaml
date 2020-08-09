@@ -1,53 +1,28 @@
----
-#
-# This is the canonical configuration for the `README.md`
-# Run `make readme` to rebuild the `README.md`
-#
-
-# Name of this project
 name: terraform-null-label
-
-# Tags of this project
 tags:
-  - aws
-  - terraform
-  - terraform-modules
-  - naming-convention
-  - name
-  - namespace
-  - stage
-
-# Categories of this project
+- aws
+- terraform
+- terraform-modules
+- naming-convention
+- name
+- namespace
+- stage
 categories:
-  - terraform-modules/supported
-
-# Logo for this project
-#logo: docs/logo.png
-
-# License of this project
-license: "APACHE2"
-
-# Canonical GitHub repo
+- terraform-modules/supported
+license: APACHE2
 github_repo: cloudposse/terraform-null-label
-
-# Badges to display
 badges:
-  - name: "Codefresh Build Status"
-    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-null-label?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d097280a52a3d4ae8db7221"
-  - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/terraform-null-label.svg"
-    url: "https://github.com/cloudposse/terraform-null-label/releases/latest"
-  - name: "Slack Community"
-    image: "https://slack.cloudposse.com/badge.svg"
-    url: "https://slack.cloudposse.com"
-
+- name: Latest Release
+  image: https://img.shields.io/github/release/cloudposse/terraform-null-label.svg
+  url: https://github.com/cloudposse/terraform-null-label/releases/latest
+- name: Slack Community
+  image: https://slack.cloudposse.com/badge.svg
+  url: https://slack.cloudposse.com
 related:
-  - name: "terraform-terraform-label"
-    description: "Terraform Module to define a consistent naming convention by (namespace, environment, stage, name, [attributes])"
-    url: "https://github.com/cloudposse/terraform-terraform-label"
-
-# Short description of this project
+- name: terraform-terraform-label
+  description: Terraform Module to define a consistent naming convention by (namespace,
+    environment, stage, name, [attributes])
+  url: https://github.com/cloudposse/terraform-terraform-label
 description: |-
   Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
@@ -64,8 +39,6 @@ description: |-
   **NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
 
   Releases of this module from `0.12.0` onward support `HCL2` and only work with Terraform 0.12 or newer.  Releases prior to this are compatible with earlier versions of terraform like Terraform 0.11.
-
-# How to use this project
 usage: |-
   ### Simple Example
 
@@ -486,28 +459,25 @@ usage: |-
   }
 
   ```
-
 include:
-  - "docs/targets.md"
-  - "docs/terraform.md"
-
-# Contributors to this project
+- docs/targets.md
+- docs/terraform.md
 contributors:
-  - name: "Erik Osterman"
-    github: "osterman"
-  - name: "Andriy Knysh"
-    github: "aknysh"
-  - name: "Igor Rodionov"
-    github: "goruha"
-  - name: "Sergey Vasilyev"
-    github: "s2504s"
-  - name: "Michael Pereira"
-    github: "MichaelPereira"
-  - name: "Jamie Nelson"
-    github: "Jamie-BitFlight"
-  - name: "Vladimir"
-    github: "SweetOps"
-  - name: "Daren Desjardins"
-    github: "darend"
-  - name: "Maarten van der Hoef"
-    github: "maartenvanderhoef"
+- name: Erik Osterman
+  github: osterman
+- name: Andriy Knysh
+  github: aknysh
+- name: Igor Rodionov
+  github: goruha
+- name: Sergey Vasilyev
+  github: s2504s
+- name: Michael Pereira
+  github: MichaelPereira
+- name: Jamie Nelson
+  github: Jamie-BitFlight
+- name: Vladimir
+  github: SweetOps
+- name: Daren Desjardins
+  github: darend
+- name: Maarten van der Hoef
+  github: maartenvanderhoef
