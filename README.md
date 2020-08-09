@@ -521,7 +521,7 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.12.0 |
+| terraform | >= 0.12.0, < 0.14.0 |
 
 ## Providers
 
