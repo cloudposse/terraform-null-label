@@ -19,6 +19,7 @@ No provider.
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
 | label\_order | The naming order of the id output and Name tag | `list(string)` | `[]` | no |
+| max\_id\_length | Specify max length of output id result, or 0 for unrestricted length | `number` | `0` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
 | namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
 | regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only hyphens, letters and digits are allowed, all other chars are removed | `string` | `"/[^a-zA-Z0-9-]/"` | no |
@@ -33,7 +34,8 @@ No provider.
 | context | Context of this module to pass to other label modules |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | environment | Normalized environment |
-| id | Disambiguated ID |
+| full\_id | Disambiguated ID not restricted to max\_id\_length |
+| id | Disambiguated ID restricted to max\_id\_length |
 | label\_order | The naming order of the id output and Name tag |
 | name | Normalized name |
 | namespace | Normalized namespace |
