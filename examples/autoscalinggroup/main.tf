@@ -64,7 +64,7 @@ resource "aws_autoscaling_group" "default" {
 # Provider                     #
 ################################
 provider "aws" {
-  region  = "eu-west-1"
+  region = "eu-west-1"
 
   # Make it faster by skipping unneeded checks here
   skip_get_ec2_platforms      = true

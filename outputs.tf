@@ -1,6 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID"
+  description = "Disambiguated ID restricted to max_id_length"
+}
+
+output "full_id" {
+  value       = local.enabled ? local.full_id : ""
+  description = "Disambiguated ID not restricted to max_id_length"
 }
 
 output "name" {
