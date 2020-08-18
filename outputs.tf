@@ -3,8 +3,8 @@ output "id" {
   description = "Disambiguated ID restricted to max_id_length"
 }
 
-output "full_id" {
-  value       = local.enabled ? local.full_id : ""
+output "id_full" {
+  value       = local.enabled ? local.id_full : ""
   description = "Disambiguated ID not restricted to max_id_length"
 }
 
