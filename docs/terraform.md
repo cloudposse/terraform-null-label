@@ -18,6 +18,7 @@ No provider.
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
+| id\_max\_length | Specify the max length of the `id` output, or 0 for unrestricted length | `number` | `0` | no |
 | label\_order | The naming order of the id output and Name tag | `list(string)` | `[]` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
 | namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
@@ -33,7 +34,8 @@ No provider.
 | context | Context of this module to pass to other label modules |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | environment | Normalized environment |
-| id | Disambiguated ID |
+| id | Disambiguated ID restricted to id\_max\_length |
+| id\_full | Disambiguated ID not restricted to id\_max\_length |
 | label\_order | The naming order of the id output and Name tag |
 | name | Normalized name |
 | namespace | Normalized namespace |

@@ -1,6 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID"
+  description = "Disambiguated ID restricted to id_max_length"
+}
+
+output "id_full" {
+  value       = local.enabled ? local.id_full : ""
+  description = "Disambiguated ID not restricted to id_max_length"
 }
 
 output "name" {
@@ -57,3 +62,4 @@ output "input" {
   value       = local.input
   description = "Merged but otherwise unmodified input to this module, to be use as context input to other modules."
 }
+

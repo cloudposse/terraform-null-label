@@ -104,3 +104,8 @@ all characters other than hyphens, letters and digits.
 EOT
 }
 
+variable "id_max_length" {
+  type        = number
+  default     = 0
+  description = "Specify the max length of the `id` output, or 0 for unrestricted length"
+}
