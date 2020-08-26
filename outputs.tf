@@ -38,6 +38,11 @@ output "tags" {
   description = "Normalized Tag map"
 }
 
+output "label_order" {
+  value       = local.label_order
+  description = "The naming order of the id output and Name tag"
+}
+
 output "tags_as_list_of_maps" {
   value       = local.tags_as_list_of_maps
   description = "Additional tags as a list of maps, which can be used in several AWS resources"
@@ -45,11 +50,10 @@ output "tags_as_list_of_maps" {
 
 output "context" {
   value       = local.output_context
-  description = "Context of this module to pass to other label modules"
+  description = "Normalized context of this module to pass to other label modules"
 }
 
-output "label_order" {
-  value       = local.label_order
-  description = "The naming order of the id output and Name tag"
+output "input" {
+  value       = local.input
+  description = "Merged but otherwise unmodified input to this module, to be use as context input to other modules."
 }
-

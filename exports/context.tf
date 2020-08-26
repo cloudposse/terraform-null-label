@@ -1,3 +1,9 @@
+#
+# ONLY EDIT THIS FILE IN cloudposse/terraform-null-label
+# All other instances of this file should be a copy of that one
+#
+
+# Copy contents of cloudposse/terraform-null-label/variables.tf here
 variable "context" {
   type = object({
     enabled             = bool
@@ -29,7 +35,7 @@ variable "context" {
 Single object for setting entire context at once.
 See description of individual variables for details.
 Individual variable settings (non-null) override settings in context object,
-except for attributes, tags, and additional_tag_map, which are merged.
+except for attributesm tags, and additional_tag_map, which are merged.
 EOT
 }
 
@@ -104,3 +110,25 @@ all characters other than hyphens, letters and digits.
 EOT
 }
 
+#### End of copy of cloudposse/terraform-null-label/variables.tf
+
+#
+# Ensure all variables above are includes in input to module "this" below
+#
+module "this" {
+  source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
+
+  enabled             = var.enabled
+  namespace           = var.namespace
+  environment         = var.environment
+  stage               = var.stage
+  name                = var.name
+  delimiter           = var.delimiter
+  attributes          = var.attributes
+  tags                = var.tags
+  additional_tag_map  = var.additional_tag_map
+  label_order         = var.label_order
+  regex_replace_chars = var.regex_replace_chars
+
+  context = var.context
+}
