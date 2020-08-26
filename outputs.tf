@@ -1,11 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID restricted to max_id_length"
+  description = "Disambiguated ID restricted to id_max_length"
 }
 
 output "id_full" {
   value       = local.enabled ? local.id_full : ""
-  description = "Disambiguated ID not restricted to max_id_length"
+  description = "Disambiguated ID not restricted to id_max_length"
 }
 
 output "name" {
@@ -57,4 +57,3 @@ output "label_order" {
   value       = local.label_order
   description = "The naming order of the id output and Name tag"
 }
-

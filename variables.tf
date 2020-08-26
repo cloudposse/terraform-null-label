@@ -94,7 +94,7 @@ variable "regex_replace_chars" {
   description = "Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only hyphens, letters and digits are allowed, all other chars are removed"
 }
 
-variable "max_id_length" {
+variable "id_max_length" {
   type        = number
   default     = 0
   description = "Specify the max length of the `id` output, or 0 for unrestricted length"
