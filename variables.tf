@@ -97,5 +97,5 @@ variable "regex_replace_chars" {
 variable "max_id_length" {
   type        = number
   default     = 0
-  description = "Specify max length of output id result, or 0 for unrestricted length"
+  description = "Specify the max length of the `id` output, or 0 for unrestricted length"
 }
