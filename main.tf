@@ -56,13 +56,13 @@ locals {
 
   labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0]
 
-  id_full = lower(join(local.delimiter, local.labels))
-  id_md5  = md5(local.id_full)
-  # Truncates ID to given max length, suffixed by 6 character hash of ID for disambiguation 
-  id_short = (var.max_id_length <= 6 ?
-    substr(local.id_md5, 0, var.max_id_length) :
-  "${replace(substr(local.id_full, 0, var.max_id_length - 6), "/-$/", "")}-${substr(local.id_md5, 0, 5)}")
-  id = var.max_id_length != 0 && length(local.id_full) > var.max_id_length ? local.id_short : local.id_full
+id_full = lower(join(local.delimiter, local.labels))
+id_md5  = md5(local.id_full)
+# Truncates ID to given max length, suffixed by 6 character hash of ID for disambiguation 
+id_short = (var.id_max_length <= 6 ?
+substr(local.id_md5, 0, var.id_max_length) :
+"${replace(substr(local.id_full, 0, var.id_max_length - 6), "/-$/", "")}-${substr(local.id_md5, 0, 5)}")
+id = var.id_max_length != 0 && length(local.id_full) > var.id_max_length ? local.id_short : local.id_full
 
 
   # Context of this label to pass to other label modules
