@@ -38,7 +38,7 @@ func TestExamplesComplete(t *testing.T) {
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
-	expectedLabel1Input := NLContext{
+	expectedLabel1Context := NLContext{
 		Enabled:     true,
 		Namespace:   "CloudPosse",
 		Environment: "UAT",
@@ -51,15 +51,16 @@ func TestExamplesComplete(t *testing.T) {
 			"City":        "Dublin",
 			"Environment": "Private",
 		},
+		AdditionalTagMap: map[string]string{},
 	}
 
-	var expectedLabel1Context NLContext
-	_ = reprint.FromTo(&expectedLabel1Input, &expectedLabel1Context)
-	expectedLabel1Context.Namespace = "cloudposse"
-	expectedLabel1Context.Environment = "uat"
-	expectedLabel1Context.Name = "winstonchurchroom"
-	expectedLabel1Context.RegexReplaceChars = "/[^-a-zA-Z0-9]/"
-	expectedLabel1Context.Tags = map[string]string{
+	var expectedLabel1NormalizedContext NLContext
+	_ = reprint.FromTo(&expectedLabel1Context, &expectedLabel1NormalizedContext)
+	expectedLabel1NormalizedContext.Namespace = "cloudposse"
+	expectedLabel1NormalizedContext.Environment = "uat"
+	expectedLabel1NormalizedContext.Name = "winstonchurchroom"
+	expectedLabel1NormalizedContext.RegexReplaceChars = "/[^-a-zA-Z0-9]/"
+	expectedLabel1NormalizedContext.Tags = map[string]string{
 		"City":        "Dublin",
 		"Environment": "Private",
 		"Namespace":   "cloudposse",
@@ -68,20 +69,20 @@ func TestExamplesComplete(t *testing.T) {
 		"Attributes":  "fire-water-earth-air",
 	}
 
-	var label1Context, label1Input NLContext
+	var label1NormalizedContext, label1Context NLContext
 	// Run `terraform output` to get the value of an output variable
 	label1 := terraform.OutputMap(t, terraformOptions, "label1")
 	label1Tags := terraform.OutputMap(t, terraformOptions, "label1_tags")
+	terraform.OutputStruct(t, terraformOptions, "label1_normalized_context", &label1NormalizedContext)
 	terraform.OutputStruct(t, terraformOptions, "label1_context", &label1Context)
-	terraform.OutputStruct(t, terraformOptions, "label1_input", &label1Input)
 
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "winstonchurchroom-uat-build-fire-water-earth-air", label1["id"])
 	assert.Equal(t, "winstonchurchroom-uat-build-fire-water-earth-air", label1Tags["Name"])
 	assert.Equal(t, "Dublin", label1Tags["City"])
 	assert.Equal(t, "Private", label1Tags["Environment"])
+	assert.Equal(t, expectedLabel1NormalizedContext, label1NormalizedContext)
 	assert.Equal(t, expectedLabel1Context, label1Context)
-	assert.Equal(t, expectedLabel1Input, label1Input)
 
 	// Run `terraform output` to get the value of an output variable
 	label2 := terraform.OutputMap(t, terraformOptions, "label2")
@@ -93,43 +94,44 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, "London", label2Tags["City"])
 	assert.Equal(t, "Public", label2Tags["Environment"])
 
-	var expectedLabel3cInput, label3cInput NLContext
-	_ = reprint.FromTo(&expectedLabel1Context, &expectedLabel3cInput)
-	expectedLabel3cInput.Name = "Starfish"
-	expectedLabel3cInput.Stage = "release"
-	expectedLabel3cInput.Delimiter = "."
-	expectedLabel3cInput.RegexReplaceChars = "/[^-a-zA-Z0-9.]/"
-	expectedLabel3cInput.Tags["Eat"] = "Carrot"
-	expectedLabel3cInput.Tags["Animal"] = "Rabbit"
+	var expectedLabel3cContext, label3cContext NLContext
+	_ = reprint.FromTo(&expectedLabel1Context, &expectedLabel3cContext)
+	expectedLabel3cContext.Name = "Starfish"
+	expectedLabel3cContext.Stage = "release"
+	expectedLabel3cContext.Delimiter = "."
+	expectedLabel3cContext.RegexReplaceChars = "/[^-a-zA-Z0-9.]/"
+	expectedLabel3cContext.Tags["Eat"] = "Carrot"
+	expectedLabel3cContext.Tags["Animal"] = "Rabbit"
 
 	// Run `terraform output` to get the value of an output variable
 	label3c := terraform.OutputMap(t, terraformOptions, "label3c")
 	label3cTags := terraform.OutputMap(t, terraformOptions, "label3c_tags")
-	terraform.OutputStruct(t, terraformOptions, "label3c_input", &label3cInput)
+	terraform.OutputStruct(t, terraformOptions, "label3c_context", &label3cContext)
 
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3c["id"])
 	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3cTags["Name"])
-	assert.Equal(t, expectedLabel3cInput, label3cInput)
+	assert.Equal(t, expectedLabel3cContext, label3cContext)
 
-	var expectedLabel3iInput, label3iInput NLContext
-	_ = reprint.FromTo(&expectedLabel1Input, &expectedLabel3cInput)
-	expectedLabel3iInput.Name = "Starfish"
-	expectedLabel3iInput.Stage = "release"
-	expectedLabel3iInput.Delimiter = "."
-	expectedLabel3iInput.RegexReplaceChars = "/[^-a-zA-Z0-9.]/"
-	expectedLabel3iInput.Tags["Eat"] = "Carrot"
-	expectedLabel3iInput.Tags["Animal"] = "Rabbit"
+	var expectedLabel3nContext, label3nContext NLContext
+	_ = reprint.FromTo(&expectedLabel1NormalizedContext, &expectedLabel3nContext)
+	expectedLabel3nContext.Name = "Starfish"
+	expectedLabel3nContext.Stage = "release"
+	expectedLabel3nContext.Delimiter = "."
+	expectedLabel3nContext.RegexReplaceChars = "/[^-a-zA-Z0-9.]/"
+	expectedLabel3nContext.Tags["Eat"] = "Carrot"
+	expectedLabel3nContext.Tags["Animal"] = "Rabbit"
 
 	// Run `terraform output` to get the value of an output variable
-	label3i := terraform.OutputMap(t, terraformOptions, "label3i")
-	label3iTags := terraform.OutputMap(t, terraformOptions, "label3i_tags")
-	terraform.OutputStruct(t, terraformOptions, "label3i_input", &label3iInput)
+	label3n := terraform.OutputMap(t, terraformOptions, "label3n")
+	label3nTags := terraform.OutputMap(t, terraformOptions, "label3n_tags")
+	terraform.OutputStruct(t, terraformOptions, "label3n_context", &label3nContext)
 
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3i["id"])
-	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3iTags["Name"])
-	assert.Equal(t, expectedLabel3iInput, label3iInput)
+	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3n["id"])
+	assert.Equal(t, label1Tags["Name"], label3nTags["Name"],
+		"Tag from label1 normalized context should overwrite label3n generated tag")
+	assert.Equal(t, expectedLabel3nContext, label3nContext)
 
 	// Run `terraform output` to get the value of an output variable
 	label4 := terraform.OutputMap(t, terraformOptions, "label4")

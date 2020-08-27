@@ -53,12 +53,12 @@ output "tags_as_list_of_maps" {
   description = "Additional tags as a list of maps, which can be used in several AWS resources"
 }
 
-output "context" {
+output "normalized_context" {
   value       = local.output_context
-  description = "Normalized context of this module to pass to other label modules"
+  description = "Normalized context of this module"
 }
 
-output "input" {
+output "context" {
   value       = local.input
   description = "Merged but otherwise unmodified input to this module, to be use as context input to other modules."
 }

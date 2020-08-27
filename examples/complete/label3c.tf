@@ -31,6 +31,6 @@ output "label3c_context" {
   value = module.label3c.context
 }
 
-output "label3c_input" {
-  value = module.label3c.input
+output "label3c_normalized_context" {
+  value = module.label3c.normalized_context
 }
