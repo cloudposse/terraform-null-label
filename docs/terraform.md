@@ -32,7 +32,7 @@ No provider.
 |------|-------------|
 | additional\_tag\_map | The merged additional\_tag\_map |
 | attributes | List of attributes |
-| context | Merged but otherwise unmodified input to this module, to be use as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
+| context | Merged but otherwise unmodified input to this module, to be used as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | enabled | True if module is enabled, false otherwise |
 | environment | Normalized environment |

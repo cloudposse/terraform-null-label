@@ -81,7 +81,7 @@ output "normalized_context" {
 output "context" {
   value       = local.input
   description = <<-EOT
-  Merged but otherwise unmodified input to this module, to be use as context input to other modules.
+  Merged but otherwise unmodified input to this module, to be used as context input to other modules.
   Note: this version will have null values as defaults, not the values actually used as defaults.
 EOT
 }
