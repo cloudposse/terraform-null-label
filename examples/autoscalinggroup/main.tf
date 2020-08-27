@@ -2,19 +2,9 @@
 # terraform-null-label example #
 ################################
 module "label" {
-  source    = "../../"
-  namespace = "eg"
-  stage     = "prod"
-  name      = "app"
+  source = "../../"
 
-  tags = {
-    BusinessUnit = "Finance"
-    ManagedBy    = "Terraform"
-  }
-
-  additional_tag_map = {
-    propagate_at_launch = "true"
-  }
+  context = module.this.context
 }
 
 #######################

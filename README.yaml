@@ -26,7 +26,7 @@ related:
 description: |-
   Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
-  A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+  A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is configurable.
   The label items are all optional. So if you prefer the term `stage` to `environment` you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
   If attributes are excluded but `stage` and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`
 
@@ -40,6 +40,25 @@ description: |-
 
   Releases of this module from `0.12.0` onward support `HCL2` and only work with Terraform 0.12 or newer.  Releases prior to this are compatible with earlier versions of terraform like Terraform 0.11.
 usage: |-
+  ### Defaults
+
+  Cloud Posse Terraform modules share a common `context` object that is meant to be passed from module to module.
+  The context object is a single object that contains all the input values for `terraform-null-label`.
+  However, each input value can also be specified individually by name as a standard Terraform variable,
+  and the value of those variables, when set to something other than `null`, will override the value
+  in the context object. In order to allow chaining of these objects, where the context object input to one
+  module is transformed and passed to the next module, all the variables default to `null` or empty collections.
+  The actual default values used when nothing is explicitly set are describe in the documentation below.
+
+  For example, the default value of `delimiter` is shown as `null`, but if you leave it set to null,
+  `terraform-null-label` will actually use the default delimiter `-` (hyphen).
+
+  A non-obvious but intentional consequence of this design is that once a module sets a non-default value,
+  future modules in the chain cannot reset the value back to the original default. Insted, the new setting
+  becomes the new default for downstream modules. Also, collections are not overwritten, they are merged,
+  so once a tag is added, it will remain in the tag set and cannot be removed, although its value can
+  be overwritten.
+
   ### Simple Example
 
   ```hcl
@@ -90,6 +109,8 @@ usage: |-
   ### Advanced Example
 
   Here is a more complex example with two instances using two different labels. Note how efficiently the tags are defined for both the instance and the security group.
+
+  <details><summary>Click to show</summary>
 
   ```hcl
   module "eg_prod_bastion_abc_label" {
@@ -155,9 +176,13 @@ usage: |-
   }
   ```
 
+  </details>
+
   ### Advanced Example 2
 
   Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requires its tags to be in this format, which this module can generate:
+
+  <details><summary>Click to show</summary>
 
   ```hcl
   tags = [
@@ -244,13 +269,17 @@ usage: |-
   }
   ```
 
+  </details>
+
   ### Advanced Example 3
 
-  See [complete example](./examples/complete)
+  See [complete example](./examples/complete) for even more examples.
 
   This example shows how you can pass the `context` output of one label module to the next label_module,
   allowing you to create one label that has the base set of values, and then creating every extra label
   as a derivative of that.
+
+  <details><summary>Click to show</summary>
 
   ```hcl
   module "label1" {
@@ -323,7 +352,33 @@ usage: |-
     ]
     "delimiter" = "-"
     "enabled" = true
+    "environment" = "UAT"
+    "label_order" = [
+      "name",
+      "environment",
+      "stage",
+      "attributes",
+    ]
+    "name" = "Winston Churchroom"
+    "namespace" = "CloudPosse"
+    "stage" = "build"
+    "tags" = {
+      "City" = "Dublin"
+      "Environment" = "Private"
+    }
+  }
+  label1_normalized_context = {
+    "additional_tag_map" = {}
+    "attributes" = [
+      "fire",
+      "water",
+      "earth",
+      "air",
+    ]
+    "delimiter" = "-"
+    "enabled" = true
     "environment" = "uat"
+    "id_length_limit" = 0
     "label_order" = [
       "name",
       "environment",
@@ -332,13 +387,13 @@ usage: |-
     ]
     "name" = "winstonchurchroom"
     "namespace" = "cloudposse"
-    "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+    "regex_replace_chars" = "/[^-a-zA-Z0-9]/"
     "stage" = "build"
     "tags" = {
       "Attributes" = "fire-water-earth-air"
       "City" = "Dublin"
       "Environment" = "Private"
-      "Name" = "winstonchurchroom"
+      "Name" = "winstonchurchroom-uat-build-fire-water-earth-air"
       "Namespace" = "cloudposse"
       "Stage" = "build"
     }
@@ -347,7 +402,7 @@ usage: |-
     "Attributes" = "fire-water-earth-air"
     "City" = "Dublin"
     "Environment" = "Private"
-    "Name" = "winstonchurchroom"
+    "Name" = "winstonchurchroom-uat-build-fire-water-earth-air"
     "Namespace" = "cloudposse"
     "Stage" = "build"
   }
@@ -359,13 +414,16 @@ usage: |-
       "air",
     ]
     "delimiter" = "+"
-    "id" = "charlie+uat+test+firewaterearthair"
+    "id" = "charlie+uat+test+fire+water+earth+air"
     "name" = "charlie"
     "namespace" = "cloudposse"
     "stage" = "test"
   }
   label2_context = {
-    "additional_tag_map" = {}
+    "additional_tag_map" = {
+      "additional_tag" = "yes"
+      "propagate_at_launch" = "true"
+    }
     "attributes" = [
       "fire",
       "water",
@@ -374,34 +432,68 @@ usage: |-
     ]
     "delimiter" = "+"
     "enabled" = true
-    "environment" = "uat"
+    "environment" = "UAT"
     "label_order" = [
       "name",
       "environment",
       "stage",
       "attributes",
     ]
-    "name" = "charlie"
-    "namespace" = "cloudposse"
-    "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+    "name" = "Charlie"
+    "namespace" = "CloudPosse"
+    "regex_replace_chars" = "/[^a-zA-Z0-9-+]/"
     "stage" = "test"
     "tags" = {
-      "Attributes" = "firewaterearthair"
       "City" = "London"
       "Environment" = "Public"
-      "Name" = "charlie"
-      "Namespace" = "cloudposse"
-      "Stage" = "test"
     }
   }
   label2_tags = {
-    "Attributes" = "firewaterearthair"
+    "Attributes" = "fire+water+earth+air"
     "City" = "London"
     "Environment" = "Public"
-    "Name" = "charlie"
+    "Name" = "charlie+uat+test+fire+water+earth+air"
     "Namespace" = "cloudposse"
     "Stage" = "test"
   }
+  label2_tags_as_list_of_maps = [
+    {
+      "additional_tag" = "yes"
+      "key" = "Attributes"
+      "propagate_at_launch" = "true"
+      "value" = "fire+water+earth+air"
+    },
+    {
+      "additional_tag" = "yes"
+      "key" = "City"
+      "propagate_at_launch" = "true"
+      "value" = "London"
+    },
+    {
+      "additional_tag" = "yes"
+      "key" = "Environment"
+      "propagate_at_launch" = "true"
+      "value" = "Public"
+    },
+    {
+      "additional_tag" = "yes"
+      "key" = "Name"
+      "propagate_at_launch" = "true"
+      "value" = "charlie+uat+test+fire+water+earth+air"
+    },
+    {
+      "additional_tag" = "yes"
+      "key" = "Namespace"
+      "propagate_at_launch" = "true"
+      "value" = "cloudposse"
+    },
+    {
+      "additional_tag" = "yes"
+      "key" = "Stage"
+      "propagate_at_launch" = "true"
+      "value" = "test"
+    },
+  ]
   label3 = {
     "attributes" = [
       "fire",
@@ -410,7 +502,7 @@ usage: |-
       "air",
     ]
     "delimiter" = "."
-    "id" = "starfish.uat.release.firewaterearthair"
+    "id" = "starfish.uat.release.fire.water.earth.air"
     "name" = "starfish"
     "namespace" = "cloudposse"
     "stage" = "release"
@@ -425,7 +517,36 @@ usage: |-
     ]
     "delimiter" = "."
     "enabled" = true
+    "environment" = "UAT"
+    "label_order" = [
+      "name",
+      "environment",
+      "stage",
+      "attributes",
+    ]
+    "name" = "Starfish"
+    "namespace" = "CloudPosse"
+    "regex_replace_chars" = "/[^-a-zA-Z0-9.]/"
+    "stage" = "release"
+    "tags" = {
+      "Animal" = "Rabbit"
+      "City" = "Dublin"
+      "Eat" = "Carrot"
+      "Environment" = "Private"
+    }
+  }
+  label3_normalized_context = {
+    "additional_tag_map" = {}
+    "attributes" = [
+      "fire",
+      "water",
+      "earth",
+      "air",
+    ]
+    "delimiter" = "."
+    "enabled" = true
     "environment" = "uat"
+    "id_length_limit" = 0
     "label_order" = [
       "name",
       "environment",
@@ -434,31 +555,34 @@ usage: |-
     ]
     "name" = "starfish"
     "namespace" = "cloudposse"
-    "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+    "regex_replace_chars" = "/[^-a-zA-Z0-9.]/"
     "stage" = "release"
     "tags" = {
       "Animal" = "Rabbit"
-      "Attributes" = "firewaterearthair"
+      "Attributes" = "fire.water.earth.air"
       "City" = "Dublin"
       "Eat" = "Carrot"
-      "Environment" = "uat"
-      "Name" = "starfish"
+      "Environment" = "Private"
+      "Name" = "starfish.uat.release.fire.water.earth.air"
       "Namespace" = "cloudposse"
       "Stage" = "release"
     }
   }
   label3_tags = {
     "Animal" = "Rabbit"
-    "Attributes" = "firewaterearthair"
+    "Attributes" = "fire.water.earth.air"
     "City" = "Dublin"
     "Eat" = "Carrot"
-    "Environment" = "uat"
-    "Name" = "starfish"
+    "Environment" = "Private"
+    "Name" = "starfish.uat.release.fire.water.earth.air"
     "Namespace" = "cloudposse"
     "Stage" = "release"
   }
 
   ```
+
+  </details>
+
 include:
 - docs/targets.md
 - docs/terraform.md

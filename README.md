@@ -27,7 +27,7 @@
 
 Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
-A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is interchangeable.
+A label follows the following convention: `{namespace}-{environment}-{stage}-{name}-{attributes}`. The delimiter (e.g. `-`) is configurable.
 The label items are all optional. So if you prefer the term `stage` to `environment` you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
 If attributes are excluded but `stage` and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`
 
@@ -80,6 +80,25 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-null-label/releases).
 
 
+### Defaults
+
+Cloud Posse Terraform modules share a common `context` object that is meant to be passed from module to module.
+The context object is a single object that contains all the input values for `terraform-null-label`.
+However, each input value can also be specified individually by name as a standard Terraform variable,
+and the value of those variables, when set to something other than `null`, will override the value
+in the context object. In order to allow chaining of these objects, where the context object input to one
+module is transformed and passed to the next module, all the variables default to `null` or empty collections.
+The actual default values used when nothing is explicitly set are describe in the documentation below.
+
+For example, the default value of `delimiter` is shown as `null`, but if you leave it set to null,
+`terraform-null-label` will actually use the default delimiter `-` (hyphen).
+
+A non-obvious but intentional consequence of this design is that once a module sets a non-default value,
+future modules in the chain cannot reset the value back to the original default. Insted, the new setting
+becomes the new default for downstream modules. Also, collections are not overwritten, they are merged,
+so once a tag is added, it will remain in the tag set and cannot be removed, although its value can
+be overwritten.
+
 ### Simple Example
 
 ```hcl
@@ -130,6 +149,8 @@ resource "aws_security_group" "eg_prod_bastion_public" {
 ### Advanced Example
 
 Here is a more complex example with two instances using two different labels. Note how efficiently the tags are defined for both the instance and the security group.
+
+<details><summary>Click to show</summary>
 
 ```hcl
 module "eg_prod_bastion_abc_label" {
@@ -195,9 +216,13 @@ resource "aws_instance" "eg_prod_bastion_xyz" {
 }
 ```
 
+</details>
+
 ### Advanced Example 2
 
 Here is a more complex example with an autoscaling group that has a different tagging schema than other resources and requires its tags to be in this format, which this module can generate:
+
+<details><summary>Click to show</summary>
 
 ```hcl
 tags = [
@@ -284,13 +309,17 @@ resource "aws_autoscaling_group" "default" {
 }
 ```
 
+</details>
+
 ### Advanced Example 3
 
-See [complete example](./examples/complete)
+See [complete example](./examples/complete) for even more examples.
 
 This example shows how you can pass the `context` output of one label module to the next label_module,
 allowing you to create one label that has the base set of values, and then creating every extra label
 as a derivative of that.
+
+<details><summary>Click to show</summary>
 
 ```hcl
 module "label1" {
@@ -363,7 +392,33 @@ label1_context = {
   ]
   "delimiter" = "-"
   "enabled" = true
+  "environment" = "UAT"
+  "label_order" = [
+    "name",
+    "environment",
+    "stage",
+    "attributes",
+  ]
+  "name" = "Winston Churchroom"
+  "namespace" = "CloudPosse"
+  "stage" = "build"
+  "tags" = {
+    "City" = "Dublin"
+    "Environment" = "Private"
+  }
+}
+label1_normalized_context = {
+  "additional_tag_map" = {}
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "-"
+  "enabled" = true
   "environment" = "uat"
+  "id_length_limit" = 0
   "label_order" = [
     "name",
     "environment",
@@ -372,13 +427,13 @@ label1_context = {
   ]
   "name" = "winstonchurchroom"
   "namespace" = "cloudposse"
-  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "regex_replace_chars" = "/[^-a-zA-Z0-9]/"
   "stage" = "build"
   "tags" = {
     "Attributes" = "fire-water-earth-air"
     "City" = "Dublin"
     "Environment" = "Private"
-    "Name" = "winstonchurchroom"
+    "Name" = "winstonchurchroom-uat-build-fire-water-earth-air"
     "Namespace" = "cloudposse"
     "Stage" = "build"
   }
@@ -387,7 +442,7 @@ label1_tags = {
   "Attributes" = "fire-water-earth-air"
   "City" = "Dublin"
   "Environment" = "Private"
-  "Name" = "winstonchurchroom"
+  "Name" = "winstonchurchroom-uat-build-fire-water-earth-air"
   "Namespace" = "cloudposse"
   "Stage" = "build"
 }
@@ -399,13 +454,16 @@ label2 = {
     "air",
   ]
   "delimiter" = "+"
-  "id" = "charlie+uat+test+firewaterearthair"
+  "id" = "charlie+uat+test+fire+water+earth+air"
   "name" = "charlie"
   "namespace" = "cloudposse"
   "stage" = "test"
 }
 label2_context = {
-  "additional_tag_map" = {}
+  "additional_tag_map" = {
+    "additional_tag" = "yes"
+    "propagate_at_launch" = "true"
+  }
   "attributes" = [
     "fire",
     "water",
@@ -414,34 +472,68 @@ label2_context = {
   ]
   "delimiter" = "+"
   "enabled" = true
-  "environment" = "uat"
+  "environment" = "UAT"
   "label_order" = [
     "name",
     "environment",
     "stage",
     "attributes",
   ]
-  "name" = "charlie"
-  "namespace" = "cloudposse"
-  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "name" = "Charlie"
+  "namespace" = "CloudPosse"
+  "regex_replace_chars" = "/[^a-zA-Z0-9-+]/"
   "stage" = "test"
   "tags" = {
-    "Attributes" = "firewaterearthair"
     "City" = "London"
     "Environment" = "Public"
-    "Name" = "charlie"
-    "Namespace" = "cloudposse"
-    "Stage" = "test"
   }
 }
 label2_tags = {
-  "Attributes" = "firewaterearthair"
+  "Attributes" = "fire+water+earth+air"
   "City" = "London"
   "Environment" = "Public"
-  "Name" = "charlie"
+  "Name" = "charlie+uat+test+fire+water+earth+air"
   "Namespace" = "cloudposse"
   "Stage" = "test"
 }
+label2_tags_as_list_of_maps = [
+  {
+    "additional_tag" = "yes"
+    "key" = "Attributes"
+    "propagate_at_launch" = "true"
+    "value" = "fire+water+earth+air"
+  },
+  {
+    "additional_tag" = "yes"
+    "key" = "City"
+    "propagate_at_launch" = "true"
+    "value" = "London"
+  },
+  {
+    "additional_tag" = "yes"
+    "key" = "Environment"
+    "propagate_at_launch" = "true"
+    "value" = "Public"
+  },
+  {
+    "additional_tag" = "yes"
+    "key" = "Name"
+    "propagate_at_launch" = "true"
+    "value" = "charlie+uat+test+fire+water+earth+air"
+  },
+  {
+    "additional_tag" = "yes"
+    "key" = "Namespace"
+    "propagate_at_launch" = "true"
+    "value" = "cloudposse"
+  },
+  {
+    "additional_tag" = "yes"
+    "key" = "Stage"
+    "propagate_at_launch" = "true"
+    "value" = "test"
+  },
+]
 label3 = {
   "attributes" = [
     "fire",
@@ -450,7 +542,7 @@ label3 = {
     "air",
   ]
   "delimiter" = "."
-  "id" = "starfish.uat.release.firewaterearthair"
+  "id" = "starfish.uat.release.fire.water.earth.air"
   "name" = "starfish"
   "namespace" = "cloudposse"
   "stage" = "release"
@@ -465,7 +557,36 @@ label3_context = {
   ]
   "delimiter" = "."
   "enabled" = true
+  "environment" = "UAT"
+  "label_order" = [
+    "name",
+    "environment",
+    "stage",
+    "attributes",
+  ]
+  "name" = "Starfish"
+  "namespace" = "CloudPosse"
+  "regex_replace_chars" = "/[^-a-zA-Z0-9.]/"
+  "stage" = "release"
+  "tags" = {
+    "Animal" = "Rabbit"
+    "City" = "Dublin"
+    "Eat" = "Carrot"
+    "Environment" = "Private"
+  }
+}
+label3_normalized_context = {
+  "additional_tag_map" = {}
+  "attributes" = [
+    "fire",
+    "water",
+    "earth",
+    "air",
+  ]
+  "delimiter" = "."
+  "enabled" = true
   "environment" = "uat"
+  "id_length_limit" = 0
   "label_order" = [
     "name",
     "environment",
@@ -474,31 +595,33 @@ label3_context = {
   ]
   "name" = "starfish"
   "namespace" = "cloudposse"
-  "regex_replace_chars" = "/[^a-zA-Z0-9-]/"
+  "regex_replace_chars" = "/[^-a-zA-Z0-9.]/"
   "stage" = "release"
   "tags" = {
     "Animal" = "Rabbit"
-    "Attributes" = "firewaterearthair"
+    "Attributes" = "fire.water.earth.air"
     "City" = "Dublin"
     "Eat" = "Carrot"
-    "Environment" = "uat"
-    "Name" = "starfish"
+    "Environment" = "Private"
+    "Name" = "starfish.uat.release.fire.water.earth.air"
     "Namespace" = "cloudposse"
     "Stage" = "release"
   }
 }
 label3_tags = {
   "Animal" = "Rabbit"
-  "Attributes" = "firewaterearthair"
+  "Attributes" = "fire.water.earth.air"
   "City" = "Dublin"
   "Eat" = "Carrot"
-  "Environment" = "uat"
-  "Name" = "starfish"
+  "Environment" = "Private"
+  "Name" = "starfish.uat.release.fire.water.earth.air"
   "Namespace" = "cloudposse"
   "Stage" = "release"
 }
 
 ```
+
+</details>
 
 
 
@@ -531,18 +654,18 @@ No provider.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| additional\_tag\_map | Additional tags for appending to each tag map | `map(string)` | `{}` | no |
+| additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
-| context | Default context to use for passing state between label invocations | <pre>object({<br>    namespace           = string<br>    environment         = string<br>    stage               = string<br>    name                = string<br>    enabled             = bool<br>    delimiter           = string<br>    attributes          = list(string)<br>    label_order         = list(string)<br>    tags                = map(string)<br>    additional_tag_map  = map(string)<br>    regex_replace_chars = string<br>  })</pre> | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": "",<br>  "enabled": true,<br>  "environment": "",<br>  "label_order": [],<br>  "name": "",<br>  "namespace": "",<br>  "regex_replace_chars": "",<br>  "stage": "",<br>  "tags": {}<br>}</pre> | no |
-| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
-| enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
-| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
-| id\_max\_length | Specify the max length of the `id` output, or 0 for unrestricted length | `number` | `0` | no |
-| label\_order | The naming order of the id output and Name tag | `list(string)` | `[]` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
-| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
-| regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only hyphens, letters and digits are allowed, all other chars are removed | `string` | `"/[^a-zA-Z0-9-]/"` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `""` | no |
+| context | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | <pre>object({<br>    enabled             = bool<br>    namespace           = string<br>    environment         = string<br>    stage               = string<br>    name                = string<br>    delimiter           = string<br>    attributes          = list(string)<br>    tags                = map(string)<br>    additional_tag_map  = map(string)<br>    regex_replace_chars = string<br>    label_order         = list(string)<br>    id_length_limit     = number<br>  })</pre> | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_order": [],<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
+| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
+| enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
+| environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
+| id\_length\_limit | Limit `id` to this many characters.<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
+| label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
+| name | Solution name, e.g. 'app' or 'jenkins' | `string` | `null` | no |
+| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `null` | no |
+| regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
 
 ## Outputs
@@ -550,14 +673,15 @@ No provider.
 | Name | Description |
 |------|-------------|
 | attributes | List of attributes |
-| context | Context of this module to pass to other label modules |
+| context | Merged but otherwise unmodified input to this module, to be use as context input to other modules. |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
 | environment | Normalized environment |
-| id | Disambiguated ID restricted to id\_max\_length |
-| id\_full | Disambiguated ID not restricted to id\_max\_length |
+| id | Disambiguated ID restricted to `id_length_limit` characters in total |
+| id\_full | Disambiguated ID not restricted in length |
 | label\_order | The naming order of the id output and Name tag |
 | name | Normalized name |
 | namespace | Normalized namespace |
+| normalized\_context | Normalized context of this module |
 | stage | Normalized stage |
 | tags | Normalized Tag map |
 | tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |

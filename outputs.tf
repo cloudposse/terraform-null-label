@@ -1,11 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID restricted to id_max_length"
+  description = "Disambiguated ID restricted to `id_length_limit` characters in total"
 }
 
 output "id_full" {
   value       = local.enabled ? local.id_full : ""
-  description = "Disambiguated ID not restricted to id_max_length"
+  description = "Disambiguated ID not restricted in length"
 }
 
 output "name" {
@@ -43,17 +43,23 @@ output "tags" {
   description = "Normalized Tag map"
 }
 
+output "label_order" {
+  value       = local.label_order
+  description = "The naming order of the id output and Name tag"
+}
+
 output "tags_as_list_of_maps" {
   value       = local.tags_as_list_of_maps
   description = "Additional tags as a list of maps, which can be used in several AWS resources"
 }
 
-output "context" {
+output "normalized_context" {
   value       = local.output_context
-  description = "Context of this module to pass to other label modules"
+  description = "Normalized context of this module"
 }
 
-output "label_order" {
-  value       = local.label_order
-  description = "The naming order of the id output and Name tag"
+output "context" {
+  value       = local.input
+  description = "Merged but otherwise unmodified input to this module, to be use as context input to other modules."
 }
+

@@ -1,3 +1,20 @@
+# DO NOT COPY THIS FILE
+#
+# This is a specially modified version of this file, since it is used to test
+# the unpublished version of this module. Normally you should use a
+# copy of the file as explained below.
+#
+#
+# Copy this file from https://github.com/cloudposse/terraform-null-label/blob/master/exports/context.tf
+# and then place it in your Terraform module to automatically get
+# Cloud Posse's standard configuration inputs suitable for passing
+# to Cloud Posse modules.
+#
+# ONLY EDIT THIS FILE IN github.com/cloudposse/terraform-null-label
+# All other instances of this file should be a copy of that one
+#
+
+# Copy contents of cloudposse/terraform-null-label/variables.tf here
 variable "context" {
   type = object({
     enabled             = bool
@@ -51,7 +68,7 @@ variable "namespace" {
 variable "environment" {
   type        = string
   default     = null
-  description = "Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT'"
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
 }
 
 variable "stage" {
@@ -69,10 +86,7 @@ variable "name" {
 variable "delimiter" {
   type        = string
   default     = null
-  description = <<EOT
-Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.
-Defaults to `-` (hyphen). Set to `""` to use no delimiter at all.
-EOT
+  description = "Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
 }
 
 variable "attributes" {
@@ -90,25 +104,23 @@ variable "tags" {
 variable "additional_tag_map" {
   type        = map(string)
   default     = {}
-  description = "Additional tags for appending to tags_as_list_of_maps. Not added to `tags`."
+  description = "Additional tags for appending to each tag map"
 }
 
 variable "label_order" {
   type        = list(string)
   default     = null
-  description = <<EOT
-The naming order of the id output and Name tag.
-Defaults to ["namespace", "environment", "stage", "name", "attributes"].
-You can omit any of the 5 elements, but at least one must be present.
-EOT
+  description = "The naming order of the id output and Name tag"
 }
 
 variable "regex_replace_chars" {
   type        = string
   default     = null
   description = <<EOT
-Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.
-If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits.
+Regex to replace chars with empty string in
+`namespace`, `environment`, `stage` and `name`.
+If not set, "/[^a-zA-Z0-9-]/" is used to remove
+all characters other than hyphens, letters and digits.
 EOT
 }
 
@@ -121,4 +133,33 @@ Set to `0` for unlimited length.
 Set to `null` for default, which is `0`.
 Does not affect `id_full`.
 EOT
+}
+
+#### End of copy of cloudposse/terraform-null-label/variables.tf
+
+#
+# Ensure all variables above are includes in input to module "this" below
+#
+# Modules should access the whole context as `module.this.context`
+# and access individual variables as `module.this.context.<var>`,
+# for example, `module.this.context.enabled`
+#
+module "this" {
+  // source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.0"
+  source = "../.."
+
+  enabled             = var.enabled
+  namespace           = var.namespace
+  environment         = var.environment
+  stage               = var.stage
+  name                = var.name
+  delimiter           = var.delimiter
+  attributes          = var.attributes
+  tags                = var.tags
+  additional_tag_map  = var.additional_tag_map
+  label_order         = var.label_order
+  regex_replace_chars = var.regex_replace_chars
+  id_length_limit     = var.id_length_limit
+
+  context = var.context
 }

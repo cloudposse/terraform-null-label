@@ -34,5 +34,9 @@ output "label1_context" {
   value = module.label1.context
 }
 
+output "label1_normalized_context" {
+  value = module.label1.normalized_context
+}
+
 
 
