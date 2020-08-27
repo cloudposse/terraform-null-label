@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -84,6 +85,18 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, expectedLabel1NormalizedContext, label1NormalizedContext)
 	assert.Equal(t, expectedLabel1Context, label1Context)
 
+	label1t1 := terraform.OutputMap(t, terraformOptions, "label1t1")
+	label1t1Tags := terraform.OutputMap(t, terraformOptions, "label1t1_tags")
+	assert.Equal(t, "winstonchurchroom-uat-6a0b34", label1t1["id"],
+		"Extra hash character should be added when trailing delimiter is removed")
+	assert.Equal(t, label1["id"], label1t1["id_full"], "id_full should not be truncated")
+	assert.Equal(t, label1t1["id"], label1t1Tags["Name"], "Name tag should match ID")
+
+	label1t2 := terraform.OutputMap(t, terraformOptions, "label1t2")
+	label1t2Tags := terraform.OutputMap(t, terraformOptions, "label1t2_tags")
+	assert.Equal(t, "winstonchurchroom-uat-b-6a0b3", label1t2["id"])
+	assert.Equal(t, label1t2["id"], label1t2Tags["Name"], "Name tag should match ID")
+
 	// Run `terraform output` to get the value of an output variable
 	label2 := terraform.OutputMap(t, terraformOptions, "label2")
 	label2Tags := terraform.OutputMap(t, terraformOptions, "label2_tags")
@@ -146,4 +159,19 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "", label5["id"])
+
+	label6f := terraform.OutputMap(t, terraformOptions, "label6f")
+	label6fTags := terraform.OutputMap(t, terraformOptions, "label6f_tags")
+	assert.Equal(t, "cp~uw2~prd~null-label", label6f["id_full"])
+	assert.Equal(t, label6f["id_full"], label6f["id"], "id should not be truncated")
+	assert.Equal(t, label6f["id"], label6fTags["Name"], "Name tag should match ID")
+
+	label6t := terraform.OutputMap(t, terraformOptions, "label6t")
+	label6tTags := terraform.OutputMap(t, terraformOptions, "label6t_tags")
+	assert.Equal(t, "cpuw2prdnull-label", label6t["id_full"])
+	assert.NotEqual(t, label6t["id_full"], label6t["id"], "id should be truncated")
+	assert.Equal(t, label6t["id"], label6tTags["Name"], "Name tag should match ID")
+	assert.Equal(t, label6t["id_length_limit"], fmt.Sprintf("%d", len(label6t["id"])),
+		"Truncated ID length should equal length limit")
+
 }

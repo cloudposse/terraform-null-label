@@ -3,3 +3,4 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
+!autoscalinggroup.auto.tfvars

@@ -1,11 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID restricted to id_max_length"
+  description = "Disambiguated ID restricted to `id_length_limit` characters in total"
 }
 
 output "id_full" {
   value       = local.enabled ? local.id_full : ""
-  description = "Disambiguated ID not restricted to id_max_length"
+  description = "Disambiguated ID not restricted in length"
 }
 
 output "name" {

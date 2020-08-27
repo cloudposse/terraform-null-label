@@ -12,3 +12,6 @@
 
 # Cloud Posse must review any changes to GitHub actions
 .github/*     @cloudposse/engineering
+
+# Cloud Posse must review any changes to standard context definition
+**/context.tf   @cloudposse/engineering
