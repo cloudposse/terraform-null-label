@@ -34,7 +34,7 @@ No provider.
 | attributes | List of attributes |
 | context | Merged but otherwise unmodified input to this module, to be use as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
-| enabled | Normalized enabled |
+| enabled | True if module is enabled, false otherwise |
 | environment | Normalized environment |
 | id | Disambiguated ID restricted to `id_length_limit` characters in total |
 | id\_full | Disambiguated ID not restricted in length |
