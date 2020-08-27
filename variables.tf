@@ -27,12 +27,12 @@ variable "context" {
     label_order         = []
     id_length_limit     = null
   }
-  description = <<EOT
-Single object for setting entire context at once.
-See description of individual variables for details.
-Leave string and numeric variables as `null` to use default value.
-Individual variable settings (non-null) override settings in context object,
-except for attributes, tags, and additional_tag_map, which are merged.
+  description = <<-EOT
+    Single object for setting entire context at once.
+    See description of individual variables for details.
+    Leave string and numeric variables as `null` to use default value.
+    Individual variable settings (non-null) override settings in context object,
+    except for attributes, tags, and additional_tag_map, which are merged.
 EOT
 }
 
@@ -69,9 +69,9 @@ variable "name" {
 variable "delimiter" {
   type        = string
   default     = null
-  description = <<EOT
-Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.
-Defaults to `-` (hyphen). Set to `""` to use no delimiter at all.
+  description = <<-EOT
+    Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.
+    Defaults to `-` (hyphen). Set to `""` to use no delimiter at all.
 EOT
 }
 
@@ -96,29 +96,29 @@ variable "additional_tag_map" {
 variable "label_order" {
   type        = list(string)
   default     = null
-  description = <<EOT
-The naming order of the id output and Name tag.
-Defaults to ["namespace", "environment", "stage", "name", "attributes"].
-You can omit any of the 5 elements, but at least one must be present.
+  description = <<-EOT
+    The naming order of the id output and Name tag.
+    Defaults to ["namespace", "environment", "stage", "name", "attributes"].
+    You can omit any of the 5 elements, but at least one must be present.
 EOT
 }
 
 variable "regex_replace_chars" {
   type        = string
   default     = null
-  description = <<EOT
-Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.
-If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits.
+  description = <<-EOT
+    Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.
+    If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits.
 EOT
 }
 
 variable "id_length_limit" {
   type        = number
   default     = null
-  description = <<EOT
-Limit `id` to this many characters.
-Set to `0` for unlimited length.
-Set to `null` for default, which is `0`.
-Does not affect `id_full`.
+  description = <<-EOT
+    Limit `id` to this many characters.
+    Set to `0` for unlimited length.
+    Set to `null` for default, which is `0`.
+    Does not affect `id_full`.
 EOT
 }

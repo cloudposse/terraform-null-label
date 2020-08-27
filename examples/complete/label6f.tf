@@ -4,6 +4,7 @@ module "label6f" {
   delimiter       = "~"
   id_length_limit = 0
 
+  # Use values from tfvars
   context = module.this.context
 }
 

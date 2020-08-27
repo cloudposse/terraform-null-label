@@ -1,6 +1,8 @@
 module "label6t" {
   source = "../../"
 
+  # Use values from tfvars,
+  # specifically: complete.auto.tfvars
   context = module.this.context
 }
 

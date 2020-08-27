@@ -105,12 +105,12 @@ locals {
     namespace           = local.namespace
     environment         = local.environment
     stage               = local.stage
+    delimiter           = local.delimiter
     attributes          = local.attributes
     tags                = local.tags
-    delimiter           = local.delimiter
+    additional_tag_map  = local.additional_tag_map
     label_order         = local.label_order
     regex_replace_chars = local.regex_replace_chars
-    additional_tag_map  = local.additional_tag_map
     id_length_limit     = local.id_length_limit
   }
 

@@ -30,16 +30,20 @@ No provider.
 
 | Name | Description |
 |------|-------------|
+| additional\_tag\_map | The merged additional\_tag\_map |
 | attributes | List of attributes |
-| context | Merged but otherwise unmodified input to this module, to be use as context input to other modules. |
+| context | Merged but otherwise unmodified input to this module, to be use as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
 | delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
+| enabled | Normalized enabled |
 | environment | Normalized environment |
 | id | Disambiguated ID restricted to `id_length_limit` characters in total |
 | id\_full | Disambiguated ID not restricted in length |
-| label\_order | The naming order of the id output and Name tag |
+| id\_length\_limit | The id\_length\_limit actually used to create the ID, with `0` meaning unlimited |
+| label\_order | The naming order actually used to create the ID |
 | name | Normalized name |
 | namespace | Normalized namespace |
 | normalized\_context | Normalized context of this module |
+| regex\_replace\_chars | The regex\_replace\_chars actually used to create the ID |
 | stage | Normalized stage |
 | tags | Normalized Tag map |
 | tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |
