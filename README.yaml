@@ -378,7 +378,7 @@ usage: |-
     "delimiter" = "-"
     "enabled" = true
     "environment" = "uat"
-    "id_length_limit" = 255
+    "id_length_limit" = 0
     "label_order" = [
       "name",
       "environment",
@@ -546,7 +546,7 @@ usage: |-
     "delimiter" = "."
     "enabled" = true
     "environment" = "uat"
-    "id_length_limit" = 255
+    "id_length_limit" = 0
     "label_order" = [
       "name",
       "environment",

@@ -90,14 +90,14 @@ in the context object. In order to allow chaining of these objects, where the co
 module is transformed and passed to the next module, all the variables default to `null` or empty collections.
 The actual default values used when nothing is explicitly set are describe in the documentation below.
 
+For example, the default value of `delimiter` is shown as `null`, but if you leave it set to null,
+`terraform-null-label` will actually use the default delimiter `-` (hyphen).
+
 A non-obvious but intentional consequence of this design is that once a module sets a non-default value,
 future modules in the chain cannot reset the value back to the original default. Insted, the new setting
 becomes the new default for downstream modules. Also, collections are not overwritten, they are merged,
 so once a tag is added, it will remain in the tag set and cannot be removed, although its value can
 be overwritten.
-
-For example, the default value of `delimiter` is shown as `null`, but if you leave it set to null,
-`terraform-null-label` will actually use the default delimiter `-` (hyphen).
 
 ### Simple Example
 
@@ -418,7 +418,7 @@ label1_normalized_context = {
   "delimiter" = "-"
   "enabled" = true
   "environment" = "uat"
-  "id_length_limit" = 255
+  "id_length_limit" = 0
   "label_order" = [
     "name",
     "environment",
@@ -586,7 +586,7 @@ label3_normalized_context = {
   "delimiter" = "."
   "enabled" = true
   "environment" = "uat"
-  "id_length_limit" = 255
+  "id_length_limit" = 0
   "label_order" = [
     "name",
     "environment",
@@ -654,14 +654,14 @@ No provider.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps | `map(string)` | `{}` | no |
+| additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
 | context | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | <pre>object({<br>    enabled             = bool<br>    namespace           = string<br>    environment         = string<br>    stage               = string<br>    name                = string<br>    delimiter           = string<br>    attributes          = list(string)<br>    tags                = map(string)<br>    additional_tag_map  = map(string)<br>    regex_replace_chars = string<br>    label_order         = list(string)<br>    id_length_limit     = number<br>  })</pre> | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_order": [],<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
-| id\_length\_limit | Limit `id` to this many characters.<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `255`.<br>Does not affect `id_full`. | `number` | `null` | no |
-| label\_order | The naming order of the id output and Name tag.<br>Set to `null` or `[]` to use the default order, which is<br>["namespace", "environment", "stage", "name", "attributes"] | `list(string)` | `null` | no |
+| id\_length\_limit | Limit `id` to this many characters.<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
+| label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | `string` | `null` | no |
 | namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `null` | no |
 | regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
