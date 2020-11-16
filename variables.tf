@@ -122,3 +122,9 @@ variable "id_length_limit" {
     Does not affect `id_full`.
   EOT
 }
+
+variable "use_lowercased_context_tags" {
+  type        = bool
+  default     = false
+  description = "Whether to use lowercased context tags (`name`, `namespace`, `environment`, `stage`, `attributes`)"
+}

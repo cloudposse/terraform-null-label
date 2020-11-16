@@ -73,7 +73,11 @@ locals {
     attributes  = local.id_context.attributes
   }
 
-  generated_tags = { for l in keys(local.tags_context) : title(l) => local.tags_context[l] if length(local.tags_context[l]) > 0 }
+  generated_tags = {
+    for l in keys(local.tags_context) :
+    var.use_lowercased_context_tags ? lower(l) : title(l) => local.tags_context[l]
+    if length(local.tags_context[l]) > 0
+  }
 
   id_context = {
     name        = local.name
