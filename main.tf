@@ -76,8 +76,8 @@ locals {
     attributes  = local.id_context.attributes
   }
 
-  tag_casing_type   = replace(var.tag_format, "/:.*/", "")
-  tag_casing_format = replace(var.tag_format, "/.*:/", "")
+  tag_casing_type   = replace(local.tag_format, "/:.*/", "")
+  tag_casing_format = replace(local.tag_format, "/.*:/", "")
 
   tag_formats = {
 
