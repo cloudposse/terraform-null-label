@@ -10,6 +10,7 @@ locals {
     attributes      = []
     id_length_limit = 0
     id_hash_length  = 5
+    tag_format      = "default:titlecase"
   }
 
   # So far, we have decided not to allow overriding replacement, sentinel, or id_hash_length
@@ -34,6 +35,7 @@ locals {
     label_order         = var.label_order == null ? var.context.label_order : var.label_order
     regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
+    tag_format          = var.tag_format == null ? var.context.tag_format : var.tag_format
   }
 
 
@@ -47,6 +49,7 @@ locals {
   delimiter       = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
   label_order     = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
   id_length_limit = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
+  tag_format      = local.input.tag_format == null ? local.defaults.tag_format : local.input.tag_format
 
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
@@ -54,7 +57,7 @@ locals {
   # Merge attributes
   attributes = compact(distinct(concat(local.input.attributes, local.defaults.attributes)))
 
-  tags = merge(local.generated_tags, local.input.tags)
+  tags = merge(lookup(local.tag_formats, local.tag_casing_type, "default"), local.input.tags)
 
   tags_as_list_of_maps = flatten([
     for key in keys(local.tags) : merge(
@@ -73,10 +76,52 @@ locals {
     attributes  = local.id_context.attributes
   }
 
-  generated_tags = {
-    for l in keys(local.tags_context) :
-    var.use_lowercased_context_tags ? lower(l) : title(l) => local.tags_context[l]
-    if length(local.tags_context[l]) > 0
+  tag_casing_type   = replace(var.tag_format, "/:.*/", "")
+  tag_casing_format = replace(var.tag_format, "/.*:/", "")
+
+  tag_formats = {
+
+    default = {
+      for k in keys(local.tags_context) :
+      local.tag_casing_format == "lowercase" ? lower(k) :
+      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) => local.tags_context[k]
+      if length(local.tags_context[k]) > 0
+    }
+
+    snake = {
+      for k in keys(local.tags_context) :
+      local.tag_casing_format == "lowercase" ? lower(k) :
+      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
+      replace(local.tag_casing_format == "lowercase" ? lower(local.tags_context[k]) :
+      (local.tag_casing_format == "titlecase" ? title(local.tags_context[k]) : upper(local.tags_context[k])), local.delimiter, "_")
+      if length(local.tags_context[k]) > 0
+    }
+
+    kebab = {
+      for k in keys(local.tags_context) :
+      local.tag_casing_format == "lowercase" ? lower(k) :
+      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
+      replace(local.tag_casing_format == "lowercase" ? lower(local.tags_context[k]) :
+      (local.tag_casing_format == "titlecase" ? title(local.tags_context[k]) : upper(local.tags_context[k])), local.delimiter, "-")
+      if length(local.tags_context[k]) > 0
+    }
+
+    pascal = {
+      for k in keys(local.tags_context) :
+      local.tag_casing_format == "lowercase" ? lower(k) :
+      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
+      join("", split(local.delimiter, title(local.tags_context[k])))
+      if length(local.tags_context[k]) > 0
+    }
+
+    camel = {
+      for k in keys(local.tags_context) :
+      local.tag_casing_format == "lowercase" ? lower(k) :
+      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
+      join("", [for idx, word in split(local.delimiter, local.tags_context[k]) :
+      idx > 0 ? title(word) : lower(word)])
+      if length(local.tags_context[k]) > 0
+    }
   }
 
   id_context = {
@@ -116,6 +161,7 @@ locals {
     label_order         = local.label_order
     regex_replace_chars = local.regex_replace_chars
     id_length_limit     = local.id_length_limit
+    tag_format          = local.tag_format
   }
 
 }

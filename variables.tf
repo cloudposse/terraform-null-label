@@ -12,6 +12,7 @@ variable "context" {
     regex_replace_chars = string
     label_order         = list(string)
     id_length_limit     = number
+    tag_format          = string
   })
   default = {
     enabled             = true
@@ -26,6 +27,7 @@ variable "context" {
     regex_replace_chars = null
     label_order         = []
     id_length_limit     = null
+    tag_format          = null
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -123,8 +125,11 @@ variable "id_length_limit" {
   EOT
 }
 
-variable "use_lowercased_context_tags" {
-  type        = bool
-  default     = false
-  description = "Whether to use lowercased context tags (`name`, `namespace`, `environment`, `stage`, `attributes`)"
+variable "tag_format" {
+  type        = string
+  default     = null
+  description = <<-EOT
+    Some great long description in progress
+    Default value: `default:titlecase`.
+  EOT
 }
