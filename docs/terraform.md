@@ -1,9 +1,8 @@
-<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.0 |
+| terraform | >= 0.12.26 |
 
 ## Providers
 
@@ -49,4 +48,3 @@ No provider.
 | tags | Normalized Tag map |
 | tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |
 
-<!-- markdownlint-restore -->
