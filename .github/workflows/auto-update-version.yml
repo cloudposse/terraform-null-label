@@ -1,0 +1,56 @@
+name: "auto-update-version-pinning"
+on:
+  release:
+    types: [published]
+
+jobs:
+  update:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    container: cloudposse/testing.cloudposse.co:latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Update exports/context.tf version pinning
+        shell: bash
+        id: update
+        env:
+          LATEST_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          echo "Checking if exports/context.tf match replace pattern exactly once"
+          [[ $(grep -Ec '(\s*version\s*\=\s*\")([0-9]+\.[0-9]+\.[0-9]+)(\")' exports/context.tf) = 1 ]]
+          echo "Checking that LATEST_TAG fetched properly: '$LATEST_TAG'"
+          echo $LATEST_TAG | grep -Eq '^\d+\.\d+\.\d+$'
+          echo "Replacing exports/context.tf version pinning with new: $LATEST_TAG"
+          sed -Ei 's/(\s*version\s*\=\s*\")([0-9]+\.[0-9]+\.[0-9]+)(\")/\1'$LATEST_TAG'\3/g' exports/context.tf
+
+      - name: Create Pull Request
+        uses: cloudposse/actions/github/create-pull-request@0.20.0
+        id: create-pr
+        with:
+          token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+          commit-message: Update 'exports/context.tf' with most recent release of this repo.
+          title: Update 'exports/context.tf' version pinning
+          body: |-
+            ## what
+            This is an auto-generated PR that updates 'exports/context.tf' with most recent release of this repo.
+
+            ## why
+            As 'exports/context.tf' is used by foreign modules it should be pinned to most recent release of this repo.
+
+          branch: auto-update/exports-context.tf
+          base: master
+          delete-branch: true
+          labels: |
+            auto-update
+            context-pinning
+            do-not-release
+
+      - name: Add chatops command to run tests
+        uses: cloudposse/actions/github/create-or-update-comment@0.22.0
+        with:
+          token: ${{ secrets.GITHUB_BOT_TOKEN }}
+          repository: ${{ github.repository }}
+          issue-number: ${{ steps.create-pr.outputs.pull-request-number }}
+          body: "/test all"
