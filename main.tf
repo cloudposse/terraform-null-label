@@ -28,8 +28,8 @@ locals {
     name        = var.name == null ? var.context.name : var.name
     delimiter   = var.delimiter == null ? var.context.delimiter : var.delimiter
     # modules tack on attributes (passed by var) to the end of the list (passed by context)
-    attributes  = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes,[]))))
-    tags        = merge(var.context.tags, var.tags)
+    attributes = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes, []))))
+    tags       = merge(var.context.tags, var.tags)
 
     additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
     label_order         = var.label_order == null ? var.context.label_order : var.label_order
