@@ -174,4 +174,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, label6t["id_length_limit"], fmt.Sprintf("%d", len(label6t["id"])),
 		"Truncated ID length should equal length limit")
 
+	label7 := terraform.OutputMap(t, terraformOptions, "label7")
+	assert.Equal(t, "eg-demo-blue-cluster-nodegroup", label7["id"], "var.attributes should be appended after context.attributes")
+
 }
