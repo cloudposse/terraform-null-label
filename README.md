@@ -116,7 +116,9 @@ be overwritten.
 
 ```hcl
 module "eg_prod_bastion_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -167,7 +169,9 @@ Here is a more complex example with two instances using two different labels. No
 
 ```hcl
 module "eg_prod_bastion_abc_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -198,7 +202,9 @@ resource "aws_instance" "eg_prod_bastion_abc" {
 }
 
 module "eg_prod_bastion_xyz_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -336,7 +342,9 @@ as a derivative of that.
 
 ```hcl
 module "label1" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
@@ -353,7 +361,9 @@ module "label1" {
 }
 
 module "label2" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   context   = module.label1.context
   name      = "Charlie"
   stage     = "test"
@@ -366,7 +376,9 @@ module "label2" {
 }
 
 module "label3" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
   name      = "Starfish"
   stage     = "release"
   context   = module.label1.context
@@ -794,7 +806,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2020 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2021 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 

@@ -1,0 +1,41 @@
+name: "auto-readme"
+on:
+  schedule:
+  # Update README.md nightly
+  - cron:  '0 4 * * *'
+
+jobs:
+  update:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Update readme
+      shell: bash
+      id: update
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        make init
+        make readme/build
+
+    - name: Create Pull Request
+      uses: cloudposse/actions/github/create-pull-request@0.20.0
+      with:
+        token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+        commit-message: Update README.md and docs
+        title: Update README.md and docs
+        body: |-
+          ## what
+          This is an auto-generated PR that updates the README.md and docs
+
+          ## why
+          To have most recent changes of README.md and doc from origin templates
+
+        branch: auto-update/readme
+        base: master
+        delete-branch: true
+        labels: |
+          auto-update
+          readme

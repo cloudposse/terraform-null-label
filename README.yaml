@@ -67,7 +67,9 @@ usage: |-
 
   ```hcl
   module "eg_prod_bastion_label" {
-    source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     namespace  = "eg"
     stage      = "prod"
     name       = "bastion"
@@ -118,7 +120,9 @@ usage: |-
 
   ```hcl
   module "eg_prod_bastion_abc_label" {
-    source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     namespace  = "eg"
     stage      = "prod"
     name       = "bastion"
@@ -149,7 +153,9 @@ usage: |-
   }
 
   module "eg_prod_bastion_xyz_label" {
-    source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     namespace  = "eg"
     stage      = "prod"
     name       = "bastion"
@@ -287,7 +293,9 @@ usage: |-
 
   ```hcl
   module "label1" {
-    source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     namespace   = "CloudPosse"
     environment = "UAT"
     stage       = "build"
@@ -304,7 +312,9 @@ usage: |-
   }
 
   module "label2" {
-    source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     context   = module.label1.context
     name      = "Charlie"
     stage     = "test"
@@ -317,7 +327,9 @@ usage: |-
   }
 
   module "label3" {
-    source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+    source = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     name      = "Starfish"
     stage     = "release"
     context   = module.label1.context

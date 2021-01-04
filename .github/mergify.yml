@@ -1,0 +1,52 @@
+pull_request_rules:
+- name: "approve automated PRs that have passed checks"
+  conditions:
+  - "check-success~=test/bats"
+  - "check-success~=test/readme"
+  - "check-success~=test/terratest"
+  - "base=master"
+  - "author=cloudpossebot"
+  - "head~=auto-update/.*"
+  actions:
+    review:
+      type: "APPROVE"
+      bot_account: "cloudposse-mergebot"
+      message: "We've automatically approved this PR because the checks from the automated Pull Request have passed."
+
+- name: "merge automated PRs when approved and tests pass"
+  conditions:
+  - "check-success~=test/bats"
+  - "check-success~=test/readme"
+  - "check-success~=test/terratest"
+  - "base=master"
+  - "head~=auto-update/.*"
+  - "#approved-reviews-by>=1"
+  - "#changes-requested-reviews-by=0"
+  - "#commented-reviews-by=0"
+  - "base=master"
+  - "author=cloudpossebot"
+  actions:
+    merge:
+      method: "squash"
+
+- name: "delete the head branch after merge"
+  conditions:
+  - "merged"
+  actions:
+    delete_head_branch: {}
+
+- name: "ask to resolve conflict"
+  conditions:
+  - "conflict"
+  actions:
+    comment:
+      message: "This pull request is now in conflict. Could you fix it @{{author}}? 🙏"
+
+- name: "remove outdated reviews"
+  conditions:
+  - "base=master"
+  actions:
+    dismiss_reviews:
+      changes_requested: true
+      approved: true
+      message: "This Pull Request has been updated, so we're dismissing all reviews."
