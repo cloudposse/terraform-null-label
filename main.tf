@@ -7,7 +7,6 @@ locals {
     replacement         = ""
     # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
     sentinel        = "\t"
-    attributes      = []
     id_length_limit = 0
     id_hash_length  = 5
   }
@@ -17,7 +16,8 @@ locals {
   sentinel       = local.defaults.sentinel
   id_hash_length = local.defaults.id_hash_length
 
-  # The values provided by variables supersede the values inherited from the context object
+  # The values provided by variables supersede the values inherited from the context object,
+  # except for tags and attributes which are merged.
   input = {
     # It would be nice to use coalesce here, but we cannot, because it
     # is an error for all the arguments to coalesce to be empty.
@@ -27,8 +27,9 @@ locals {
     stage       = var.stage == null ? var.context.stage : var.stage
     name        = var.name == null ? var.context.name : var.name
     delimiter   = var.delimiter == null ? var.context.delimiter : var.delimiter
-    attributes  = compact(distinct(concat(var.attributes, var.context.attributes)))
-    tags        = merge(var.context.tags, var.tags)
+    # modules tack on attributes (passed by var) to the end of the list (passed by context)
+    attributes = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes, []))))
+    tags       = merge(var.context.tags, var.tags)
 
     additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
     label_order         = var.label_order == null ? var.context.label_order : var.label_order
@@ -51,8 +52,7 @@ locals {
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
 
-  # Merge attributes
-  attributes = compact(distinct(concat(local.input.attributes, local.defaults.attributes)))
+  attributes = local.input.attributes
 
   tags = merge(local.generated_tags, local.input.tags)
 

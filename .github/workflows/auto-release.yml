@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  semver:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-get-merged-pull-request@v1
