@@ -17,7 +17,7 @@ locals {
   id_hash_length = local.defaults.id_hash_length
 
   # The values provided by variables supersede the values inherited from the context object,
-  # except for tags and attributes which are merged.
+  # except for tags, required_tags and attributes which are merged.
   input = {
     # It would be nice to use coalesce here, but we cannot, because it
     # is an error for all the arguments to coalesce to be empty.
@@ -32,6 +32,7 @@ locals {
     tags       = merge(var.context.tags, var.tags)
 
     additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
+    required_tags       = distinct(concat(var.context.required_tags, var.required_tags))
     label_order         = var.label_order == null ? var.context.label_order : var.label_order
     regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
@@ -51,6 +52,7 @@ locals {
 
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
+  required_tags      = local.input.required_tags
 
   attributes = local.input.attributes
 
@@ -109,9 +111,16 @@ locals {
     attributes          = local.attributes
     tags                = local.tags
     additional_tag_map  = local.additional_tag_map
+    required_tags       = local.required_tags
     label_order         = local.label_order
     regex_replace_chars = local.regex_replace_chars
     id_length_limit     = local.id_length_limit
   }
 
+}
+
+# Required tags validation
+data external missing_required_tag {
+  for_each = toset([for name in local.required_tags : name if ! contains(keys(local.tags), name)])
+  program  = ["Error: Required tag ${name} is not specified for label ${local.id}."]
 }

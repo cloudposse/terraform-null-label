@@ -9,6 +9,7 @@ variable "context" {
     attributes          = list(string)
     tags                = map(string)
     additional_tag_map  = map(string)
+    required_tags       = list(string)
     regex_replace_chars = string
     label_order         = list(string)
     id_length_limit     = number
@@ -23,6 +24,7 @@ variable "context" {
     attributes          = []
     tags                = {}
     additional_tag_map  = {}
+    required_tags       = []
     regex_replace_chars = null
     label_order         = []
     id_length_limit     = null
@@ -32,7 +34,8 @@ variable "context" {
     See description of individual variables for details.
     Leave string and numeric variables as `null` to use default value.
     Individual variable settings (non-null) override settings in context object,
-    except for attributes, tags, and additional_tag_map, which are merged.
+    except for attributes, tags, additional_tag_map, and required_tags, which
+    are merged.
   EOT
 }
 
@@ -91,6 +94,12 @@ variable "additional_tag_map" {
   type        = map(string)
   default     = {}
   description = "Additional tags for appending to tags_as_list_of_maps. Not added to `tags`."
+}
+
+variable "required_tags" {
+  type        = list(string)
+  default     = []
+  description = "A list of tag keys that must be set. A runtime error during plan/apply will be raised if any are not."
 }
 
 variable "label_order" {
