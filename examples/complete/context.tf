@@ -214,4 +214,17 @@ variable "label_value_case" {
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
+
+variable "id_lengths" {
+  type        = list(number)
+  default     = []
+  description = <<-EOT
+    Create variants of `id` limited to these many characters.
+    By default, no variants are created.
+    The length-limited `id` variants are available as the `id_trunc` output map.
+    For example, variable `id_lengths = [8,16]` results in output `id_trunc` = {8 => "...", 16 => "..." }.
+    This functionality generally supersedes `id_length_limit`.
+  EOT
+}
+
 #### End of copy of cloudposse/terraform-null-label/variables.tf

@@ -699,6 +699,7 @@ No provider.
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
 | id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
+| id\_lengths | Create variants of `id` limited to these many characters.<br>By default, no variants are created.<br>The length-limited `id` variants are available as the `id_trunc` output map.<br>For example, variable `id_lengths = [8,16]` results in output `id_trunc` = {8 => "...", 16 => "..." }.<br>This functionality generally supersedes `id_length_limit`. | `list(number)` | `[]` | no |
 | label\_key\_case | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
 | label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
 | label\_value\_case | The letter case of output label values (also used in `tags` and `id`).<br>Possible values: `lower`, `title`, `upper` and `none` (no transformation).<br>Default value: `lower`. | `string` | `null` | no |
@@ -721,6 +722,7 @@ No provider.
 | id | Disambiguated ID restricted to `id_length_limit` characters in total |
 | id\_full | Disambiguated ID not restricted in length |
 | id\_length\_limit | The id\_length\_limit actually used to create the ID, with `0` meaning unlimited |
+| id\_trunc | Disambiguated ID restricted to character lengths specified by `id_lengths` variable.<br>For example, variable `id_lengths = [8,16]` results in output `id_trunc` = {8 => "...", 16 => "..." }. |
 | label\_order | The naming order actually used to create the ID |
 | name | Normalized name |
 | namespace | Normalized namespace |
