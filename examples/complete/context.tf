@@ -1,3 +1,8 @@
+# DO NOT COPY THIS FILE
+#
+# This is a specially modified version of this file, since it is used to test
+# the unpublished version of this module. Normally you should use a
+# copy of the file as explained below.
 #
 # ONLY EDIT THIS FILE IN github.com/cloudposse/terraform-null-label
 # All other instances of this file should be a copy of that one
@@ -19,8 +24,7 @@
 #
 
 module "this" {
-  source  = "cloudposse/label/null"
-  version = "0.22.1" // requires Terraform >= 0.12.26
+  source = "../.."
 
   enabled             = var.enabled
   namespace           = var.namespace
