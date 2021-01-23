@@ -6,10 +6,11 @@ locals {
     delimiter           = "-"
     replacement         = ""
     # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
-    sentinel        = "\t"
-    id_length_limit = 0
-    id_hash_length  = 5
-    tag_format      = "default:titlecase"
+    sentinel                = "\t"
+    id_length_limit         = 0
+    id_hash_length          = 5
+    id_case                 = "lower"
+    generated_tag_name_case = "title"
   }
 
   # So far, we have decided not to allow overriding replacement, sentinel, or id_hash_length
@@ -32,32 +33,34 @@ locals {
     attributes = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes, []))))
     tags       = merge(var.context.tags, var.tags)
 
-    additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
-    label_order         = var.label_order == null ? var.context.label_order : var.label_order
-    regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
-    id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
-    tag_format          = var.tag_format == null ? var.context.tag_format : var.tag_format
+    additional_tag_map      = merge(var.context.additional_tag_map, var.additional_tag_map)
+    label_order             = var.label_order == null ? var.context.label_order : var.label_order
+    regex_replace_chars     = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
+    id_length_limit         = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
+    id_case                 = var.id_case == null ? var.context.id_case : var.id_case
+    generated_tag_name_case = var.generated_tag_name_case == null ? var.context.generated_tag_name_case : var.generated_tag_name_case
   }
 
 
   enabled             = local.input.enabled
   regex_replace_chars = coalesce(local.input.regex_replace_chars, local.defaults.regex_replace_chars)
 
-  name            = lower(replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement))
-  namespace       = lower(replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement))
-  environment     = lower(replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement))
-  stage           = lower(replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement))
-  delimiter       = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
-  label_order     = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
-  id_length_limit = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
-  tag_format      = local.input.tag_format == null ? local.defaults.tag_format : local.input.tag_format
+  name                    = lower(replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement))
+  namespace               = lower(replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement))
+  environment             = lower(replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement))
+  stage                   = lower(replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement))
+  delimiter               = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
+  label_order             = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
+  id_length_limit         = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
+  id_case                 = local.input.id_case == null ? local.defaults.id_case : local.input.id_case
+  generated_tag_name_case = local.input.generated_tag_name_case == null ? local.defaults.generated_tag_name_case : local.input.generated_tag_name_case
 
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
 
   attributes = local.input.attributes
 
-  tags = merge(lookup(local.tag_formats, local.tag_casing_type, "default"), local.input.tags)
+  tags = merge(local.generated_tags, local.input.tags)
 
   tags_as_list_of_maps = flatten([
     for key in keys(local.tags) : merge(
@@ -76,52 +79,11 @@ locals {
     attributes  = local.id_context.attributes
   }
 
-  tag_casing_type   = replace(local.tag_format, "/:.*/", "")
-  tag_casing_format = replace(local.tag_format, "/.*:/", "")
-
-  tag_formats = {
-
-    default = {
-      for k in keys(local.tags_context) :
-      local.tag_casing_format == "lowercase" ? lower(k) :
-      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) => local.tags_context[k]
-      if length(local.tags_context[k]) > 0
-    }
-
-    snake = {
-      for k in keys(local.tags_context) :
-      local.tag_casing_format == "lowercase" ? lower(k) :
-      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
-      replace(local.tag_casing_format == "lowercase" ? lower(local.tags_context[k]) :
-      (local.tag_casing_format == "titlecase" ? title(local.tags_context[k]) : upper(local.tags_context[k])), local.delimiter, "_")
-      if length(local.tags_context[k]) > 0
-    }
-
-    kebab = {
-      for k in keys(local.tags_context) :
-      local.tag_casing_format == "lowercase" ? lower(k) :
-      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
-      replace(local.tag_casing_format == "lowercase" ? lower(local.tags_context[k]) :
-      (local.tag_casing_format == "titlecase" ? title(local.tags_context[k]) : upper(local.tags_context[k])), local.delimiter, "-")
-      if length(local.tags_context[k]) > 0
-    }
-
-    pascal = {
-      for k in keys(local.tags_context) :
-      local.tag_casing_format == "lowercase" ? lower(k) :
-      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
-      join("", split(local.delimiter, title(local.tags_context[k])))
-      if length(local.tags_context[k]) > 0
-    }
-
-    camel = {
-      for k in keys(local.tags_context) :
-      local.tag_casing_format == "lowercase" ? lower(k) :
-      (local.tag_casing_format == "titlecase" ? title(k) : upper(k)) =>
-      join("", [for idx, word in split(local.delimiter, local.tags_context[k]) :
-      idx > 0 ? title(word) : lower(word)])
-      if length(local.tags_context[k]) > 0
-    }
+  generated_tags = {
+    for l in keys(local.tags_context) :
+    local.generated_tag_name_case == "title" ? title(l) : (
+      local.generated_tag_name_case == "lower" ? lower(l) : upper(l)
+    ) => local.tags_context[l] if length(local.tags_context[l]) > 0
   }
 
   id_context = {
@@ -134,7 +96,9 @@ locals {
 
   labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0]
 
-  id_full = lower(join(local.delimiter, local.labels))
+  id_full = local.id_case == "lower" ? lower(join(local.delimiter, local.labels)) : (
+    local.id_case == "title" ? title(join(local.delimiter, local.labels)) :
+  upper(join(local.delimiter, local.labels)))
   # Create a truncated ID if needed
   delimiter_length = length(local.delimiter)
   # Calculate length of normal part of ID, leaving room for delimiter and hash
@@ -149,19 +113,20 @@ locals {
 
   # Context of this label to pass to other label modules
   output_context = {
-    enabled             = local.enabled
-    name                = local.name
-    namespace           = local.namespace
-    environment         = local.environment
-    stage               = local.stage
-    delimiter           = local.delimiter
-    attributes          = local.attributes
-    tags                = local.tags
-    additional_tag_map  = local.additional_tag_map
-    label_order         = local.label_order
-    regex_replace_chars = local.regex_replace_chars
-    id_length_limit     = local.id_length_limit
-    tag_format          = local.tag_format
+    enabled                 = local.enabled
+    name                    = local.name
+    namespace               = local.namespace
+    environment             = local.environment
+    stage                   = local.stage
+    delimiter               = local.delimiter
+    attributes              = local.attributes
+    tags                    = local.tags
+    additional_tag_map      = local.additional_tag_map
+    label_order             = local.label_order
+    regex_replace_chars     = local.regex_replace_chars
+    id_length_limit         = local.id_length_limit
+    id_case                 = local.id_case
+    generated_tag_name_case = local.generated_tag_name_case
   }
 
 }

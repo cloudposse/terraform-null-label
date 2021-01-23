@@ -1,33 +1,35 @@
 variable "context" {
   type = object({
-    enabled             = bool
-    namespace           = string
-    environment         = string
-    stage               = string
-    name                = string
-    delimiter           = string
-    attributes          = list(string)
-    tags                = map(string)
-    additional_tag_map  = map(string)
-    regex_replace_chars = string
-    label_order         = list(string)
-    id_length_limit     = number
-    tag_format          = string
+    enabled                 = bool
+    namespace               = string
+    environment             = string
+    stage                   = string
+    name                    = string
+    delimiter               = string
+    attributes              = list(string)
+    tags                    = map(string)
+    additional_tag_map      = map(string)
+    regex_replace_chars     = string
+    label_order             = list(string)
+    id_length_limit         = number
+    id_case                 = string
+    generated_tag_name_case = string
   })
   default = {
-    enabled             = true
-    namespace           = null
-    environment         = null
-    stage               = null
-    name                = null
-    delimiter           = null
-    attributes          = []
-    tags                = {}
-    additional_tag_map  = {}
-    regex_replace_chars = null
-    label_order         = []
-    id_length_limit     = null
-    tag_format          = null
+    enabled                 = true
+    namespace               = null
+    environment             = null
+    stage                   = null
+    name                    = null
+    delimiter               = null
+    attributes              = []
+    tags                    = {}
+    additional_tag_map      = {}
+    regex_replace_chars     = null
+    label_order             = []
+    id_length_limit         = null
+    id_case                 = null
+    generated_tag_name_case = null
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -125,11 +127,22 @@ variable "id_length_limit" {
   EOT
 }
 
-variable "tag_format" {
+variable "id_case" {
   type        = string
   default     = null
   description = <<-EOT
-    Some great long description in progress
-    Default value: `default:titlecase`.
+    The letter case of generated `ID`.
+    Possible values: `lower`, `title`, `upper`. 
+    Default value: `lower`.
+  EOT
+}
+
+variable "generated_tag_name_case" {
+  type        = string
+  default     = null
+  description = <<-EOT
+    The letter case of `generated_tag` keys (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`).
+    Possible values: `lower`, `title`, `upper`. 
+    Default value: `title`.
   EOT
 }
