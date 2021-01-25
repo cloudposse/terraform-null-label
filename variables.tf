@@ -38,6 +38,16 @@ variable "context" {
     Individual variable settings (non-null) override settings in context object,
     except for attributes, tags, and additional_tag_map, which are merged.
   EOT
+
+  validation {
+    condition     = var.context["generated_tag_name_case"] == null ? true : contains(["lower", "title", "upper"], var.context["generated_tag_name_case"])
+    error_message = "Allowed values: `lower`, `title`, `upper`."
+  }
+
+  validation {
+    condition     = var.context["id_case"] == null ? true : contains(["lower", "title", "upper"], var.context["id_case"])
+    error_message = "Allowed values: `lower`, `title`, `upper`."
+  }
 }
 
 variable "enabled" {
@@ -135,6 +145,11 @@ variable "id_case" {
     Possible values: `lower`, `title`, `upper`. 
     Default value: `lower`.
   EOT
+
+  validation {
+    condition     = var.id_case == null ? true : contains(["lower", "title", "upper"], var.id_case)
+    error_message = "Allowed values: `lower`, `title`, `upper`."
+  }
 }
 
 variable "generated_tag_name_case" {
@@ -145,4 +160,9 @@ variable "generated_tag_name_case" {
     Possible values: `lower`, `title`, `upper`. 
     Default value: `title`.
   EOT
+
+  validation {
+    condition     = var.generated_tag_name_case == null ? true : contains(["lower", "title", "upper"], var.generated_tag_name_case)
+    error_message = "Allowed values: `lower`, `title`, `upper`."
+  }
 }
