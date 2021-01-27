@@ -45,7 +45,7 @@ variable "context" {
   }
 
   validation {
-    condition     = var.context["id_case"] == null ? true : contains(["lower", "title", "upper","none"], var.context["id_case"])
+    condition     = var.context["id_case"] == null ? true : contains(["lower", "title", "upper", "none"], var.context["id_case"])
     error_message = "Allowed values: `lower`, `title`, `upper`,`none`."
   }
 }
@@ -142,7 +142,7 @@ variable "id_case" {
   default     = null
   description = <<-EOT
     The letter case of generated `ID`.
-    Possible values: `lower`, `title`, `upper`, and `none` (no transformation). 
+    Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
     Default value: `lower`.
   EOT
 

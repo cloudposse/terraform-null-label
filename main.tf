@@ -45,10 +45,10 @@ locals {
   enabled             = local.input.enabled
   regex_replace_chars = coalesce(local.input.regex_replace_chars, local.defaults.regex_replace_chars)
 
-  name                    = lower(replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement))
-  namespace               = lower(replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement))
-  environment             = lower(replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement))
-  stage                   = lower(replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement))
+  name                    = local.id_case == "none" ? replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement))
+  namespace               = local.id_case == "none" ? replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement))
+  environment             = local.id_case == "none" ? replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement))
+  stage                   = local.id_case == "none" ? replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement))
   delimiter               = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
   label_order             = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
   id_length_limit         = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
@@ -91,15 +91,17 @@ locals {
     namespace   = local.namespace
     environment = local.environment
     stage       = local.stage
-    attributes  = lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.replacement))
+    attributes  = local.id_case == "none" ? replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.replacement) : lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.replacement))
   }
 
   labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0]
 
   formatted_labels = [
-    for l in local.labels : local.id_case == "none" ? l : local.id_case == "title" ? title(l) : local.id_case = "upper" ? upper(l) : lower(l)
-  ]
-      
+    for l in local.labels :
+    local.id_case == "none" ? l : (
+      local.id_case == "title" ? title(l) : (local.id_case == "upper" ? upper(l) : lower(l))
+  )]
+
   id_full = join(local.delimiter, local.formatted_labels)
   # Create a truncated ID if needed
   delimiter_length = length(local.delimiter)
