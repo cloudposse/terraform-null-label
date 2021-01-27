@@ -81,8 +81,8 @@ locals {
 
   generated_tags = {
     for l in keys(local.tags_context) :
-    local.generated_tag_name_case == "title" ? title(l) : (
-      local.generated_tag_name_case == "lower" ? lower(l) : upper(l)
+    local.generated_tag_name_case == "upper" ? upper(l) : (
+      local.generated_tag_name_case == "lower" ? lower(l) : title(l)
     ) => local.tags_context[l] if length(local.tags_context[l]) > 0
   }
 
@@ -96,9 +96,11 @@ locals {
 
   labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0]
 
-  id_full = local.id_case == "lower" ? lower(join(local.delimiter, local.labels)) : (
-    local.id_case == "title" ? title(join(local.delimiter, local.labels)) :
-  upper(join(local.delimiter, local.labels)))
+  formatted_labels = [
+    for l in local.labels : local.id_case == "none" ? l : local.id_case == "title" ? title(l) : local.id_case = "upper" ? upper(l) : lower(l)
+  ]
+      
+  id_full = join(local.delimiter, local.formatted_labels)
   # Create a truncated ID if needed
   delimiter_length = length(local.delimiter)
   # Calculate length of normal part of ID, leaving room for delimiter and hash
