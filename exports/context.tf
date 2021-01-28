@@ -88,7 +88,7 @@ variable "context" {
 
   validation {
     condition     = var.context["id_case"] == null ? true : contains(["lower", "title", "upper", "none"], var.context["id_case"])
-    error_message = "Allowed values: `lower`, `title`, `upper`,`none`."
+    error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
 

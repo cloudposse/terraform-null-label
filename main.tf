@@ -6,7 +6,6 @@ locals {
     delimiter           = "-"
     replacement         = ""
     # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
-    sentinel                = "\t"
     id_length_limit         = 0
     id_hash_length          = 5
     id_case                 = "lower"
@@ -45,10 +44,28 @@ locals {
   enabled             = local.input.enabled
   regex_replace_chars = coalesce(local.input.regex_replace_chars, local.defaults.regex_replace_chars)
 
-  name                    = local.id_case == "none" ? replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.name, local.sentinel), local.regex_replace_chars, local.replacement))
-  namespace               = local.id_case == "none" ? replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.namespace, local.sentinel), local.regex_replace_chars, local.replacement))
-  environment             = local.id_case == "none" ? replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.environment, local.sentinel), local.regex_replace_chars, local.replacement))
-  stage                   = local.id_case == "none" ? replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement) : lower(replace(coalesce(local.input.stage, local.sentinel), local.regex_replace_chars, local.replacement))
+  # string_label_names are names of inputs that are strings (not list of strings) used as labels
+  string_label_names = ["name", "namespace", "environment", "stage"]
+  normalized_labels = { for k in local.string_label_names : k =>
+    local.input[k] == null ? "" : replace(local.input[k], local.regex_replace_chars, local.replacement)
+  }
+  normalized_attributes = compact(distinct([for v in local.input.attributes : replace(v, local.regex_replace_chars, local.replacement)]))
+
+  formatted_labels = { for k in local.string_label_names : k => var.label_value_case == "none" ? local.normalized_labels[k] :
+    var.label_value_case == "title" ? title(local.normalized_labels[k]) :
+    var.label_value_case == "upper" ? upper(local.normalized_labels[k]) : lower(local.normalized_labels[k])
+  }
+
+  attributes = compact(distinct([for v in local.normalized_attributes : (var.label_value_case == "none" ? v :
+    var.label_value_case == "title" ? title(v) :
+    var.label_value_case == "upper" ? upper(v) : lower(v))
+  ]))
+
+  name            = local.formatted_labels["name"]
+  namespace       = local.formatted_labels["namespace"]
+  environment     = local.formatted_labels["environment"]
+  stage           = local.formatted_labels["stage"]
+
   delimiter               = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
   label_order             = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
   id_length_limit         = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
@@ -91,18 +108,12 @@ locals {
     namespace   = local.namespace
     environment = local.environment
     stage       = local.stage
-    attributes  = local.id_case == "none" ? replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.replacement) : lower(replace(join(local.delimiter, local.attributes), local.regex_replace_chars, local.replacement))
+    attributes  = join(local.delimiter, local.attributes)
   }
 
   labels = [for l in local.label_order : local.id_context[l] if length(local.id_context[l]) > 0]
 
-  formatted_labels = [
-    for l in local.labels :
-    local.id_case == "none" ? l : (
-      local.id_case == "title" ? title(l) : (local.id_case == "upper" ? upper(l) : lower(l))
-  )]
-
-  id_full = join(local.delimiter, local.formatted_labels)
+  id_full = join(local.delimiter, local.labels)
   # Create a truncated ID if needed
   delimiter_length = length(local.delimiter)
   # Calculate length of normal part of ID, leaving room for delimiter and hash
