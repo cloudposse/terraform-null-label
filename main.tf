@@ -5,16 +5,13 @@ locals {
     regex_replace_chars = "/[^-a-zA-Z0-9]/"
     delimiter           = "-"
     replacement         = ""
-    # The `sentinel` should match the `regex_replace_chars`, so it will be replaced with the `replacement` value
-    id_length_limit         = 0
-    id_hash_length          = 5
-    id_case                 = "lower"
-    generated_tag_name_case = "title"
+    id_length_limit     = 0
+    id_hash_length      = 5
+    label_value_case    = "lower"
+    label_key_case      = "title"
   }
 
-  # So far, we have decided not to allow overriding replacement, sentinel, or id_hash_length
   replacement    = local.defaults.replacement
-  sentinel       = local.defaults.sentinel
   id_hash_length = local.defaults.id_hash_length
 
   # The values provided by variables supersede the values inherited from the context object,
@@ -32,12 +29,12 @@ locals {
     attributes = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes, []))))
     tags       = merge(var.context.tags, var.tags)
 
-    additional_tag_map      = merge(var.context.additional_tag_map, var.additional_tag_map)
-    label_order             = var.label_order == null ? var.context.label_order : var.label_order
-    regex_replace_chars     = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
-    id_length_limit         = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
-    id_case                 = var.id_case == null ? var.context.id_case : var.id_case
-    generated_tag_name_case = var.generated_tag_name_case == null ? var.context.generated_tag_name_case : var.generated_tag_name_case
+    additional_tag_map  = merge(var.context.additional_tag_map, var.additional_tag_map)
+    label_order         = var.label_order == null ? var.context.label_order : var.label_order
+    regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
+    id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
+    label_value_case    = var.label_value_case == null ? var.context.label_value_case : var.label_value_case
+    label_key_case      = var.label_key_case == null ? var.context.label_key_case : var.label_key_case
   }
 
 
@@ -51,31 +48,30 @@ locals {
   }
   normalized_attributes = compact(distinct([for v in local.input.attributes : replace(v, local.regex_replace_chars, local.replacement)]))
 
-  formatted_labels = { for k in local.string_label_names : k => var.label_value_case == "none" ? local.normalized_labels[k] :
-    var.label_value_case == "title" ? title(local.normalized_labels[k]) :
-    var.label_value_case == "upper" ? upper(local.normalized_labels[k]) : lower(local.normalized_labels[k])
+  formatted_labels = { for k in local.string_label_names : k => local.label_value_case == "none" ? local.normalized_labels[k] :
+    local.label_value_case == "title" ? title(local.normalized_labels[k]) :
+    local.label_value_case == "upper" ? upper(local.normalized_labels[k]) : lower(local.normalized_labels[k])
   }
 
-  attributes = compact(distinct([for v in local.normalized_attributes : (var.label_value_case == "none" ? v :
-    var.label_value_case == "title" ? title(v) :
-    var.label_value_case == "upper" ? upper(v) : lower(v))
+  attributes = compact(distinct([
+    for v in local.normalized_attributes : (local.label_value_case == "none" ? v :
+      local.label_value_case == "title" ? title(v) :
+    local.label_value_case == "upper" ? upper(v) : lower(v))
   ]))
 
-  name            = local.formatted_labels["name"]
-  namespace       = local.formatted_labels["namespace"]
-  environment     = local.formatted_labels["environment"]
-  stage           = local.formatted_labels["stage"]
+  name        = local.formatted_labels["name"]
+  namespace   = local.formatted_labels["namespace"]
+  environment = local.formatted_labels["environment"]
+  stage       = local.formatted_labels["stage"]
 
-  delimiter               = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
-  label_order             = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
-  id_length_limit         = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
-  id_case                 = local.input.id_case == null ? local.defaults.id_case : local.input.id_case
-  generated_tag_name_case = local.input.generated_tag_name_case == null ? local.defaults.generated_tag_name_case : local.input.generated_tag_name_case
+  delimiter        = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
+  label_order      = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
+  id_length_limit  = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
+  label_value_case = local.input.label_value_case == null ? local.defaults.label_value_case : local.input.label_value_case
+  label_key_case   = local.input.label_key_case == null ? local.defaults.label_key_case : local.input.label_key_case
 
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
-
-  attributes = local.input.attributes
 
   tags = merge(local.generated_tags, local.input.tags)
 
@@ -98,8 +94,8 @@ locals {
 
   generated_tags = {
     for l in keys(local.tags_context) :
-    local.generated_tag_name_case == "upper" ? upper(l) : (
-      local.generated_tag_name_case == "lower" ? lower(l) : title(l)
+    local.label_key_case == "upper" ? upper(l) : (
+      local.label_key_case == "lower" ? lower(l) : title(l)
     ) => local.tags_context[l] if length(local.tags_context[l]) > 0
   }
 
@@ -128,20 +124,20 @@ locals {
 
   # Context of this label to pass to other label modules
   output_context = {
-    enabled                 = local.enabled
-    name                    = local.name
-    namespace               = local.namespace
-    environment             = local.environment
-    stage                   = local.stage
-    delimiter               = local.delimiter
-    attributes              = local.attributes
-    tags                    = local.tags
-    additional_tag_map      = local.additional_tag_map
-    label_order             = local.label_order
-    regex_replace_chars     = local.regex_replace_chars
-    id_length_limit         = local.id_length_limit
-    id_case                 = local.id_case
-    generated_tag_name_case = local.generated_tag_name_case
+    enabled             = local.enabled
+    name                = local.name
+    namespace           = local.namespace
+    environment         = local.environment
+    stage               = local.stage
+    delimiter           = local.delimiter
+    attributes          = local.attributes
+    tags                = local.tags
+    additional_tag_map  = local.additional_tag_map
+    label_order         = local.label_order
+    regex_replace_chars = local.regex_replace_chars
+    id_length_limit     = local.id_length_limit
+    label_value_case    = local.label_value_case
+    label_key_case      = local.label_key_case
   }
 
 }

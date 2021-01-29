@@ -46,36 +46,36 @@ module "this" {
 
 variable "context" {
   type = object({
-    enabled                 = bool
-    namespace               = string
-    environment             = string
-    stage                   = string
-    name                    = string
-    delimiter               = string
-    attributes              = list(string)
-    tags                    = map(string)
-    additional_tag_map      = map(string)
-    regex_replace_chars     = string
-    label_order             = list(string)
-    id_length_limit         = number
-    id_case                 = string
-    generated_tag_name_case = string
+    enabled             = bool
+    namespace           = string
+    environment         = string
+    stage               = string
+    name                = string
+    delimiter           = string
+    attributes          = list(string)
+    tags                = map(string)
+    additional_tag_map  = map(string)
+    regex_replace_chars = string
+    label_order         = list(string)
+    id_length_limit     = number
+    label_value_case    = string
+    label_key_case      = string
   })
   default = {
-    enabled                 = true
-    namespace               = null
-    environment             = null
-    stage                   = null
-    name                    = null
-    delimiter               = null
-    attributes              = []
-    tags                    = {}
-    additional_tag_map      = {}
-    regex_replace_chars     = null
-    label_order             = []
-    id_length_limit         = null
-    id_case                 = null
-    generated_tag_name_case = null
+    enabled             = true
+    namespace           = null
+    environment         = null
+    stage               = null
+    name                = null
+    delimiter           = null
+    attributes          = []
+    tags                = {}
+    additional_tag_map  = {}
+    regex_replace_chars = null
+    label_order         = []
+    id_length_limit     = null
+    label_value_case    = null
+    label_key_case      = null
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -86,12 +86,12 @@ variable "context" {
   EOT
 
   validation {
-    condition     = var.context["generated_tag_name_case"] == null ? true : contains(["lower", "title", "upper"], var.context["generated_tag_name_case"])
+    condition     = var.context["label_key_case"] == null ? true : contains(["lower", "title", "upper"], var.context["label_key_case"])
     error_message = "Allowed values: `lower`, `title`, `upper`."
   }
 
   validation {
-    condition     = var.context["id_case"] == null ? true : contains(["lower", "title", "upper", "none"], var.context["id_case"])
+    condition     = var.context["label_value_case"] == null ? true : contains(["lower", "title", "upper", "none"], var.context["label_value_case"])
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
@@ -183,32 +183,32 @@ variable "id_length_limit" {
   EOT
 }
 
-variable "id_case" {
+variable "label_value_case" {
   type        = string
   default     = null
   description = <<-EOT
-    The letter case of generated `ID`.
+    The letter case of label values.
     Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
     Default value: `lower`.
   EOT
 
   validation {
-    condition     = var.id_case == null ? true : contains(["lower", "title", "upper", "none"], var.id_case)
+    condition     = var.label_value_case == null ? true : contains(["lower", "title", "upper", "none"], var.label_value_case)
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
 
-variable "generated_tag_name_case" {
+variable "label_key_case" {
   type        = string
   default     = null
   description = <<-EOT
-    The letter case of `generated_tag` keys (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`).
+    The letter case of label keys (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`).
     Possible values: `lower`, `title`, `upper`. 
     Default value: `title`.
   EOT
 
   validation {
-    condition     = var.generated_tag_name_case == null ? true : contains(["lower", "title", "upper"], var.generated_tag_name_case)
+    condition     = var.label_key_case == null ? true : contains(["lower", "title", "upper"], var.label_key_case)
     error_message = "Allowed values: `lower`, `title`, `upper`."
   }
 }

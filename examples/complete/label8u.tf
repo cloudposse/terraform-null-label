@@ -1,13 +1,13 @@
 module "label8u" {
-  source                  = "../../"
-  enabled                 = true
-  namespace               = "eg"
-  environment             = "demo"
-  name                    = "blue"
-  attributes              = ["cluster"]
-  delimiter               = "-"
-  id_case                 = "upper"
-  generated_tag_name_case = "upper"
+  source           = "../../"
+  enabled          = true
+  namespace        = "eg"
+  environment      = "demo"
+  name             = "blue"
+  attributes       = ["cluster"]
+  delimiter        = "-"
+  label_value_case = "upper"
+  label_key_case   = "upper"
 
   tags = {
     "kubernetes.io/cluster/" = "shared"
@@ -26,6 +26,11 @@ output "label8u_context_id" {
 
 output "label8u_context_context" {
   value = module.label8u_context.context
+}
+
+// debug
+output "label8u_context_normalized_context" {
+  value = module.label8u_context.normalized_context
 }
 
 output "label8u_context_tags" {

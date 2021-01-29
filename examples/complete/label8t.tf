@@ -1,13 +1,13 @@
 module "label8t" {
-  source                  = "../../"
-  enabled                 = true
-  namespace               = "eg"
-  environment             = "demo"
-  name                    = "blue"
-  attributes              = ["cluster"]
-  delimiter               = "-"
-  id_case                 = "title"
-  generated_tag_name_case = "title"
+  source           = "../../"
+  enabled          = true
+  namespace        = "eg"
+  environment      = "demo"
+  name             = "blue"
+  attributes       = ["cluster"]
+  delimiter        = "-"
+  label_value_case = "title"
+  label_key_case   = "title"
 
   tags = {
     "kubernetes.io/cluster/" = "shared"
