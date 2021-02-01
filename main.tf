@@ -50,14 +50,14 @@ locals {
   normalized_attributes = compact(distinct([for v in local.input.attributes : replace(v, local.regex_replace_chars, local.replacement)]))
 
   formatted_labels = { for k in local.string_label_names : k => local.label_value_case == "none" ? local.normalized_labels[k] :
-    local.label_value_case == "title" ? title(local.normalized_labels[k]) :
-    local.label_value_case == "upper" ? upper(local.normalized_labels[k]) : lower(local.normalized_labels[k])
+    local.label_value_case == "title" ? title(lower(local.normalized_labels[k])) :
+    local.label_value_case == "upper" ? upper(lower(local.normalized_labels[k])) : lower(local.normalized_labels[k])
   }
 
   attributes = compact(distinct([
     for v in local.normalized_attributes : (local.label_value_case == "none" ? v :
-      local.label_value_case == "title" ? title(v) :
-    local.label_value_case == "upper" ? upper(v) : lower(v))
+      local.label_value_case == "title" ? title(lower(v)) :
+    local.label_value_case == "upper" ? upper(lower(v)) : lower(v))
   ]))
 
   name        = local.formatted_labels["name"]
@@ -95,8 +95,8 @@ locals {
 
   generated_tags = {
     for l in keys(local.tags_context) :
-    local.label_key_case == "upper" ? upper(l) : (
-      local.label_key_case == "lower" ? lower(l) : title(l)
+    local.label_key_case == "upper" ? upper(lower(l)) : (
+      local.label_key_case == "lower" ? lower(l) : title(lower(l))
     ) => local.tags_context[l] if length(local.tags_context[l]) > 0
   }
 
@@ -117,7 +117,7 @@ locals {
   id_truncated_length_limit = local.id_length_limit - (local.id_hash_length + local.delimiter_length)
   # Truncate the ID and ensure a single (not double) trailing delimiter
   id_truncated = local.id_truncated_length_limit <= 0 ? "" : "${trimsuffix(substr(local.id_full, 0, local.id_truncated_length_limit), local.delimiter)}${local.delimiter}"
-  id_hash      = md5(local.id_full)
+  id_hash      = local.label_value_case == "title" ? title(md5(local.id_full)) : local.label_value_case == "upper" ? upper(md5(local.id_full)) : local.label_value_case == "lower" ? lower(md5(local.id_full)) : md5(local.id_full)
   # Create the short ID by adding a hash to the end of the truncated ID
   id_short = substr("${local.id_truncated}${local.id_hash}", 0, local.id_length_limit)
   id       = local.id_length_limit != 0 && length(local.id_full) > local.id_length_limit ? local.id_short : local.id_full

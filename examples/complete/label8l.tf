@@ -6,8 +6,8 @@ module "label8l" {
   name             = "blue"
   attributes       = ["cluster"]
   delimiter        = "-"
-  label_value_case = "lower"
   label_key_case   = "lower"
+  label_value_case = "lower"
 
   tags = {
     "kubernetes.io/cluster/" = "shared"

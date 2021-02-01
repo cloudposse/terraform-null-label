@@ -241,7 +241,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	label8tID := terraform.Output(t, terraformOptions, "label8t_id")
 	label8tContextID := terraform.Output(t, terraformOptions, "label8t_context_id")
-	assert.Equal(t, "Eg-Demo-Blue-Cluster", label8tID)
+	assert.Equal(t, "Eg-Demo-Blue-Eks-Cluster", label8tID)
 	assert.Equal(t, label8tID, label8tContextID, "ID and context ID should be equal")
 
 	label8tTags := terraform.OutputMap(t, terraformOptions, "label8t_tags")
@@ -281,7 +281,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	label8nID := terraform.Output(t, terraformOptions, "label8n_id")
 	label8nContextID := terraform.Output(t, terraformOptions, "label8n_context_id")
-	assert.Equal(t, "EG-demo-blue-ClusteR", label8nID)
+	assert.Equal(t, "EG-demo-blue-eks-ClusteR", label8nID)
 	assert.Equal(t, label8nID, label8nContextID, "ID and context ID should be equal")
 
 	label8nTags := terraform.OutputMap(t, terraformOptions, "label8n_tags")

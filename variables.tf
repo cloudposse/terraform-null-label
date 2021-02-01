@@ -137,21 +137,6 @@ variable "id_length_limit" {
   EOT
 }
 
-variable "label_value_case" {
-  type        = string
-  default     = null
-  description = <<-EOT
-    The letter case of output label values (also used in `tags` and `id`).
-    Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
-    Default value: `lower`.
-  EOT
-
-  validation {
-    condition     = var.label_value_case == null ? true : contains(["lower", "title", "upper", "none"], var.label_value_case)
-    error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
-  }
-}
-
 variable "label_key_case" {
   type        = string
   default     = null
@@ -164,5 +149,20 @@ variable "label_key_case" {
   validation {
     condition     = var.label_key_case == null ? true : contains(["lower", "title", "upper"], var.label_key_case)
     error_message = "Allowed values: `lower`, `title`, `upper`."
+  }
+}
+
+variable "label_value_case" {
+  type        = string
+  default     = null
+  description = <<-EOT
+    The letter case of output label values (also used in `tags` and `id`).
+    Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
+    Default value: `lower`.
+  EOT
+
+  validation {
+    condition     = var.label_value_case == null ? true : contains(["lower", "title", "upper", "none"], var.label_value_case)
+    error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
