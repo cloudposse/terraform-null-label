@@ -177,4 +177,116 @@ func TestExamplesComplete(t *testing.T) {
 	label7 := terraform.OutputMap(t, terraformOptions, "label7")
 	assert.Equal(t, "eg-demo-blue-cluster-nodegroup", label7["id"], "var.attributes should be appended after context.attributes")
 
+	// Verify that apply with `label_key_case=title`, `label_value_case=lower`, `delimiter=""` returns expected value of id, context id
+	label8dndID := terraform.Output(t, terraformOptions, "label8dnd_id")
+	label8dndContextID := terraform.Output(t, terraformOptions, "label8dnd_context_id")
+	assert.Equal(t, "egdemobluecluster", label8dndID)
+	assert.Equal(t, label8dndID, label8dndContextID, "ID and context ID should be equal")
+
+	// Verify that apply with `label_key_case=title`, `label_value_case=lower`, `delimiter="x"` returns expected value of id, context id
+	label8dcdID := terraform.Output(t, terraformOptions, "label8dcd_id")
+	label8dcdContextID := terraform.Output(t, terraformOptions, "label8dcd_context_id")
+	assert.Equal(t, "egxdemoxbluexcluster", label8dcdID)
+	assert.Equal(t, label8dcdID, label8dcdContextID, "ID and context ID should be equal")
+
+	// Verify that apply with `label_key_case=title` and `label_value_case=lower` returns expected values of id, tags, context tags
+	label8dExpectedTags := map[string]string{
+		"Attributes":             "cluster",
+		"Environment":            "demo",
+		"Name":                   "eg-demo-blue-cluster",
+		"Namespace":              "eg",
+		"kubernetes.io/cluster/": "shared",
+	}
+
+	label8dID := terraform.Output(t, terraformOptions, "label8d_id")
+	label8dContextID := terraform.Output(t, terraformOptions, "label8d_context_id")
+	assert.Equal(t, "eg-demo-blue-cluster", label8dID)
+	assert.Equal(t, label8dID, label8dContextID, "ID and context ID should be equal")
+
+	label8dTags := terraform.OutputMap(t, terraformOptions, "label8d_tags")
+	label8dContextTags := terraform.OutputMap(t, terraformOptions, "label8d_context_tags")
+
+	assert.Exactly(t, label8dExpectedTags, label8dTags, "generated tags are different from expected")
+	assert.Exactly(t, label8dTags, label8dContextTags, "tags and context tags should be equal")
+
+	// Verify that apply with `label_key_case=lower` and  `label_value_case=lower` returns expected values of id, tags, context tags
+	label8lExpectedTags := map[string]string{
+		"attributes":             "cluster",
+		"environment":            "demo",
+		"name":                   "eg-demo-blue-cluster",
+		"namespace":              "eg",
+		"kubernetes.io/cluster/": "shared",
+		"upperTEST":              "testUPPER",
+	}
+
+	label8lID := terraform.Output(t, terraformOptions, "label8l_id")
+	label8lContextID := terraform.Output(t, terraformOptions, "label8l_context_id")
+	assert.Equal(t, "eg-demo-blue-cluster", label8lID)
+	assert.Equal(t, label8lID, label8lContextID, "ID and context ID should be equal")
+
+	label8lTags := terraform.OutputMap(t, terraformOptions, "label8l_tags")
+	label8lContextTags := terraform.OutputMap(t, terraformOptions, "label8l_context_tags")
+
+	assert.Exactly(t, label8lExpectedTags, label8lTags, "generated tags are different from expected")
+	assert.Exactly(t, label8lTags, label8lContextTags, "tags and context tags should be equal")
+
+	// Verify that apply with `label_key_case=title` and  `label_value_case=title` returns expected values of id, tags, context tags
+	label8tExpectedTags := map[string]string{
+		"Attributes":             "Eks-Cluster",
+		"Environment":            "Demo",
+		"Name":                   "Eg-Demo-Blue-Eks-Cluster",
+		"Namespace":              "Eg",
+		"kubernetes.io/cluster/": "shared",
+	}
+
+	label8tID := terraform.Output(t, terraformOptions, "label8t_id")
+	label8tContextID := terraform.Output(t, terraformOptions, "label8t_context_id")
+	assert.Equal(t, "Eg-Demo-Blue-Eks-Cluster", label8tID)
+	assert.Equal(t, label8tID, label8tContextID, "ID and context ID should be equal")
+
+	label8tTags := terraform.OutputMap(t, terraformOptions, "label8t_tags")
+	label8tContextTags := terraform.OutputMap(t, terraformOptions, "label8t_context_tags")
+
+	assert.Exactly(t, label8tExpectedTags, label8tTags, "generated tags are different from expected")
+	assert.Exactly(t, label8tTags, label8tContextTags, "tags and context tags should be equal")
+
+	// Verify that apply with `label_key_case=upper` and  `label_value_case=upper` returns expected values of id, tags, context tags
+	label8uExpectedTags := map[string]string{
+		"ATTRIBUTES":             "CLUSTER",
+		"ENVIRONMENT":            "DEMO",
+		"NAME":                   "EG-DEMO-BLUE-CLUSTER",
+		"NAMESPACE":              "EG",
+		"kubernetes.io/cluster/": "shared",
+	}
+
+	label8uID := terraform.Output(t, terraformOptions, "label8u_id")
+	label8uContextID := terraform.Output(t, terraformOptions, "label8u_context_id")
+	assert.Equal(t, "EG-DEMO-BLUE-CLUSTER", label8uID)
+	assert.Equal(t, label8uID, label8uContextID, "ID and context ID should be equal")
+
+	label8uTags := terraform.OutputMap(t, terraformOptions, "label8u_tags")
+	label8uContextTags := terraform.OutputMap(t, terraformOptions, "label8u_context_tags")
+
+	assert.Exactly(t, label8uExpectedTags, label8uTags, "generated tags are different from expected")
+	assert.Exactly(t, label8uTags, label8uContextTags, "tags and context tags should be equal")
+
+	// Verify that apply with `label_key_case=title` and  `label_value_case=none` returns expected values of id, tags, context tags
+	label8nExpectedTags := map[string]string{
+		"Attributes":             "eks-ClusteR",
+		"Environment":            "demo",
+		"Name":                   "EG-demo-blue-eks-ClusteR",
+		"Namespace":              "EG",
+		"kubernetes.io/cluster/": "shared",
+	}
+
+	label8nID := terraform.Output(t, terraformOptions, "label8n_id")
+	label8nContextID := terraform.Output(t, terraformOptions, "label8n_context_id")
+	assert.Equal(t, "EG-demo-blue-eks-ClusteR", label8nID)
+	assert.Equal(t, label8nID, label8nContextID, "ID and context ID should be equal")
+
+	label8nTags := terraform.OutputMap(t, terraformOptions, "label8n_tags")
+	label8nContextTags := terraform.OutputMap(t, terraformOptions, "label8n_context_tags")
+
+	assert.Exactly(t, label8nExpectedTags, label8nTags, "generated tags are different from expected")
+	assert.Exactly(t, label8nTags, label8nContextTags, "tags and context tags should be equal")
 }
