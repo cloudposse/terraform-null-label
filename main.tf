@@ -116,7 +116,10 @@ locals {
   id_truncated_length_limit = local.id_length_limit - (local.id_hash_length + local.delimiter_length)
   # Truncate the ID and ensure a single (not double) trailing delimiter
   id_truncated = local.id_truncated_length_limit <= 0 ? "" : "${trimsuffix(substr(local.id_full, 0, local.id_truncated_length_limit), local.delimiter)}${local.delimiter}"
-  id_hash      = local.label_value_case == "title" ? title(md5(local.id_full)) : local.label_value_case == "upper" ? upper(md5(local.id_full)) : local.label_value_case == "lower" ? lower(md5(local.id_full)) : md5(local.id_full)
+  # Support usages that disallow numeric characters. Would prefer tr 0-9 q-z but Terraform does not support it.
+  id_hash_plus = "${md5(local.id_full)}qrstuvwxyz"
+  id_hash_case = local.label_value_case == "title" ? title(local.id_hash_plus) : local.label_value_case == "upper" ? upper(local.id_hash_plus) : local.label_value_case == "lower" ? lower(local.id_hash_plus) : local.id_hash_plus
+  id_hash      = replace(local.id_hash_case, local.regex_replace_chars, local.replacement)
   # Create the short ID by adding a hash to the end of the truncated ID
   id_short = substr("${local.id_truncated}${local.id_hash}", 0, local.id_length_limit)
   id       = local.id_length_limit != 0 && length(local.id_full) > local.id_length_limit ? local.id_short : local.id_full
