@@ -11,6 +11,7 @@ module "label8l" {
 
   tags = {
     "kubernetes.io/cluster/" = "shared"
+    "upperTEST"              = "testUPPER"
   }
 }
 

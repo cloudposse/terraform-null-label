@@ -4,7 +4,7 @@ module "label8t" {
   namespace        = "eg"
   environment      = "demo"
   name             = "blue"
-  attributes       = ["cluster"]
+  attributes       = ["EKS", "cluster"]
   delimiter        = "-"
   label_value_case = "title"
   label_key_case   = "title"

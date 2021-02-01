@@ -54,8 +54,8 @@ variable "context" {
     regex_replace_chars = string
     label_order         = list(string)
     id_length_limit     = number
-    label_value_case    = string
     label_key_case      = string
+    label_value_case    = string
   })
   default = {
     enabled             = true
@@ -70,8 +70,8 @@ variable "context" {
     regex_replace_chars = null
     label_order         = []
     id_length_limit     = null
-    label_value_case    = null
     label_key_case      = null
+    label_value_case    = null
   }
   description = <<-EOT
     Single object for setting entire context at once.

@@ -5,7 +5,7 @@ module "label8n" {
   namespace        = "EG"
   environment      = "demo"
   name             = "blue"
-  attributes       = ["ClusteR"]
+  attributes       = ["eks", "ClusteR"]
   delimiter        = "-"
   label_value_case = "none"
 

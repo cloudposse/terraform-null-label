@@ -216,6 +216,7 @@ func TestExamplesComplete(t *testing.T) {
 		"name":                   "eg-demo-blue-cluster",
 		"namespace":              "eg",
 		"kubernetes.io/cluster/": "shared",
+		"upperTEST":              "testUPPER",
 	}
 
 	label8lID := terraform.Output(t, terraformOptions, "label8l_id")
@@ -231,9 +232,9 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify that apply with `label_key_case=title` and  `label_value_case=title` returns expected values of id, tags, context tags
 	label8tExpectedTags := map[string]string{
-		"Attributes":             "Cluster",
+		"Attributes":             "Eks-Cluster",
 		"Environment":            "Demo",
-		"Name":                   "Eg-Demo-Blue-Cluster",
+		"Name":                   "Eg-Demo-Blue-Eks-Cluster",
 		"Namespace":              "Eg",
 		"kubernetes.io/cluster/": "shared",
 	}
@@ -249,7 +250,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Exactly(t, label8tExpectedTags, label8tTags, "generated tags are different from expected")
 	assert.Exactly(t, label8tTags, label8tContextTags, "tags and context tags should be equal")
 
-	// Verify that apply with `label_key_case=title` and  `label_value_case=upper` returns expected values of id, tags, context tags
+	// Verify that apply with `label_key_case=upper` and  `label_value_case=upper` returns expected values of id, tags, context tags
 	label8uExpectedTags := map[string]string{
 		"ATTRIBUTES":             "CLUSTER",
 		"ENVIRONMENT":            "DEMO",
@@ -271,9 +272,9 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify that apply with `label_key_case=title` and  `label_value_case=none` returns expected values of id, tags, context tags
 	label8nExpectedTags := map[string]string{
-		"Attributes":             "ClusteR",
+		"Attributes":             "eks-ClusteR",
 		"Environment":            "demo",
-		"Name":                   "EG-demo-blue-ClusteR",
+		"Name":                   "EG-demo-blue-eks-ClusteR",
 		"Namespace":              "EG",
 		"kubernetes.io/cluster/": "shared",
 	}

@@ -11,6 +11,7 @@ locals {
     label_key_case      = "title"
   }
 
+  # So far, we have decided not to allow overriding replacement or id_hash_length
   replacement    = local.defaults.replacement
   id_hash_length = local.defaults.id_hash_length
 
@@ -33,8 +34,8 @@ locals {
     label_order         = var.label_order == null ? var.context.label_order : var.label_order
     regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
-    label_value_case    = var.label_value_case == null ? var.context.label_value_case : var.label_value_case
     label_key_case      = var.label_key_case == null ? var.context.label_key_case : var.label_key_case
+    label_value_case    = var.label_value_case == null ? var.context.label_value_case : var.label_value_case
   }
 
 
@@ -136,8 +137,8 @@ locals {
     label_order         = local.label_order
     regex_replace_chars = local.regex_replace_chars
     id_length_limit     = local.id_length_limit
-    label_value_case    = local.label_value_case
     label_key_case      = local.label_key_case
+    label_value_case    = local.label_value_case
   }
 
 }
