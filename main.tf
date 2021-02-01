@@ -51,13 +51,13 @@ locals {
 
   formatted_labels = { for k in local.string_label_names : k => local.label_value_case == "none" ? local.normalized_labels[k] :
     local.label_value_case == "title" ? title(lower(local.normalized_labels[k])) :
-    local.label_value_case == "upper" ? upper(lower(local.normalized_labels[k])) : lower(local.normalized_labels[k])
+    local.label_value_case == "upper" ? upper(local.normalized_labels[k]) : lower(local.normalized_labels[k])
   }
 
   attributes = compact(distinct([
     for v in local.normalized_attributes : (local.label_value_case == "none" ? v :
       local.label_value_case == "title" ? title(lower(v)) :
-    local.label_value_case == "upper" ? upper(lower(v)) : lower(v))
+    local.label_value_case == "upper" ? upper(v) : lower(v))
   ]))
 
   name        = local.formatted_labels["name"]
@@ -94,7 +94,7 @@ locals {
 
   generated_tags = {
     for l in keys(local.tags_context) :
-    local.label_key_case == "upper" ? upper(lower(l)) : (
+    local.label_key_case == "upper" ? upper(l) : (
       local.label_key_case == "lower" ? lower(l) : title(lower(l))
     ) => local.tags_context[l] if length(local.tags_context[l]) > 0
   }
