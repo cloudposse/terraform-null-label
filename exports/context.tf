@@ -20,7 +20,7 @@
 
 module "this" {
   source  = "cloudposse/label/null"
-  version = "0.23.0" // requires Terraform >= 0.13.0
+  version = "0.23.0" # requires Terraform >= 0.13.0
 
   enabled             = var.enabled
   namespace           = var.namespace
@@ -184,7 +184,7 @@ variable "label_key_case" {
   default     = null
   description = <<-EOT
     The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.
-    Possible values: `lower`, `title`, `upper`. 
+    Possible values: `lower`, `title`, `upper`.
     Default value: `title`.
   EOT
 
@@ -199,7 +199,7 @@ variable "label_value_case" {
   default     = null
   description = <<-EOT
     The letter case of output label values (also used in `tags` and `id`).
-    Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
+    Possible values: `lower`, `title`, `upper` and `none` (no transformation).
     Default value: `lower`.
   EOT
 
