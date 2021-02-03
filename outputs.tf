@@ -9,7 +9,7 @@ output "id_full" {
 }
 
 output "id_trunc" {
-  value       = { for length in var.id_lengths : length => local.ids[length] }
+  value       = { for length in local.id_lengths : length => local.ids[length] }
   description = <<-EOT
     Disambiguated ID restricted to character lengths specified by `id_lengths` variable.
     For example, variable `id_lengths = [8,16]` results in output `id_trunc` = {8 => "...", 16 => "..." }.

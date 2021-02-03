@@ -9,6 +9,7 @@ locals {
     id_hash_length      = 5
     label_key_case      = "title"
     label_value_case    = "lower"
+    id_lengths          = []
   }
 
   # So far, we have decided not to allow overriding replacement or id_hash_length
@@ -36,6 +37,7 @@ locals {
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
     label_key_case      = var.label_key_case == null ? lookup(var.context, "label_key_case", null) : var.label_key_case
     label_value_case    = var.label_value_case == null ? lookup(var.context, "label_value_case", null) : var.label_value_case
+    id_lengths          = distinct(concat(var.context.id_lengths, var.id_lengths))
   }
 
 
@@ -72,6 +74,7 @@ locals {
   label_value_case = local.input.label_value_case == null ? local.defaults.label_value_case : local.input.label_value_case
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
+  id_lengths         = local.input.id_lengths
 
   tags = merge(local.generated_tags, local.input.tags)
 
@@ -126,9 +129,9 @@ locals {
   id       = local.id_length_limit != 0 && length(local.id_full) > local.id_length_limit ? local.id_short : local.id_full
 
   # Custom truncated lengths
-  ids_truncated_length_limit = { for length in var.id_lengths : length => length - local.id_truncated_suffix_length }
-  ids_truncated              = { for length in var.id_lengths : length => local.ids_truncated_length_limit[length] <= 0 ? "" : "${trimsuffix(substr(local.id_full, 0, local.ids_truncated_length_limit[length]), local.delimiter)}${local.delimiter}" }
-  ids                        = { for length in var.id_lengths : length => length(local.id_full) > length ? substr("${local.ids_truncated[length]}${local.id_hash}", 0, length) : local.id_full }
+  ids_truncated_length_limit = { for length in local.id_lengths : length => length - local.id_truncated_suffix_length }
+  ids_truncated              = { for length in local.id_lengths : length => local.ids_truncated_length_limit[length] <= 0 ? "" : "${trimsuffix(substr(local.id_full, 0, local.ids_truncated_length_limit[length]), local.delimiter)}${local.delimiter}" }
+  ids                        = { for length in local.id_lengths : length => length(local.id_full) > length ? substr("${local.ids_truncated[length]}${local.id_hash}", 0, length) : local.id_full }
 
   # Context of this label to pass to other label modules
   output_context = {
@@ -146,6 +149,7 @@ locals {
     id_length_limit     = local.id_length_limit
     label_key_case      = local.label_key_case
     label_value_case    = local.label_value_case
+    id_lengths          = local.id_lengths
   }
 
 }
