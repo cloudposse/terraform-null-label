@@ -115,11 +115,15 @@ variable "id_length_limit" {
   type        = number
   default     = null
   description = <<-EOT
-    Limit `id` to this many characters.
+    Limit `id` to this many characters (minimum 6).
     Set to `0` for unlimited length.
     Set to `null` for default, which is `0`.
     Does not affect `id_full`.
   EOT
+  validation {
+    condition     = var.id_length_limit == null ? true : id_length_limit >= 6 || id_length_limit == 0
+    error_message = "id_length_limit must be >= 6 if supplied (not null), or 0 for unlimited length"
+  }
 }
 
 variable "label_key_case" {
