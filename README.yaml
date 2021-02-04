@@ -34,7 +34,7 @@ description: |-
   - If you want the attributes in a different order, you can specify that, too, with the `label_order` list.
   - You can set a maximum length for the name, and the module will create a unique name that fits within that length.
   - You can control the letter case of the generated labels which make up the `id` using `var.label_value_case`.
-  - The labels are also exported as tags. You can control the case of the tag names (keys) using `var.label_tag_case`.
+  - The labels are also exported as tags. You can control the case of the tag names (keys) using `var.label_key_case`.
 
   It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type.
   For example, if you have 10 instances, there should be 10 different labels.
