@@ -162,15 +162,16 @@ func TestExamplesComplete(t *testing.T) {
 
 	label6f := terraform.OutputMap(t, terraformOptions, "label6f")
 	label6fTags := terraform.OutputMap(t, terraformOptions, "label6f_tags")
-	assert.Equal(t, "cp~uw2~prd~null-label", label6f["id_full"])
+	// Test of setting var.label_key_case = "lower", var.label_value_case = "upper"
+	assert.Equal(t, "CP~UW2~PRD~NULL-LABEL", label6f["id_full"])
 	assert.Equal(t, label6f["id_full"], label6f["id"], "id should not be truncated")
-	assert.Equal(t, label6f["id"], label6fTags["Name"], "Name tag should match ID")
+	assert.Equal(t, label6f["id"], label6fTags["name"], "Name tag should match ID")
 
 	label6t := terraform.OutputMap(t, terraformOptions, "label6t")
 	label6tTags := terraform.OutputMap(t, terraformOptions, "label6t_tags")
-	assert.Equal(t, "cpuw2prdnull-label", label6t["id_full"])
+	assert.Equal(t, "CPUW2PRDNULL-LABEL", label6t["id_full"])
 	assert.NotEqual(t, label6t["id_full"], label6t["id"], "id should be truncated")
-	assert.Equal(t, label6t["id"], label6tTags["Name"], "Name tag should match ID")
+	assert.Equal(t, label6t["id"], label6tTags["name"], "Name tag should match ID")
 	assert.Equal(t, label6t["id_length_limit"], fmt.Sprintf("%d", len(label6t["id"])),
 		"Truncated ID length should equal length limit")
 
