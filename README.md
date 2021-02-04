@@ -33,9 +33,11 @@ This module generates names using the following convention by default: `{namespa
 However, it is highly configurable. The delimiter (e.g. `-`) is configurable. Each label item is optional (although you must provide at least one).
 So if you prefer the term `stage` to `environment`
 you can exclude environment and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
-If attributes are excluded but `stage` and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
-If you want the attributes in a different order, you can specify that, too, with the `label_order` list.
-You can set a maximum length for the name, and the module will create a unique name that fits within that length.
+- If attributes are excluded but `namespace`, `stage`, and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
+- If you want the attributes in a different order, you can specify that, too, with the `label_order` list.
+- You can set a maximum length for the name, and the module will create a unique name that fits within that length.
+- You can control the letter case of the generated labels which make up the `id` using `var.label_value_case`.
+- The labels are also exported as tags. You can control the case of the tag names (keys) using `var.label_tag_case`.
 
 It's recommended to use one `terraform-null-label` module for every unique resource of a given resource type.
 For example, if you have 10 instances, there should be 10 different labels.
@@ -43,9 +45,12 @@ However, if you have multiple different kinds of resources (e.g. instances, secu
 
 All [Cloud Posse modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=terraform-&type=&language=) use this module to ensure resources can be instantiated multiple times within an account and without conflict.
 
-**NOTE:** The `null` refers to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
+**NOTE:** The `null` originally referred to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
+With Terraform 0.12, this module no longer needs any provider, but the name was kept for continuity.
 
-Releases of this module from `0.12.0` onward support `HCL2` and only work with Terraform 0.12 or newer.  Releases prior to this are compatible with earlier versions of terraform like Terraform 0.11.
+- Releases of this module from `0.23.0` onward only work with Terraform 0.13 or newer.
+- Releases of this module from `0.12.0` through `0.22.1` support `HCL2` and are compatible with Terraform 0.12 or newer.
+- Releases of this module prior to `0.12.0` are compatible with earlier versions of terraform like Terraform 0.11.
 
 
 ---
@@ -693,7 +698,7 @@ No provider.
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
-| id\_length\_limit | Limit `id` to this many characters.<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
+| id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | label\_key\_case | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
 | label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
 | label\_value\_case | The letter case of output label values (also used in `tags` and `id`).<br>Possible values: `lower`, `title`, `upper` and `none` (no transformation).<br>Default value: `lower`. | `string` | `null` | no |
