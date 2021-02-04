@@ -38,6 +38,8 @@ module "this" {
   label_order         = var.label_order
   regex_replace_chars = var.regex_replace_chars
   id_length_limit     = var.id_length_limit
+  label_key_case      = var.label_key_case
+  label_value_case    = var.label_value_case
 
   context = var.context
 }
@@ -188,7 +190,7 @@ variable "label_key_case" {
   default     = null
   description = <<-EOT
     The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.
-    Possible values: `lower`, `title`, `upper`. 
+    Possible values: `lower`, `title`, `upper`.
     Default value: `title`.
   EOT
 
@@ -203,7 +205,7 @@ variable "label_value_case" {
   default     = null
   description = <<-EOT
     The letter case of output label values (also used in `tags` and `id`).
-    Possible values: `lower`, `title`, `upper` and `none` (no transformation). 
+    Possible values: `lower`, `title`, `upper` and `none` (no transformation).
     Default value: `lower`.
   EOT
 
@@ -212,5 +214,4 @@ variable "label_value_case" {
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
-
 #### End of copy of cloudposse/terraform-null-label/variables.tf
