@@ -43,22 +43,7 @@ module "this" {
 # Copy contents of cloudposse/terraform-null-label/variables.tf here
 
 variable "context" {
-  type = object({
-    enabled             = bool
-    namespace           = string
-    environment         = string
-    stage               = string
-    name                = string
-    delimiter           = string
-    attributes          = list(string)
-    tags                = map(string)
-    additional_tag_map  = map(string)
-    regex_replace_chars = string
-    label_order         = list(string)
-    id_length_limit     = number
-    label_key_case      = string
-    label_value_case    = string
-  })
+  type = any
   default = {
     enabled             = true
     namespace           = null
@@ -84,12 +69,12 @@ variable "context" {
   EOT
 
   validation {
-    condition     = var.context["label_key_case"] == null ? true : contains(["lower", "title", "upper"], var.context["label_key_case"])
+    condition     = lookup(var.context, "label_key_case", null) == null ? true : contains(["lower", "title", "upper"], var.context["label_key_case"])
     error_message = "Allowed values: `lower`, `title`, `upper`."
   }
 
   validation {
-    condition     = var.context["label_value_case"] == null ? true : contains(["lower", "title", "upper", "none"], var.context["label_value_case"])
+    condition     = lookup(var.context, "label_value_case", null) == null ? true : contains(["lower", "title", "upper", "none"], var.context["label_value_case"])
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
