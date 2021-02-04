@@ -121,7 +121,7 @@ variable "id_length_limit" {
     Does not affect `id_full`.
   EOT
   validation {
-    condition     = var.id_length_limit == null ? true : id_length_limit >= 6 || id_length_limit == 0
+    condition     = var.id_length_limit == null ? true : var.id_length_limit >= 6 || var.id_length_limit == 0
     error_message = "The id_length_limit must be >= 6 if supplied (not null), or 0 for unlimited length."
   }
 }
