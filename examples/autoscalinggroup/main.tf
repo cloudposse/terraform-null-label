@@ -23,9 +23,11 @@ resource "aws_launch_template" "default" {
     enabled = false
   }
 
-  # terraform-null-label example used here: Set tags on volumes
+  # terraform-null-label example used here: Set tags on everything that can be tagged
   tag_specifications {
-    resource_type = "volume"
+    for_each = ["instance", "volume", "elastic-gpu", "spot-instance-request"]
+
+    resource_type = each.value
     tags          = module.label.tags
   }
 
