@@ -28,6 +28,11 @@ resource "aws_launch_template" "default" {
     resource_type = "volume"
     tags          = module.label.tags
   }
+
+  # Bridgecrew compliance: Ensure Instance Metadata Service Version 1 is not enabled (BC_AWS_GENERAL_31)
+  metadata_options {
+    http_tokens = "required"
+  }
 }
 
 ######################
