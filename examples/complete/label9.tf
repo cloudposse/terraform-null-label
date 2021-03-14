@@ -37,8 +37,8 @@ output "label9cv_ids" {
 
 // No specification, and an old pre-id_lengths context
 module "label9_oldcontext" {
-  source = "../../"
-  context = { for k, v in module.label9c.context : k => v if k != "id_lengths"}
+  source  = "../../"
+  context = { for k, v in module.label9c.context : k => v if k != "id_lengths" }
 }
 
 output "label9_oldcontext_ids" {
