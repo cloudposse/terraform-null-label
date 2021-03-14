@@ -17,7 +17,7 @@ locals {
   id_hash_length = local.defaults.id_hash_length
 
   # The values provided by variables supersede the values inherited from the context object,
-  # except for tags and attributes which are merged.
+  # except for the following items which merge: tags, attributes, and id_lengths.
   input = {
     # It would be nice to use coalesce here, but we cannot, because it
     # is an error for all the arguments to coalesce to be empty.
@@ -37,7 +37,7 @@ locals {
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
     label_key_case      = var.label_key_case == null ? lookup(var.context, "label_key_case", null) : var.label_key_case
     label_value_case    = var.label_value_case == null ? lookup(var.context, "label_value_case", null) : var.label_value_case
-    id_lengths          = distinct(concat(var.context.id_lengths, var.id_lengths))
+    id_lengths          = distinct(concat(lookup(var.context, "id_lengths", []), var.id_lengths))
   }
 
 
