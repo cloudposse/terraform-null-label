@@ -314,4 +314,7 @@ func TestExamplesComplete(t *testing.T) {
 	}
 	assert.Exactly(t, label9cvExpectedIds, label9cvIds, "label9cv ids are different from expected")
 
+	label9oldcontextIds := terraform.OutputMap(t, terraformOptions, "label9cv_ids")
+	label9oldcontextExpectedIds := map[string]string{}
+	assert.Exactly(t, label9oldcontextExpectedIds, label9oldcontextIds, "label9oldcontext ids are different from expected")
 }

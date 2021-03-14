@@ -34,3 +34,13 @@ module "label9cv" {
 output "label9cv_ids" {
   value = module.label9cv.id_trunc
 }
+
+// No specification, and an old pre-id_lengths context
+module "label9_oldcontext" {
+  source = "../../"
+  context = { for k, v in module.label9c.context : k => v if k != "id_lengths"}
+}
+
+output "label9_oldcontext_ids" {
+  value = module.label9_oldcontext.id_trun
+}
