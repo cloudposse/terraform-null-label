@@ -10,11 +10,8 @@ module "label9v" {
   id_lengths  = [10, 15]
 }
 
-output "label9v" {
-  value = {
-    id  = module.label9v.id
-    ids = module.label9v.id_trunc
-  }
+output "label9v_ids" {
+  value = module.label9v.id_trunc
 }
 
 # Context only
@@ -23,11 +20,8 @@ module "label9c" {
   context = module.label9v.context
 }
 
-output "label9c" {
-  value = {
-    id  = module.label9c.id
-    ids = module.label9c.id_trunc
-  }
+output "label9c_ids" {
+  value = module.label9c.id_trunc
 }
 
 # Context and variable
@@ -37,9 +31,6 @@ module "label9cv" {
   id_lengths = [30, 50]
 }
 
-output "label9cv" {
-  value = {
-    id  = module.label9cv.id
-    ids = module.label9cv.id_trunc
-  }
+output "label9cv_ids" {
+  value = module.label9cv.id_trunc
 }
