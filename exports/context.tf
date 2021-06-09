@@ -4,6 +4,9 @@
 #
 #
 # Copy this file from https://github.com/cloudposse/terraform-null-label/blob/master/exports/context.tf
+#
+# curl -s https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf -o context.tf
+#
 # and then place it in your Terraform module to automatically get
 # Cloud Posse's standard configuration inputs suitable for passing
 # to Cloud Posse modules.
