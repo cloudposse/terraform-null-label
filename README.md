@@ -841,12 +841,9 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 **NOTE:** Be sure to merge the latest changes from "upstream" before making a pull request!
 
 
+## Copyright
 
-## Copyrights
-
-Copyright © 2017-2021 [Cloud Posse, LLC](https://cloudposse.com)
-
-
+Copyright © 2017-2021 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
