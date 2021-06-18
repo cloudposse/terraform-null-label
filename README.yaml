@@ -13,7 +13,7 @@ license: APACHE2
 copyrights:
 - name: "Cloud Posse, LLC"
   url: "https://cloudposse.com"
-  year: "2021"
+  year: "2017"
 github_repo: cloudposse/terraform-null-label
 badges:
 - name: Latest Release
