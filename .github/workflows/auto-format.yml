@@ -6,7 +6,7 @@ on:
 jobs:
   auto-format:
     runs-on: ubuntu-latest
-    container: cloudposse/build-harness:slim-latest
+    container: cloudposse/build-harness:latest
     steps:
     # Checkout the pull request branch
     #  "An action in a workflow run can’t trigger a new workflow run. For example, if an action pushes code using
@@ -29,6 +29,8 @@ jobs:
     - name: Auto Format
       if: github.event.pull_request.state == 'open'
       shell: bash
+      env:
+        GITHUB_TOKEN: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
       run: make BUILD_HARNESS_PATH=/build-harness PACKAGES_PREFER_HOST=true -f /build-harness/templates/Makefile.build-harness pr/auto-format/host
 
     # Commit changes (if any) to the PR branch
