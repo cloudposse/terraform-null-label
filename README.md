@@ -1,3 +1,4 @@
+
 <!-- markdownlint-disable -->
 # terraform-null-label [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-null-label.svg)](https://github.com/cloudposse/terraform-null-label/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
@@ -52,7 +53,6 @@ With Terraform 0.12, this module no longer needs any provider, but the name was 
 - Releases of this module from `0.12.0` through `0.22.1` support `HCL2` and are compatible with Terraform 0.12 or newer.
 - Releases of this module prior to `0.12.0` are compatible with earlier versions of terraform like Terraform 0.11.
 
-
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
@@ -77,7 +77,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 We literally have [*hundreds of terraform modules*][terraform_modules] that are Open Source and well-maintained. Check them out!
-
 
 
 
@@ -140,7 +139,10 @@ be overwritten.
 
 ```hcl
 module "eg_prod_bastion_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -191,7 +193,10 @@ Here is a more complex example with two instances using two different labels. No
 
 ```hcl
 module "eg_prod_bastion_abc_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -222,7 +227,10 @@ resource "aws_instance" "eg_prod_bastion_abc" {
 }
 
 module "eg_prod_bastion_xyz_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   namespace  = "eg"
   stage      = "prod"
   name       = "bastion"
@@ -360,7 +368,10 @@ as a derivative of that.
 
 ```hcl
 module "label1" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   namespace   = "CloudPosse"
   environment = "UAT"
   stage       = "build"
@@ -377,7 +388,10 @@ module "label1" {
 }
 
 module "label2" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   context   = module.label1.context
   name      = "Charlie"
   stage     = "test"
@@ -390,7 +404,10 @@ module "label2" {
 }
 
 module "label3" {
-  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=master"
+  source   = "cloudposse/label/null"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version     = "x.x.x"
+
   name      = "Starfish"
   stage     = "release"
   context   = module.label1.context
@@ -682,54 +699,61 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
 
 ## Providers
 
-No provider.
+No providers.
+
+## Modules
+
+No modules.
+
+## Resources
+
+No resources.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
-| attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
-| context | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | `any` | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_key_case": null,<br>  "label_order": [],<br>  "label_value_case": null,<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
-| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
-| enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
-| environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
-| id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
-| label\_key\_case | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
-| label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
-| label\_value\_case | The letter case of output label values (also used in `tags` and `id`).<br>Possible values: `lower`, `title`, `upper` and `none` (no transformation).<br>Default value: `lower`. | `string` | `null` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | `string` | `null` | no |
-| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `null` | no |
-| regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
+| <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
+| <a name="input_attributes"></a> [attributes](#input\_attributes) | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
+| <a name="input_context"></a> [context](#input\_context) | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | `any` | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_key_case": null,<br>  "label_order": [],<br>  "label_value_case": null,<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
+| <a name="input_delimiter"></a> [delimiter](#input\_delimiter) | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
+| <a name="input_id_length_limit"></a> [id\_length\_limit](#input\_id\_length\_limit) | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
+| <a name="input_label_key_case"></a> [label\_key\_case](#input\_label\_key\_case) | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
+| <a name="input_label_order"></a> [label\_order](#input\_label\_order) | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
+| <a name="input_label_value_case"></a> [label\_value\_case](#input\_label\_value\_case) | The letter case of output label values (also used in `tags` and `id`).<br>Possible values: `lower`, `title`, `upper` and `none` (no transformation).<br>Default value: `lower`. | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Solution name, e.g. 'app' or 'jenkins' | `string` | `null` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `null` | no |
+| <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
+| <a name="input_stage"></a> [stage](#input\_stage) | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| additional\_tag\_map | The merged additional\_tag\_map |
-| attributes | List of attributes |
-| context | Merged but otherwise unmodified input to this module, to be used as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
-| delimiter | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
-| enabled | True if module is enabled, false otherwise |
-| environment | Normalized environment |
-| id | Disambiguated ID restricted to `id_length_limit` characters in total |
-| id\_full | Disambiguated ID not restricted in length |
-| id\_length\_limit | The id\_length\_limit actually used to create the ID, with `0` meaning unlimited |
-| label\_order | The naming order actually used to create the ID |
-| name | Normalized name |
-| namespace | Normalized namespace |
-| normalized\_context | Normalized context of this module |
-| regex\_replace\_chars | The regex\_replace\_chars actually used to create the ID |
-| stage | Normalized stage |
-| tags | Normalized Tag map |
-| tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |
-
+| <a name="output_additional_tag_map"></a> [additional\_tag\_map](#output\_additional\_tag\_map) | The merged additional\_tag\_map |
+| <a name="output_attributes"></a> [attributes](#output\_attributes) | List of attributes |
+| <a name="output_context"></a> [context](#output\_context) | Merged but otherwise unmodified input to this module, to be used as context input to other modules.<br>Note: this version will have null values as defaults, not the values actually used as defaults. |
+| <a name="output_delimiter"></a> [delimiter](#output\_delimiter) | Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes` |
+| <a name="output_enabled"></a> [enabled](#output\_enabled) | True if module is enabled, false otherwise |
+| <a name="output_environment"></a> [environment](#output\_environment) | Normalized environment |
+| <a name="output_id"></a> [id](#output\_id) | Disambiguated ID restricted to `id_length_limit` characters in total |
+| <a name="output_id_full"></a> [id\_full](#output\_id\_full) | Disambiguated ID not restricted in length |
+| <a name="output_id_length_limit"></a> [id\_length\_limit](#output\_id\_length\_limit) | The id\_length\_limit actually used to create the ID, with `0` meaning unlimited |
+| <a name="output_label_order"></a> [label\_order](#output\_label\_order) | The naming order actually used to create the ID |
+| <a name="output_name"></a> [name](#output\_name) | Normalized name |
+| <a name="output_namespace"></a> [namespace](#output\_namespace) | Normalized namespace |
+| <a name="output_normalized_context"></a> [normalized\_context](#output\_normalized\_context) | Normalized context of this module |
+| <a name="output_regex_replace_chars"></a> [regex\_replace\_chars](#output\_regex\_replace\_chars) | The regex\_replace\_chars actually used to create the ID |
+| <a name="output_stage"></a> [stage](#output\_stage) | Normalized stage |
+| <a name="output_tags"></a> [tags](#output\_tags) | Normalized Tag map |
+| <a name="output_tags_as_list_of_maps"></a> [tags\_as\_list\_of\_maps](#output\_tags\_as\_list\_of\_maps) | Additional tags as a list of maps, which can be used in several AWS resources |
 <!-- markdownlint-restore -->
 
 
@@ -741,13 +765,12 @@ Like this project? Please give it a ★ on [our GitHub](https://github.com/cloud
 Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
 
 
+
 ## Related Projects
 
 Check out these related projects.
 
 - [terraform-terraform-label](https://github.com/cloudposse/terraform-terraform-label) - Terraform Module to define a consistent naming convention by (namespace, environment, stage, name, [attributes])
-
-
 
 ## Help
 
@@ -878,8 +901,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 ### Contributors
 
 <!-- markdownlint-disable -->
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Sergey Vasilyev][s2504s_avatar]][s2504s_homepage]<br/>[Sergey Vasilyev][s2504s_homepage] | [![Michael Pereira][MichaelPereira_avatar]][MichaelPereira_homepage]<br/>[Michael Pereira][MichaelPereira_homepage] | [![Jamie Nelson][Jamie-BitFlight_avatar]][Jamie-BitFlight_homepage]<br/>[Jamie Nelson][Jamie-BitFlight_homepage] | [![Vladimir][SweetOps_avatar]][SweetOps_homepage]<br/>[Vladimir][SweetOps_homepage] | [![Daren Desjardins][darend_avatar]][darend_homepage]<br/>[Daren Desjardins][darend_homepage] | [![Maarten van der Hoef][maartenvanderhoef_avatar]][maartenvanderhoef_homepage]<br/>[Maarten van der Hoef][maartenvanderhoef_homepage] | [![Adam Tibbing][tibbing_avatar]][tibbing_homepage]<br/>[Adam Tibbing][tibbing_homepage] |
-|---|---|---|---|---|---|---|---|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Sergey Vasilyev][s2504s_avatar]][s2504s_homepage]<br/>[Sergey Vasilyev][s2504s_homepage] | [![Michael Pereira][MichaelPereira_avatar]][MichaelPereira_homepage]<br/>[Michael Pereira][MichaelPereira_homepage] | [![Jamie Nelson][Jamie-BitFlight_avatar]][Jamie-BitFlight_homepage]<br/>[Jamie Nelson][Jamie-BitFlight_homepage] | [![Vladimir][SweetOps_avatar]][SweetOps_homepage]<br/>[Vladimir][SweetOps_homepage] | [![Daren Desjardins][darend_avatar]][darend_homepage]<br/>[Daren Desjardins][darend_homepage] | [![Maarten van der Hoef][maartenvanderhoef_avatar]][maartenvanderhoef_homepage]<br/>[Maarten van der Hoef][maartenvanderhoef_homepage] | [![Adam Tibbing][tibbing_avatar]][tibbing_homepage]<br/>[Adam Tibbing][tibbing_homepage] | [![Yonatan Koren][korenyoni_avatar]][korenyoni_homepage]<br/>[Yonatan Koren][korenyoni_homepage] |
+|---|---|---|---|---|---|---|---|---|---|---|
 <!-- markdownlint-restore -->
 
   [osterman_homepage]: https://github.com/osterman
@@ -902,6 +925,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [maartenvanderhoef_avatar]: https://img.cloudposse.com/150x150/https://github.com/maartenvanderhoef.png
   [tibbing_homepage]: https://github.com/tibbing
   [tibbing_avatar]: https://img.cloudposse.com/150x150/https://github.com/tibbing.png
+  [korenyoni_homepage]: https://github.com/korenyoni
+  [korenyoni_avatar]: https://img.cloudposse.com/150x150/https://github.com/korenyoni.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
