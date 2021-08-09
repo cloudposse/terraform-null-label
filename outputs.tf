@@ -14,7 +14,7 @@ output "enabled" {
 }
 
 output "static_tags" {
-  value = local.static_tags
+  value       = local.static_tags
   description = "True if tags have not been modified by this module, false otherwise"
 }
 

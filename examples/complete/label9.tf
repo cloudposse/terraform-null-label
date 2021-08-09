@@ -1,11 +1,11 @@
 module "label9" {
-  source           = "../../"
-  enabled          = true
-  static_tags      = true
+  source      = "../../"
+  enabled     = true
+  static_tags = true
 
   tags = {
     "kubernetes.io/cluster/" = "shared"
-    "City" = "Norwich"
+    "City"                   = "Norwich"
   }
 }
 
