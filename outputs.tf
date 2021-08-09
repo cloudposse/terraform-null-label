@@ -13,6 +13,11 @@ output "enabled" {
   description = "True if module is enabled, false otherwise"
 }
 
+output "static_tags" {
+  value = local.static_tags
+  description = "True if tags have not been modified by this module, false otherwise"
+}
+
 output "namespace" {
   value       = local.enabled ? local.namespace : ""
   description = "Normalized namespace"
@@ -85,4 +90,3 @@ output "context" {
   Note: this version will have null values as defaults, not the values actually used as defaults.
 EOT
 }
-

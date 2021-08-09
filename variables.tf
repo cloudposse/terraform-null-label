@@ -2,6 +2,7 @@ variable "context" {
   type = any
   default = {
     enabled             = true
+    static_tags         = false
     namespace           = null
     environment         = null
     stage               = null
@@ -39,6 +40,12 @@ variable "enabled" {
   type        = bool
   default     = null
   description = "Set to false to prevent the module from creating any resources"
+}
+
+variable "static_tags" {
+  type        = bool
+  default     = null
+  description = "Set to true to prevent the module adding merging additional tags into `var.tags`, for use with precomputed tags"
 }
 
 variable "namespace" {

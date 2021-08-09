@@ -290,4 +290,15 @@ func TestExamplesComplete(t *testing.T) {
 
 	assert.Exactly(t, label8nExpectedTags, label8nTags, "generated tags are different from expected")
 	assert.Exactly(t, label8nTags, label8nContextTags, "tags and context tags should be equal")
+
+	// Verify that static_tags correctly stops the module from merging new tags and instead uses the statically given ones
+	label9ExpectedTags := map[string]string{
+			"kubernetes.io/cluster/": "shared",
+			"City": "Norwich",
+	}
+	label9Tags := terraform.OutputMap(t, terraformOptions, "label9_tags")
+	label9ContextTags := terraform.OutputMap(t, terraformOptions, "label9_context_tags")
+
+	assert.Exactly(t, label9ExpectedTags, label9Tags, "generated tags are different from expected")
+	assert.Exactly(t, label9Tags, label9ContextTags, "tags and context tags should be equal")
 }

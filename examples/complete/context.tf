@@ -27,6 +27,7 @@ module "this" {
   source = "../.."
 
   enabled             = var.enabled
+  static_tags         = var.static_tags
   namespace           = var.namespace
   environment         = var.environment
   stage               = var.stage
@@ -49,6 +50,7 @@ module "this" {
 variable "context" {
   type = object({
     enabled             = bool
+    static_tags         = bool
     namespace           = string
     environment         = string
     stage               = string
@@ -65,6 +67,7 @@ variable "context" {
   })
   default = {
     enabled             = true
+    static_tags         = false
     namespace           = null
     environment         = null
     stage               = null
@@ -102,6 +105,12 @@ variable "enabled" {
   type        = bool
   default     = null
   description = "Set to false to prevent the module from creating any resources"
+}
+
+variable "static_tags" {
+  type        = bool
+  default     = null
+  description = "Set to true to prevent the module adding merging additional tags into `var.tags`, for use with precomputed tags"
 }
 
 variable "namespace" {
