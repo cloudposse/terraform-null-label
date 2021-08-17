@@ -51,7 +51,7 @@ variable "namespace" {
 variable "tenant" {
   type        = string
   default     = null
-  description = "Usually omitted, but available for distinguishing resources dedicated to a specific customer"
+  description = "_(Rarely used)_ A customer identifier, indicating who this instance of a resource is for"
 }
 
 variable "environment" {
