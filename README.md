@@ -35,7 +35,7 @@ However, it is highly configurable. The delimiter (e.g. `-`) is configurable. Ea
 So if you prefer the term `stage` to `environment` and do not need `tenant`, you can exclude them
 and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
 - If `attributes` and `tenant` are excluded but `namespace`, `stage`, and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
-  Excluding `attributes` is discouraged, though, because attributes are the main way modules modify the ID to ensure uniqueness.
+  Excluding `attributes` is discouraged, though, because attributes are the main way modules modify the ID to ensure uniqueness when provisioning the same resource types.
 - If you want the label items in a different order, you can specify that, too, with the `label_order` list.
 - You can set a maximum length for the `id`, and the module will create a (probably) unique name that fits within that length.
   (The module uses a portion of the MD5 hash of the full `id` to represent the missing part, so there remains a slight chance of name collision.)
@@ -44,7 +44,7 @@ and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
 Unlike the tags generated from the label inputs, tags passed in via the `tags` input are not modified.
 
 
-There is an unforunate collision over the use of the label/key `name`. Cloud Posse uses `name` in this module
+There is an unfortunate collision over the use of the key `name`. Cloud Posse uses `name` in this module
 to represent the component, such as `eks` or `rds`. AWS uses a tag with the key `Name` to store the full human-friendly
 identifier of the thing tagged, which this module outputs as `id`, not `name`. So when converting input labels
 to tags, the value of the `Name` key is set to the module `id` output, and there is no tag corresponding to the
@@ -56,9 +56,9 @@ However, if you have multiple different kinds of resources (e.g. instances, secu
 
 All [Cloud Posse Terraform modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=terraform-&type=&language=) use this module to ensure resources can be instantiated multiple times within an account and without conflict.
 
-Cloud Posse convention is to use the labels like this:
+The Cloud Posse convention is to use labels as follows:
 - `namespace`: A short (3-4 letters) abbreviation of the company name, to ensure globally unique IDs for things like S3 buckets
-- `tenant`: Usually omitted. For resources dedicated to a customer or subsidiary but housed in the company's accounts, a short code to identify the customer
+- `tenant`: _(Rarely needed)_ When a company creates a dedicated resource per customer, `tenant` can be used to identify the customer the resource is dedicated to
 - `environment`: A [short abbreviation](https://github.com/cloudposse/terraform-aws-utils/#introduction) for the AWS region hosting the resource, or `gbl` for resources like IAM roles that have no region
 - `stage`: The name or role of the account the resource is for, such as `prod` or `dev`
 - `name`: The name of the component that owns the resources, such as `eks` or `rds`
@@ -798,7 +798,7 @@ No resources.
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`) | `map(string)` | `{}` | no |
-| <a name="input_tenant"></a> [tenant](#input\_tenant) | Usually omitted, but available for distinguishing resources dedicated to a specific customer | `string` | `null` | no |
+| <a name="input_tenant"></a> [tenant](#input\_tenant) | \_(Rarely used)\_ A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
 
 ## Outputs
 

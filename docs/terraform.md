@@ -36,7 +36,7 @@ No resources.
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`) | `map(string)` | `{}` | no |
-| <a name="input_tenant"></a> [tenant](#input\_tenant) | Usually omitted, but available for distinguishing resources dedicated to a specific customer | `string` | `null` | no |
+| <a name="input_tenant"></a> [tenant](#input\_tenant) | \_(Rarely used)\_ A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
 
 ## Outputs
 
