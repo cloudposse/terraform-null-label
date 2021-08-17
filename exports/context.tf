@@ -8,6 +8,8 @@
 # Cloud Posse's standard configuration inputs suitable for passing
 # to Cloud Posse modules.
 #
+# curl -sL https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf -o context.tf
+#
 # Modules should access the whole context as `module.this.context`
 # to get the input variables with nulls for defaults,
 # for example `context = module.this.context`,
@@ -20,10 +22,11 @@
 
 module "this" {
   source  = "cloudposse/label/null"
-  version = "0.24.1" # requires Terraform >= 0.13.0
+  version = "0.25.0" # requires Terraform >= 0.13.0
 
   enabled             = var.enabled
   namespace           = var.namespace
+  tenant              = var.tenant
   environment         = var.environment
   stage               = var.stage
   name                = var.name
@@ -47,6 +50,7 @@ variable "context" {
   default = {
     enabled             = true
     namespace           = null
+    tenant              = null
     environment         = null
     stage               = null
     name                = null
@@ -91,6 +95,12 @@ variable "namespace" {
   description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
 }
 
+variable "tenant" {
+  type        = string
+  default     = null
+  description = "Usually omitted, but available for distinguishing resources dedicated to a specific customer"
+}
+
 variable "environment" {
   type        = string
   default     = null
@@ -113,7 +123,7 @@ variable "delimiter" {
   type        = string
   default     = null
   description = <<-EOT
-    Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.
+    Delimiter to be used between `namespace`, `tenant`, `environment`, `stage`, `name` and `attributes`.
     Defaults to `-` (hyphen). Set to `""` to use no delimiter at all.
   EOT
 }
@@ -121,19 +131,23 @@ variable "delimiter" {
 variable "attributes" {
   type        = list(string)
   default     = []
-  description = "Additional attributes (e.g. `1`)"
+  description = "Additional attributes (e.g. `1`) to add to `id`"
 }
 
 variable "tags" {
   type        = map(string)
   default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
+  description = "Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`)"
 }
 
 variable "additional_tag_map" {
   type        = map(string)
   default     = {}
-  description = "Additional tags for appending to tags_as_list_of_maps. Not added to `tags`."
+  description = <<-EOT
+    Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.
+    This is for some rare cases where resources want additional configuration of tags
+    and therefore take a list of maps with tag key, value, and additional configuration.
+    EOT
 }
 
 variable "label_order" {
@@ -141,7 +155,7 @@ variable "label_order" {
   default     = null
   description = <<-EOT
     The naming order of the id output and Name tag.
-    Defaults to ["namespace", "environment", "stage", "name", "attributes"].
+    Defaults to ["namespace", "tenant", "environment", "stage", "name", "attributes"].
     You can omit any of the 5 elements, but at least one must be present.
   EOT
 }
@@ -191,6 +205,7 @@ variable "label_value_case" {
   description = <<-EOT
     The letter case of output label values (also used in `tags` and `id`).
     Possible values: `lower`, `title`, `upper` and `none` (no transformation).
+    Set this to `title` and set `delimiter` to `""` to yield Pascal Case.
     Default value: `lower`.
   EOT
 

@@ -18,6 +18,7 @@ output "label3n" {
     name       = module.label3n.name
     namespace  = module.label3n.namespace
     stage      = module.label3n.stage
+    tenant     = module.label3n.tenant
     attributes = module.label3n.attributes
     delimiter  = module.label3n.delimiter
   }
