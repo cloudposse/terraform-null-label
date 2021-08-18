@@ -1,13 +1,13 @@
 module "label9a" {
-  source           = "../../"
-  enabled          = true
-  suppress_tags      = ["environment"]
-  environment     = "demo"
-  name = "red"
+  source        = "../../"
+  enabled       = true
+  suppress_tags = ["environment"]
+  environment   = "demo"
+  name          = "red"
 
   tags = {
     "kubernetes.io/cluster/" = "shared"
-    "City" = "Norwich"
+    "City"                   = "Norwich"
   }
 }
 

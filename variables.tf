@@ -2,7 +2,7 @@ variable "context" {
   type = any
   default = {
     enabled             = true
-    suppress_tags         = []
+    suppress_tags       = []
     namespace           = null
     environment         = null
     stage               = null

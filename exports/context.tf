@@ -23,7 +23,7 @@ module "this" {
   version = "0.24.1" # requires Terraform >= 0.13.0
 
   enabled             = var.enabled
-  suppress_tags         = var.suppress_tags
+  suppress_tags       = var.suppress_tags
   namespace           = var.namespace
   environment         = var.environment
   stage               = var.stage
@@ -47,7 +47,7 @@ variable "context" {
   type = any
   default = {
     enabled             = true
-    suppress_tags         = []
+    suppress_tags       = []
     namespace           = null
     environment         = null
     stage               = null

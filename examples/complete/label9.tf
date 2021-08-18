@@ -1,9 +1,9 @@
 module "label9" {
-  source           = "../../"
-  enabled          = true
-  suppress_tags    = ["environment", "stage", "name"]
-  environment      = "demo"
-  name             = "red"
+  source        = "../../"
+  enabled       = true
+  suppress_tags = ["environment", "stage", "name"]
+  environment   = "demo"
+  name          = "red"
 
   tags = {
     "kubernetes.io/cluster/" = "shared"

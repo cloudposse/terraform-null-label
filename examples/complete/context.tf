@@ -27,7 +27,7 @@ module "this" {
   source = "../.."
 
   enabled             = var.enabled
-  suppress_tags         = var.suppress_tags
+  suppress_tags       = var.suppress_tags
   namespace           = var.namespace
   environment         = var.environment
   stage               = var.stage
@@ -50,7 +50,7 @@ module "this" {
 variable "context" {
   type = object({
     enabled             = bool
-    suppress_tags         = list(string)
+    suppress_tags       = list(string)
     namespace           = string
     environment         = string
     stage               = string
@@ -67,7 +67,7 @@ variable "context" {
   })
   default = {
     enabled             = true
-    suppress_tags         = []
+    suppress_tags       = []
     namespace           = null
     environment         = null
     stage               = null
