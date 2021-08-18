@@ -13,9 +13,9 @@ output "enabled" {
   description = "True if module is enabled, false otherwise"
 }
 
-output "static_tags" {
-  value       = local.static_tags
-  description = "True if tags have not been modified by this module, false otherwise"
+output "suppress_tags" {
+  value       = local.suppress_tags
+  description = "A list of tags that should not be automatically added to the 'tags' output (Workaround for allowing AWS `default_tags` without always showing updates terraform-provider-aws#18311)"
 }
 
 output "namespace" {

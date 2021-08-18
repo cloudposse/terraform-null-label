@@ -291,14 +291,35 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Exactly(t, label8nExpectedTags, label8nTags, "generated tags are different from expected")
 	assert.Exactly(t, label8nTags, label8nContextTags, "tags and context tags should be equal")
 
-	// Verify that static_tags correctly stops the module from merging new tags and instead uses the statically given ones
+	// Verify that suppress_tags correctly removes tags from the tags output but not context tags
 	label9ExpectedTags := map[string]string{
-			"kubernetes.io/cluster/": "shared",
 			"City": "Norwich",
+			"kubernetes.io/cluster/": "shared",
 	}
 	label9Tags := terraform.OutputMap(t, terraformOptions, "label9_tags")
 	label9ContextTags := terraform.OutputMap(t, terraformOptions, "label9_context_tags")
 
 	assert.Exactly(t, label9ExpectedTags, label9Tags, "generated tags are different from expected")
 	assert.Exactly(t, label9Tags, label9ContextTags, "tags and context tags should be equal")
+
+	label9aExpectedTags := map[string]string{
+		"City": "Norwich",
+		"Name": "demo-red",
+		"kubernetes.io/cluster/": "shared",
+	}
+	label9aTags := terraform.OutputMap(t, terraformOptions, "label9a_tags")
+	assert.Exactly(t, label9aExpectedTags, label9aTags, "generated tags are different from expected")
+
+	label9aExpectedContextTags := map[string]string{
+		"City": "Norwich",
+		"Environment": "demo",
+		"Name": "demo-red",
+		"kubernetes.io/cluster/": "shared",
+	}
+
+	label9aContextTags := terraform.OutputMap(t, terraformOptions, "label9a_context_tags")
+
+	assert.Exactly(t, label9aExpectedContextTags, label9aContextTags, "generated tags are different from expected")
+	assert.NotEqual(t, label9aTags, label9aContextTags, "tags and context tags should NOT be equal if suppress_tags is set")
+
 }

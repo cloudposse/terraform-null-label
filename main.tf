@@ -21,7 +21,7 @@ locals {
     # It would be nice to use coalesce here, but we cannot, because it
     # is an error for all the arguments to coalesce to be empty.
     enabled     = var.enabled == null ? var.context.enabled : var.enabled
-    static_tags = var.static_tags == null ? var.context.static_tags : var.static_tags
+    suppress_tags = var.suppress_tags == null ? var.context.suppress_tags : var.suppress_tags
     namespace   = var.namespace == null ? var.context.namespace : var.namespace
     environment = var.environment == null ? var.context.environment : var.environment
     stage       = var.stage == null ? var.context.stage : var.stage
@@ -41,7 +41,7 @@ locals {
 
 
   enabled             = local.input.enabled
-  static_tags         = local.input.static_tags
+  suppress_tags         = local.input.suppress_tags
   regex_replace_chars = coalesce(local.input.regex_replace_chars, local.defaults.regex_replace_chars)
 
   # string_label_names are names of inputs that are strings (not list of strings) used as labels
@@ -75,7 +75,7 @@ locals {
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
 
-  tags = local.static_tags ? local.input.tags : merge(local.generated_tags, local.input.tags)
+  tags = { for k, v in merge(local.generated_tags, local.input.tags): k => v if ! contains([for i in local.suppress_tags: lower(i)], lower(k)) }
 
   tags_as_list_of_maps = flatten([
     for key in keys(local.tags) : merge(
@@ -130,7 +130,7 @@ locals {
   # Context of this label to pass to other label modules
   output_context = {
     enabled             = local.enabled
-    static_tags         = local.static_tags
+    suppress_tags         = local.suppress_tags
     name                = local.name
     namespace           = local.namespace
     environment         = local.environment
