@@ -21,11 +21,12 @@ badges:
 description: |-
   Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
-  This module generates IDs using the following convention by default: `{namespace}-{tenant}-{environment}-{stage}-{name}-{attributes}`.
+  This module generates IDs using the following convention by default: `{namespace}-{environment}-{stage}-{name}-{attributes}`.
   However, it is highly configurable. The delimiter (e.g. `-`) is configurable. Each label item is optional (although you must provide at least one).
   So if you prefer the term `stage` to `environment` and do not need `tenant`, you can exclude them
   and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
-  - If `attributes` and `tenant` are excluded but `namespace`, `stage`, and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
+  - The `tenant` label was introduced in v0.25.0. To preserve backward compatibility, it is not included by default.
+  - If `attributes` is excluded but `namespace`, `stage`, and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
     Excluding `attributes` is discouraged, though, because attributes are the main way modules modify the ID to ensure uniqueness when provisioning the same resource types.
   - If you want the label items in a different order, you can specify that, too, with the `label_order` list.
   - You can set a maximum length for the `id`, and the module will create a (probably) unique name that fits within that length.

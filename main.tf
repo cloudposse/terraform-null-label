@@ -1,7 +1,10 @@
 locals {
 
   defaults = {
-    label_order         = ["namespace", "tenant", "environment", "stage", "name", "attributes"]
+    # The `tenant` label was introduced in v0.25.0. To preserve backward compatibility, or, really, to ensure
+    # that people using the `tenant` label are alerted that it was not previously supported if they try to
+    # use it in an older version, it is not included by default.
+    label_order         = ["namespace", "environment", "stage", "name", "attributes"]
     regex_replace_chars = "/[^-a-zA-Z0-9]/"
     delimiter           = "-"
     replacement         = ""
@@ -20,9 +23,10 @@ locals {
   input = {
     # It would be nice to use coalesce here, but we cannot, because it
     # is an error for all the arguments to coalesce to be empty.
-    enabled     = var.enabled == null ? var.context.enabled : var.enabled
-    namespace   = var.namespace == null ? var.context.namespace : var.namespace
-    tenant      = var.tenant == null ? var.context.tenant : var.tenant
+    enabled   = var.enabled == null ? var.context.enabled : var.enabled
+    namespace = var.namespace == null ? var.context.namespace : var.namespace
+    # tenant was introduced in v0.25.0, prior context versions do not have it
+    tenant      = var.tenant == null ? lookup(var.context, "tenant", null) : var.tenant
     environment = var.environment == null ? var.context.environment : var.environment
     stage       = var.stage == null ? var.context.stage : var.stage
     name        = var.name == null ? var.context.name : var.name
@@ -82,7 +86,7 @@ locals {
       {
         key   = key
         value = local.tags[key]
-    }, var.additional_tag_map)
+    }, local.additional_tag_map)
   ])
 
   tags_context = {
