@@ -21,7 +21,7 @@
 #
 
 module "this" {
-  source  = "../.."
+  source = "../.."
 
   enabled             = var.enabled
   namespace           = var.namespace
