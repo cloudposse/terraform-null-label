@@ -223,6 +223,6 @@ variable "descriptor_formats" {
     `labels` is a list of labels, in order, to pass to `format()` function.
     Label values will be normalized before being passed to `format()` so they will be
     identical to how they appear in `id`.
-    Default is `{}` (`descriptors` will be empty).
+    Default is `{}` (`descriptors` output will be empty).
     EOT
 }

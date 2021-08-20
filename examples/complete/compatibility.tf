@@ -76,7 +76,7 @@ module "source_v24_empty" {
   stage = "STAGE"
 }
 
-# To test backward compatibility of supplying an new
+# When testing the backward compatibility of supplying a new
 # context to an old module, it is not fair to use
 # the new features in the new module.
 module "source_v25_22_full" {
@@ -97,7 +97,11 @@ module "source_v25_22_full" {
   additional_tag_map = {
     propagate = true
   }
-  label_order         = ["name", "environment", "stage", "attributes"]
+  label_order = ["name", "environment", "stage", "attributes"]
+  # Need to add "+" to the regex in v0.22.1 due to a known issue:
+  # the attributes string will have the delimiter stripped out
+  # if the delimiter is selected by `regex_replace_chars`.
+  # This was fixed in v0.24.1
   regex_replace_chars = "/[^a-tv-zA-Z0-9+]/" # Eliminate "u" just to verify this is taking effect
   id_length_limit     = 28
 }
@@ -268,7 +272,7 @@ output "compare_25_24_empty" {
 }
 
 
-output "compatable" {
+output "compatible" {
   value = (
     module.compare_22_25_full.equal &&
     module.compare_24_25_full.equal &&

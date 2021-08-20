@@ -40,8 +40,8 @@ func TestExamplesComplete(t *testing.T) {
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
-	compatable := terraform.Output(t, terraformOptions, "compatable")
-	assert.Equal(t, "true", compatable)
+	compatible := terraform.Output(t, terraformOptions, "compatible")
+	assert.Equal(t, "true", compatible)
 
 	descriptorAccountName := terraform.Output(t, terraformOptions, "descriptor_account_name")
 	descriptorStack := terraform.Output(t, terraformOptions, "descriptor_stack")

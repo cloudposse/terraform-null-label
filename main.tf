@@ -18,8 +18,22 @@ locals {
   }
 
   default_labels_as_tags = keys(local.tags_context)
-  # Unlike other inputs, the first setting of `labels_as_tags` cannot be later overridden
-  # We have to cover 2 cases. 1) context does not have a labels_as_tags key, 2) it is present and set to ["default"]
+  # Unlike other inputs, the first setting of `labels_as_tags` cannot be later overridden. However,
+  # we still have to pass the `input` map as the context to the next module. So we need to distinguish
+  # between the first setting of var.labels_as_tags == null as meaning set the default and do not change
+  # it later, versus later settings of var.labels_as_tags that should be ignored. So, we make the
+  # default value in context be "unset", meaning it can be changed, but when it is unset and
+  # var.labels_as_tags is null, we change it to "default". Once it is set to "default" we will
+  # not allow it to be changed again, but of course we have to detect "default" and replace it
+  # with local.default_labels_as_tags when we go to use it.
+  #
+  # We do not want to use null as default or unset, because Terraform has issues with
+  # the value of an object field being null in some places and [] in others.
+  # We do not want to use [] as default or unset because that is actually a valid setting
+  # that we want to have override the default.
+  #
+  # To determine whether that context.labels_as_tags is not set,
+  # we have to cover 2 cases: 1) context does not have a labels_as_tags key, 2) it is present and set to ["unset"]
   context_labels_as_tags_is_unset = try(contains(var.context.labels_as_tags, "unset"), true)
 
   # So far, we have decided not to allow overriding replacement or id_hash_length

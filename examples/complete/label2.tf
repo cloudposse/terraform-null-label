@@ -17,7 +17,7 @@ module "label2" {
     "Environment" = "Public"
   }
 
-  # Because this is chained from label1, labels_as_tags should have not effect
+  # Because this is chained from label1, labels_as_tags should have no effect
   labels_as_tags = ["stage"]
 }
 
