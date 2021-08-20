@@ -8,6 +8,8 @@
 # Cloud Posse's standard configuration inputs suitable for passing
 # to Cloud Posse modules.
 #
+# curl -sL https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf -o context.tf
+#
 # Modules should access the whole context as `module.this.context`
 # to get the input variables with nulls for defaults,
 # for example `context = module.this.context`,
@@ -20,10 +22,11 @@
 
 module "this" {
   source  = "cloudposse/label/null"
-  version = "0.24.1" # requires Terraform >= 0.13.0
+  version = "0.25.0" # requires Terraform >= 0.13.0
 
   enabled             = var.enabled
   namespace           = var.namespace
+  tenant              = var.tenant
   environment         = var.environment
   stage               = var.stage
   name                = var.name
@@ -36,6 +39,8 @@ module "this" {
   id_length_limit     = var.id_length_limit
   label_key_case      = var.label_key_case
   label_value_case    = var.label_value_case
+  descriptor_formats  = var.descriptor_formats
+  labels_as_tags      = var.labels_as_tags
 
   context = var.context
 }
@@ -47,6 +52,7 @@ variable "context" {
   default = {
     enabled             = true
     namespace           = null
+    tenant              = null
     environment         = null
     stage               = null
     name                = null
@@ -59,6 +65,15 @@ variable "context" {
     id_length_limit     = null
     label_key_case      = null
     label_value_case    = null
+    descriptor_formats  = {}
+    # Note: we have to use [] instead of null for unset lists due to
+    # https://github.com/hashicorp/terraform/issues/28137
+    # which was not fixed until Terraform 1.0.0,
+    # but we want the default to be all the labels in `label_order`
+    # and we want users to be able to prevent all tag generation
+    # by setting `labels_as_tags` to `[]`, so we need
+    # a different sentinel to indicate "default"
+    labels_as_tags = ["unset"]
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -88,32 +103,42 @@ variable "enabled" {
 variable "namespace" {
   type        = string
   default     = null
-  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
+  description = "ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique"
+}
+
+variable "tenant" {
+  type        = string
+  default     = null
+  description = "ID element _(Rarely used, not included by default)_. A customer identifier, indicating who this instance of a resource is for"
 }
 
 variable "environment" {
   type        = string
   default     = null
-  description = "Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT'"
+  description = "ID element. Usually used for region e.g. 'uw2', 'us-west-2', OR role 'prod', 'staging', 'dev', 'UAT'"
 }
 
 variable "stage" {
   type        = string
   default     = null
-  description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
+  description = "ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release'"
 }
 
 variable "name" {
   type        = string
   default     = null
-  description = "Solution name, e.g. 'app' or 'jenkins'"
+  description = <<-EOT
+    ID element. Usually the component or solution name, e.g. 'app' or 'jenkins'.
+    This is the only ID element not also included as a `tag`.
+    The "name" tag is set to the full `id` string. There is no tag with the value of the `name` input.
+    EOT
 }
 
 variable "delimiter" {
   type        = string
   default     = null
   description = <<-EOT
-    Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.
+    Delimiter to be used between ID elements.
     Defaults to `-` (hyphen). Set to `""` to use no delimiter at all.
   EOT
 }
@@ -121,36 +146,64 @@ variable "delimiter" {
 variable "attributes" {
   type        = list(string)
   default     = []
-  description = "Additional attributes (e.g. `1`)"
+  description = <<-EOT
+    ID element. Additional attributes (e.g. `workers` or `cluster`) to add to `id`,
+    in the order they appear in the list. New attributes are appended to the
+    end of the list. The elements of the list are joined by the `delimiter`
+    and treated as a single ID element.
+    EOT
+}
+
+variable "labels_as_tags" {
+  type        = set(string)
+  default     = ["default"]
+  description = <<-EOT
+    Set of labels (ID elements) to include as tags in the `tags` output.
+    Default is to include all labels.
+    Tags with empty values will not be included in the `tags` output.
+    Set to `[]` to suppress all generated tags.
+    **Notes:**
+      The value of the `name` tag, if included, will be the `id`, not the `name`.
+      Unlike other `null-label` inputs, the initial setting of `labels_as_tags` cannot be
+      changed in later chained modules. Attempts to change it will be silently ignored.
+    EOT
 }
 
 variable "tags" {
   type        = map(string)
   default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
+  description = <<-EOT
+    Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).
+    Neither the tag keys nor the tag values will be modified by this module.
+    EOT
 }
 
 variable "additional_tag_map" {
   type        = map(string)
   default     = {}
-  description = "Additional tags for appending to tags_as_list_of_maps. Not added to `tags`."
+  description = <<-EOT
+    Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.
+    This is for some rare cases where resources want additional configuration of tags
+    and therefore take a list of maps with tag key, value, and additional configuration.
+    EOT
 }
 
 variable "label_order" {
   type        = list(string)
   default     = null
   description = <<-EOT
-    The naming order of the id output and Name tag.
+    The order in which the labels (ID elements) appear in the `id`.
     Defaults to ["namespace", "environment", "stage", "name", "attributes"].
-    You can omit any of the 5 elements, but at least one must be present.
-  EOT
+    You can omit any of the 6 labels ("tenant" is the 6th), but at least one must be present.
+    EOT
 }
 
 variable "regex_replace_chars" {
   type        = string
   default     = null
   description = <<-EOT
-    Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.
+    Terraform regular expression (regex) string.
+    Characters matching the regex will be removed from the ID elements.
     If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits.
   EOT
 }
@@ -161,7 +214,7 @@ variable "id_length_limit" {
   description = <<-EOT
     Limit `id` to this many characters (minimum 6).
     Set to `0` for unlimited length.
-    Set to `null` for default, which is `0`.
+    Set to `null` for keep the existing setting, which defaults to `0`.
     Does not affect `id_full`.
   EOT
   validation {
@@ -174,7 +227,8 @@ variable "label_key_case" {
   type        = string
   default     = null
   description = <<-EOT
-    The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.
+    Controls the letter case of the `tags` keys (label names) for tags generated by this module.
+    Does not affect keys of tags passed in via the `tags` input.
     Possible values: `lower`, `title`, `upper`.
     Default value: `title`.
   EOT
@@ -189,8 +243,11 @@ variable "label_value_case" {
   type        = string
   default     = null
   description = <<-EOT
-    The letter case of output label values (also used in `tags` and `id`).
+    Controls the letter case of ID elements (labels) as included in `id`,
+    set as tag values, and output by this module individually.
+    Does not affect values of tags passed in via the `tags` input.
     Possible values: `lower`, `title`, `upper` and `none` (no transformation).
+    Set this to `title` and set `delimiter` to `""` to yield Pascal Case IDs.
     Default value: `lower`.
   EOT
 
@@ -199,4 +256,24 @@ variable "label_value_case" {
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
 }
+
+variable "descriptor_formats" {
+  type        = any
+  default     = {}
+  description = <<-EOT
+    Describe additional descriptors to be output in the `descriptors` output map.
+    Map of maps. Keys are names of descriptors. Values are maps of the form
+    `{
+       format = string
+       labels = list(string)
+    }`
+    (Type is `any` so the map values can later be enhanced to provide additional options.)
+    `format` is a Terraform format string to be passed to the `format()` function.
+    `labels` is a list of labels, in order, to pass to `format()` function.
+    Label values will be normalized before being passed to `format()` so they will be
+    identical to how they appear in `id`.
+    Default is `{}` (`descriptors` output will be empty).
+    EOT
+}
+
 #### End of copy of cloudposse/terraform-null-label/variables.tf

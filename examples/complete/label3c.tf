@@ -18,6 +18,7 @@ output "label3c" {
     name       = module.label3c.name
     namespace  = module.label3c.namespace
     stage      = module.label3c.stage
+    tenant     = module.label3c.tenant
     attributes = module.label3c.attributes
     delimiter  = module.label3c.delimiter
   }

@@ -1,13 +1,13 @@
 module "label1" {
   source      = "../../"
   namespace   = "CloudPosse"
+  tenant      = "H.R.H"
   environment = "UAT"
   stage       = "build"
   name        = "Winston Churchroom"
   attributes  = ["fire", "water", "earth", "air"]
-  delimiter   = "-"
 
-  label_order = ["name", "environment", "stage", "attributes"]
+  label_order = ["name", "tenant", "environment", "stage", "attributes"]
 
   tags = {
     "City"        = "Dublin"
@@ -21,6 +21,7 @@ output "label1" {
     name       = module.label1.name
     namespace  = module.label1.namespace
     stage      = module.label1.stage
+    tenant     = module.label1.tenant
     attributes = module.label1.attributes
     delimiter  = module.label1.delimiter
   }

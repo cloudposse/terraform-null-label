@@ -1,11 +1,11 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID restricted to `id_length_limit` characters in total"
+  description = "Disambiguated ID string restricted to `id_length_limit` characters in total"
 }
 
 output "id_full" {
   value       = local.enabled ? local.id_full : ""
-  description = "Disambiguated ID not restricted in length"
+  description = "ID string not restricted in length"
 }
 
 output "enabled" {
@@ -16,6 +16,11 @@ output "enabled" {
 output "namespace" {
   value       = local.enabled ? local.namespace : ""
   description = "Normalized namespace"
+}
+
+output "tenant" {
+  value       = local.enabled ? local.tenant : ""
+  description = "Normalized tenant"
 }
 
 output "environment" {
@@ -35,7 +40,7 @@ output "stage" {
 
 output "delimiter" {
   value       = local.enabled ? local.delimiter : ""
-  description = "Delimiter between `namespace`, `environment`, `stage`, `name` and `attributes`"
+  description = "Delimiter between `namespace`, `tenant`, `environment`, `stage`, `name` and `attributes`"
 }
 
 output "attributes" {
@@ -70,7 +75,16 @@ output "id_length_limit" {
 
 output "tags_as_list_of_maps" {
   value       = local.tags_as_list_of_maps
-  description = "Additional tags as a list of maps, which can be used in several AWS resources"
+  description = <<-EOT
+    This is a list with one map for each `tag`. Each map contains the tag `key`,
+    `value`, and contents of `var.additional_tag_map`. Used in the rare cases
+    where resources need additional configuration information for each tag.
+    EOT
+}
+
+output "descriptors" {
+  value       = local.descriptors
+  description = "Map of descriptors as configured by `descriptor_formats`"
 }
 
 output "normalized_context" {

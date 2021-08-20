@@ -21,6 +21,7 @@ type NLContext struct {
 	RegexReplaceChars interface{}       `json:"regex_replace_chars"`
 	Stage             interface{}       `json:"stage"`
 	Tags              map[string]string `json:"tags"`
+	Tenant            interface{}       `json:"tenant"`
 }
 
 // Test the Terraform module in examples/complete using Terratest.
@@ -39,15 +40,24 @@ func TestExamplesComplete(t *testing.T) {
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
+	compatible := terraform.Output(t, terraformOptions, "compatible")
+	assert.Equal(t, "true", compatible)
+
+	descriptorAccountName := terraform.Output(t, terraformOptions, "descriptor_account_name")
+	descriptorStack := terraform.Output(t, terraformOptions, "descriptor_stack")
+	assert.Equal(t, "bild-hrh", descriptorAccountName)
+	assert.Equal(t, "hrh-uat-bild", descriptorStack)
+
 	expectedLabel1Context := NLContext{
 		Enabled:     true,
 		Namespace:   "CloudPosse",
+		Tenant:      "H.R.H",
 		Environment: "UAT",
 		Stage:       "build",
 		Name:        "Winston Churchroom",
 		Attributes:  []string{"fire", "water", "earth", "air"},
-		Delimiter:   "-",
-		LabelOrder:  []string{"name", "environment", "stage", "attributes"},
+		Delimiter:   nil,
+		LabelOrder:  []string{"name", "tenant", "environment", "stage", "attributes"},
 		Tags: map[string]string{
 			"City":        "Dublin",
 			"Environment": "Private",
@@ -58,15 +68,18 @@ func TestExamplesComplete(t *testing.T) {
 	var expectedLabel1NormalizedContext NLContext
 	_ = reprint.FromTo(&expectedLabel1Context, &expectedLabel1NormalizedContext)
 	expectedLabel1NormalizedContext.Namespace = "cloudposse"
+	expectedLabel1NormalizedContext.Tenant = "hrh"
 	expectedLabel1NormalizedContext.Environment = "uat"
 	expectedLabel1NormalizedContext.Name = "winstonchurchroom"
+	expectedLabel1NormalizedContext.Delimiter = "-"
 	expectedLabel1NormalizedContext.RegexReplaceChars = "/[^-a-zA-Z0-9]/"
 	expectedLabel1NormalizedContext.Tags = map[string]string{
 		"City":        "Dublin",
 		"Environment": "Private",
 		"Namespace":   "cloudposse",
 		"Stage":       "build",
-		"Name":        "winstonchurchroom-uat-build-fire-water-earth-air",
+		"Tenant":      "hrh",
+		"Name":        "winstonchurchroom-hrh-uat-build-fire-water-earth-air",
 		"Attributes":  "fire-water-earth-air",
 	}
 
@@ -78,8 +91,8 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.OutputStruct(t, terraformOptions, "label1_context", &label1Context)
 
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "winstonchurchroom-uat-build-fire-water-earth-air", label1["id"])
-	assert.Equal(t, "winstonchurchroom-uat-build-fire-water-earth-air", label1Tags["Name"])
+	assert.Equal(t, "winstonchurchroom-hrh-uat-build-fire-water-earth-air", label1["id"])
+	assert.Equal(t, "winstonchurchroom-hrh-uat-build-fire-water-earth-air", label1Tags["Name"])
 	assert.Equal(t, "Dublin", label1Tags["City"])
 	assert.Equal(t, "Private", label1Tags["Environment"])
 	assert.Equal(t, expectedLabel1NormalizedContext, label1NormalizedContext)
@@ -87,14 +100,14 @@ func TestExamplesComplete(t *testing.T) {
 
 	label1t1 := terraform.OutputMap(t, terraformOptions, "label1t1")
 	label1t1Tags := terraform.OutputMap(t, terraformOptions, "label1t1_tags")
-	assert.Equal(t, "winstonchurchroom-uat-6a0b34", label1t1["id"],
+	assert.Equal(t, "winstonchurchroom-hrh-uat-6403d8", label1t1["id"],
 		"Extra hash character should be added when trailing delimiter is removed")
 	assert.Equal(t, label1["id"], label1t1["id_full"], "id_full should not be truncated")
 	assert.Equal(t, label1t1["id"], label1t1Tags["Name"], "Name tag should match ID")
 
 	label1t2 := terraform.OutputMap(t, terraformOptions, "label1t2")
 	label1t2Tags := terraform.OutputMap(t, terraformOptions, "label1t2_tags")
-	assert.Equal(t, "winstonchurchroom-uat-b-6a0b3", label1t2["id"])
+	assert.Equal(t, "winstonchurchroom-hrh-uat-b-6403d", label1t2["id"])
 	assert.Equal(t, label1t2["id"], label1t2Tags["Name"], "Name tag should match ID")
 
 	// Run `terraform output` to get the value of an output variable
@@ -122,8 +135,8 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.OutputStruct(t, terraformOptions, "label3c_context", &label3cContext)
 
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3c["id"])
-	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3cTags["Name"])
+	assert.Equal(t, "starfish.h.r.h.uat.release.fire.water.earth.air", label3c["id"])
+	assert.Equal(t, "starfish.h.r.h.uat.release.fire.water.earth.air", label3cTags["Name"])
 	assert.Equal(t, expectedLabel3cContext, label3cContext)
 
 	var expectedLabel3nContext, label3nContext NLContext
@@ -141,7 +154,8 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.OutputStruct(t, terraformOptions, "label3n_context", &label3nContext)
 
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "starfish.uat.release.fire.water.earth.air", label3n["id"])
+	// The tenant from normalized label1 should be "hrh" not "h.r.h."
+	assert.Equal(t, "starfish.hrh.uat.release.fire.water.earth.air", label3n["id"])
 	assert.Equal(t, label1Tags["Name"], label3nTags["Name"],
 		"Tag from label1 normalized context should overwrite label3n generated tag")
 	assert.Equal(t, expectedLabel3nContext, label3nContext)
@@ -192,17 +206,19 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify that apply with `label_key_case=title` and `label_value_case=lower` returns expected values of id, tags, context tags
 	label8dExpectedTags := map[string]string{
-		"Attributes":             "cluster",
-		"Environment":            "demo",
-		"Name":                   "eg-demo-blue-cluster",
-		"Namespace":              "eg",
+		"Attributes":  "cluster",
+		"Environment": "demo",
+		"Name":        "eg-demo-blue-cluster",
+		// Suppressed by labels_as_tags: "Namespace":              "eg",
 		"kubernetes.io/cluster/": "shared",
 	}
 
 	label8dID := terraform.Output(t, terraformOptions, "label8d_id")
 	label8dContextID := terraform.Output(t, terraformOptions, "label8d_context_id")
+	label8dChained := terraform.Output(t, terraformOptions, "label8d_chained_context_labels_as_tags")
 	assert.Equal(t, "eg-demo-blue-cluster", label8dID)
 	assert.Equal(t, label8dID, label8dContextID, "ID and context ID should be equal")
+	assert.Equal(t, "attributes-environment-name-stage", label8dChained)
 
 	label8dTags := terraform.OutputMap(t, terraformOptions, "label8d_tags")
 	label8dContextTags := terraform.OutputMap(t, terraformOptions, "label8d_context_tags")

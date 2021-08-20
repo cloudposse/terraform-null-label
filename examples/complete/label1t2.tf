@@ -1,7 +1,7 @@
 module "label1t2" {
   source = "../../"
 
-  id_length_limit = 29
+  id_length_limit = 33
 
   context = module.label1.context
 }
