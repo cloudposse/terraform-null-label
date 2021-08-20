@@ -101,15 +101,16 @@ locals {
   id_length_limit  = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
   label_key_case   = local.input.label_key_case == null ? local.defaults.label_key_case : local.input.label_key_case
   label_value_case = local.input.label_value_case == null ? local.defaults.label_value_case : local.input.label_value_case
-  labels_as_tags   = contains(local.input.labels_as_tags, "default") ? local.default_labels_as_tags : local.input.labels_as_tags
 
-  additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
-
-  tags = merge(local.generated_tags, local.input.tags)
+  # labels_as_tags is an exception to the rule that input vars override context values (see above)
+  labels_as_tags = contains(local.input.labels_as_tags, "default") ? local.default_labels_as_tags : local.input.labels_as_tags
 
   # Just for standardization and completeness
   descriptor_formats = local.input.descriptor_formats
 
+  additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
+
+  tags = merge(local.generated_tags, local.input.tags)
 
   tags_as_list_of_maps = flatten([
     for key in keys(local.tags) : merge(

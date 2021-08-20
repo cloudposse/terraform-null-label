@@ -43,20 +43,19 @@ However, it is highly configurable. The delimiter (e.g. `-`) is configurable. Ea
 So if you prefer the term `stage` to `environment` and do not need `tenant`, you can exclude them
 and the label `id` will look like `{namespace}-{stage}-{name}-{attributes}`.
 - The `tenant` label was introduced in v0.25.0. To preserve backward compatibility, it is not included by default.
-- The `attrbutes` input is actually a list of strings and `{attributes}` expands to the list elements joined by the delimiter.
+- The `attributes` input is actually a list of strings and `{attributes}` expands to the list elements joined by the delimiter.
 - If `attributes` is excluded but `namespace`, `stage`, and `environment` are included, `id` will look like `{namespace}-{environment}-{stage}-{name}`.
   Excluding `attributes` is discouraged, though, because attributes are the main way modules modify the ID to ensure uniqueness when provisioning the same resource types.
 - If you want the label items in a different order, you can specify that, too, with the `label_order` list.
 - You can set a maximum length for the `id`, and the module will create a (probably) unique name that fits within that length.
   (The module uses a portion of the MD5 hash of the full `id` to represent the missing part, so there remains a slight chance of name collision.)
 - You can control the letter case of the generated labels which make up the `id` using `var.label_value_case`.
-- By default all the non-empty labels are also exported as tags, whether they appear in the `id` or not.
+- By default, all of the non-empty labels are also exported as tags, whether they appear in the `id` or not.
 You can control which labels are exported as tags by setting `labels_as_tags` to the list of labels you want exported,
 or the empty list `[]` if you want no labels exported as tags at all. Tags passed in via the `tags` variable are
 always exported, and regardless of settings, empty labels are never exported as tags.
 You can control the case of the tag names (keys) for the labels using `var.label_key_case`.
 Unlike the tags generated from the label inputs, tags passed in via the `tags` input are not modified.
-
 
 There is an unfortunate collision over the use of the key `name`. Cloud Posse uses `name` in this module
 to represent the component, such as `eks` or `rds`. AWS uses a tag with the key `Name` to store the full human-friendly
@@ -174,7 +173,7 @@ so once a tag is added, it will remain in the tag set and cannot be removed, alt
 be overwritten.
 
 Because the purpose of `labels_as_tags` is primarily to prevent tags from being generated
-that would conflict with the AWS provider's `default_flags`, it is an exception to the
+that would [conflict with the AWS provider's `default_tags`](https://github.com/hashicorp/terraform-provider-aws/issues/19204), it is an exception to the
 rule that variables override the setting in the context object. The value in the context
 object cannot be changed, so that later modules cannot re-enable a problematic tag.
 

@@ -1,3 +1,9 @@
+# This module compares the outputs of 2 instances of null-label and determines
+# whether or not they are equivalent. Used to detect when changes to new
+# versions cause an unintended difference in output/behavior
+# that would break compatibility.
+
+
 variable "a" {
   type = any
 }
