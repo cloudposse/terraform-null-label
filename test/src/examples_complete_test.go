@@ -43,6 +43,11 @@ func TestExamplesComplete(t *testing.T) {
 	compatable := terraform.Output(t, terraformOptions, "compatable")
 	assert.Equal(t, "true", compatable)
 
+	descriptorAccountName := terraform.Output(t, terraformOptions, "descriptor_account_name")
+	descriptorStack := terraform.Output(t, terraformOptions, "descriptor_stack")
+	assert.Equal(t, "bild-hrh", descriptorAccountName)
+	assert.Equal(t, "hrh-uat-bild", descriptorStack)
+
 	expectedLabel1Context := NLContext{
 		Enabled:     true,
 		Namespace:   "CloudPosse",
@@ -201,17 +206,19 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Verify that apply with `label_key_case=title` and `label_value_case=lower` returns expected values of id, tags, context tags
 	label8dExpectedTags := map[string]string{
-		"Attributes":             "cluster",
-		"Environment":            "demo",
-		"Name":                   "eg-demo-blue-cluster",
-		"Namespace":              "eg",
+		"Attributes":  "cluster",
+		"Environment": "demo",
+		"Name":        "eg-demo-blue-cluster",
+		// Suppressed by labels_as_tags: "Namespace":              "eg",
 		"kubernetes.io/cluster/": "shared",
 	}
 
 	label8dID := terraform.Output(t, terraformOptions, "label8d_id")
 	label8dContextID := terraform.Output(t, terraformOptions, "label8d_context_id")
+	label8dChained := terraform.Output(t, terraformOptions, "label8d_chained_context_labels_as_tags")
 	assert.Equal(t, "eg-demo-blue-cluster", label8dID)
 	assert.Equal(t, label8dID, label8dContextID, "ID and context ID should be equal")
+	assert.Equal(t, "attributes-environment-name-stage", label8dChained)
 
 	label8dTags := terraform.OutputMap(t, terraformOptions, "label8d_tags")
 	label8dContextTags := terraform.OutputMap(t, terraformOptions, "label8d_context_tags")

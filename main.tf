@@ -12,7 +12,15 @@ locals {
     id_hash_length      = 5
     label_key_case      = "title"
     label_value_case    = "lower"
+
+    # The default value of labels_as_tags cannot be included in this
+    # defaults` map because it creates a circular dependency
   }
+
+  default_labels_as_tags = keys(local.tags_context)
+  # Unlike other inputs, the first setting of `labels_as_tags` cannot be later overridden
+  # We have to cover 2 cases. 1) context does not have a labels_as_tags key, 2) it is present and set to ["default"]
+  context_labels_as_tags_is_unset = try(contains(var.context.labels_as_tags, "unset"), true)
 
   # So far, we have decided not to allow overriding replacement or id_hash_length
   replacement    = local.defaults.replacement
@@ -41,6 +49,9 @@ locals {
     id_length_limit     = var.id_length_limit == null ? var.context.id_length_limit : var.id_length_limit
     label_key_case      = var.label_key_case == null ? lookup(var.context, "label_key_case", null) : var.label_key_case
     label_value_case    = var.label_value_case == null ? lookup(var.context, "label_value_case", null) : var.label_value_case
+
+    descriptor_formats = merge(lookup(var.context, "descriptor_formats", {}), var.descriptor_formats)
+    labels_as_tags     = local.context_labels_as_tags_is_unset ? var.labels_as_tags : var.context.labels_as_tags
   }
 
 
@@ -76,10 +87,15 @@ locals {
   id_length_limit  = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
   label_key_case   = local.input.label_key_case == null ? local.defaults.label_key_case : local.input.label_key_case
   label_value_case = local.input.label_value_case == null ? local.defaults.label_value_case : local.input.label_value_case
+  labels_as_tags   = contains(local.input.labels_as_tags, "default") ? local.default_labels_as_tags : local.input.labels_as_tags
 
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
 
   tags = merge(local.generated_tags, local.input.tags)
+
+  # Just for standardization and completeness
+  descriptor_formats = local.input.descriptor_formats
+
 
   tags_as_list_of_maps = flatten([
     for key in keys(local.tags) : merge(
@@ -100,7 +116,7 @@ locals {
   }
 
   generated_tags = {
-    for l in keys(local.tags_context) :
+    for l in setintersection(keys(local.tags_context), local.labels_as_tags) :
     local.label_key_case == "upper" ? upper(l) : (
       local.label_key_case == "lower" ? lower(l) : title(lower(l))
     ) => local.tags_context[l] if length(local.tags_context[l]) > 0
@@ -152,6 +168,8 @@ locals {
     id_length_limit     = local.id_length_limit
     label_key_case      = local.label_key_case
     label_value_case    = local.label_value_case
+    labels_as_tags      = local.labels_as_tags
+    descriptor_formats  = local.descriptor_formats
   }
 
 }

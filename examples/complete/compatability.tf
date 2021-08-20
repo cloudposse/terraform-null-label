@@ -182,12 +182,20 @@ output "compare_22_25_full" {
   value = module.compare_22_25_full
 }
 
+/* Uncomment this code to see how the fields differ
 output "source_22_full_id_full" {
   value = module.source_v22_full.id_full
 }
 output "compat_22_25_full_id_full" {
   value = module.compat_22_25_full.id_full
 }
+output "source_22_full_talm" {
+  value = module.source_v22_full.tags_as_list_of_maps
+}
+output "compat_22_25_full_talm" {
+  value = module.compat_22_25_full.tags_as_list_of_maps
+}
+*/
 
 module "compare_24_25_full" {
   source = "./module/compare"

@@ -16,6 +16,9 @@ module "label2" {
     "City"        = "London"
     "Environment" = "Public"
   }
+
+  # Because this is chained from label1, labels_as_tags should have not effect
+  labels_as_tags = ["stage"]
 }
 
 output "label2" {

@@ -16,6 +16,15 @@ variable "context" {
     id_length_limit     = null
     label_key_case      = null
     label_value_case    = null
+    descriptor_formats  = {}
+    # Note: we have to use [] instead of null for unset lists due to
+    # https://github.com/hashicorp/terraform/issues/28137
+    # which was not fixed until Terraform 1.0.0,
+    # but we want the default to be all the labels in `label_order`
+    # and we want users to be able to prevent all tag generation
+    # by setting `labels_as_tags` to `[]`, so we need
+    # a different sentinel to indicate "default"
+    labels_as_tags = ["unset"]
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -96,6 +105,21 @@ variable "attributes" {
     EOT
 }
 
+variable "labels_as_tags" {
+  type        = set(string)
+  default     = ["default"]
+  description = <<-EOT
+    Set of labels (ID elements) to include as tags in the `tags` output.
+    Default is to include all labels.
+    Tags with empty values will not be included in the `tags` output.
+    Set to `[]` to suppress all generated tags.
+    **Notes:**
+      The value of the `name` tag, if included, will be the `id`, not the `name`.
+      Unlike other `null-label` inputs, the initial setting of `labels_as_tags` cannot be
+      changed in later chained modules. Attempts to change it will be silently ignored.
+    EOT
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
@@ -119,10 +143,10 @@ variable "label_order" {
   type        = list(string)
   default     = null
   description = <<-EOT
-    The order in which the ID elements (labels) appear in the `id`.
+    The order in which the labels (ID elements) appear in the `id`.
     Defaults to ["namespace", "environment", "stage", "name", "attributes"].
-    You can omit any of the 6 label elements ("tenant" is the 6th), but at least one must be present.
-  EOT
+    You can omit any of the 6 labels ("tenant" is the 6th), but at least one must be present.
+    EOT
 }
 
 variable "regex_replace_chars" {
@@ -182,4 +206,23 @@ variable "label_value_case" {
     condition     = var.label_value_case == null ? true : contains(["lower", "title", "upper", "none"], var.label_value_case)
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
+}
+
+variable "descriptor_formats" {
+  type        = any
+  default     = {}
+  description = <<-EOT
+    Describe additional descriptors to be output in the `descriptors` output map.
+    Map of maps. Keys are names of descriptors. Values are maps of the form
+    `{
+       format = string
+       labels = list(string)
+    }`
+    (Type is `any` so the map values can later be enhanced to provide additional options.)
+    `format` is a Terraform format string to be passed to the `format()` function.
+    `labels` is a list of labels, in order, to pass to `format()` function.
+    Label values will be normalized before being passed to `format()` so they will be
+    identical to how they appear in `id`.
+    Default is `{}` (`descriptors` will be empty).
+    EOT
 }
