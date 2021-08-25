@@ -40,3 +40,17 @@ output "descriptor_stack" {
 output "descriptor_account_name" {
   value = module.descriptors.descriptors["account_name"]
 }
+
+module "chained_descriptors" {
+  source = "../.."
+
+  context = module.descriptors.context
+}
+
+output "chained_descriptor_stack" {
+  value = module.chained_descriptors.descriptors["stack"]
+}
+
+output "chained_descriptor_account_name" {
+  value = module.chained_descriptors.descriptors["account_name"]
+}
