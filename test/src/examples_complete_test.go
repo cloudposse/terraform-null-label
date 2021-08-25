@@ -43,10 +43,17 @@ func TestExamplesComplete(t *testing.T) {
 	compatible := terraform.Output(t, terraformOptions, "compatible")
 	assert.Equal(t, "true", compatible)
 
+	expectedDescriptorAccountName := "bild-hrh"
+	expectedDescriptorStack := "hrh-uat-bild"
 	descriptorAccountName := terraform.Output(t, terraformOptions, "descriptor_account_name")
 	descriptorStack := terraform.Output(t, terraformOptions, "descriptor_stack")
-	assert.Equal(t, "bild-hrh", descriptorAccountName)
-	assert.Equal(t, "hrh-uat-bild", descriptorStack)
+	assert.Equal(t, expectedDescriptorAccountName, descriptorAccountName)
+	assert.Equal(t, expectedDescriptorStack, descriptorStack)
+
+	chainedDescriptorAccountName := terraform.Output(t, terraformOptions, "chained_descriptor_account_name")
+	chainedDescriptorStack := terraform.Output(t, terraformOptions, "chained_descriptor_stack")
+	assert.Equal(t, descriptorAccountName, chainedDescriptorAccountName, "Chained module should output same descriptors")
+	assert.Equal(t, descriptorStack, chainedDescriptorStack, "Chained module should output same descriptors")
 
 	expectedLabel1Context := NLContext{
 		Enabled:     true,

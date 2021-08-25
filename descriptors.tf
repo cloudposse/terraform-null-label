@@ -18,10 +18,10 @@
 # with only 2 use cases, we are going to keep it simple for now.
 
 locals {
-  descriptor_labels = { for k, v in var.descriptor_formats : k => [
+  descriptor_labels = { for k, v in local.descriptor_formats : k => [
     for label in v.labels : local.id_context[label]
   ] }
-  descriptors = { for k, v in var.descriptor_formats : k => (
+  descriptors = { for k, v in local.descriptor_formats : k => (
     format(v.format, local.descriptor_labels[k]...)
     )
   }
