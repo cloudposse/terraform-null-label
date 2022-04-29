@@ -1,0 +1,3 @@
+This presence of a .github/.github-update-disabled file
+prevents `make github/update` from making any changes.
+The contents of the file are ignored.

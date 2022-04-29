@@ -2,12 +2,20 @@ package test
 
 import (
 	"fmt"
+	"os"
 	"testing"
+
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/qdm12/reprint"
 	"github.com/stretchr/testify/assert"
 )
+
+func cleanup(t *testing.T, terraformOptions *terraform.Options, tempTestFolder string) {
+	terraform.Destroy(t, terraformOptions)
+	os.RemoveAll(tempTestFolder)
+}
 
 type NLContext struct {
 	AdditionalTagMap  map[string]string `json:"additional_tag_map"`
@@ -28,9 +36,14 @@ type NLContext struct {
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
 
+	rootFolder := "../../"
+	terraformFolderRelativeToRoot := "examples/complete"
+
+	tempTestFolder := test_structure.CopyTerraformFolderToTemp(t, rootFolder, terraformFolderRelativeToRoot)
+
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../../examples/complete",
+		TerraformDir: tempTestFolder,
 		Upgrade:      true,
 	}
 
