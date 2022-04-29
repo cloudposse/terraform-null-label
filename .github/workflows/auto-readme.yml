@@ -1,0 +1,71 @@
+name: "auto-readme"
+on:
+  workflow_dispatch:
+
+  schedule:
+  # Example of job definition:
+  # .---------------- minute (0 - 59)
+  # |  .------------- hour (0 - 23)
+  # |  |  .---------- day of month (1 - 31)
+  # |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+  # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+  # |  |  |  |  |
+  # *  *  *  *  * user-name command to be executed
+
+  # Update README.md nightly at 4am UTC
+  - cron:  '0 4 * * *'
+
+jobs:
+  update:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Find default branch name
+      id: defaultBranch
+      shell: bash
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        default_branch=$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)
+        printf "::set-output name=defaultBranch::%s\n" "${default_branch}"
+        printf "defaultBranchRef.name=%s\n" "${default_branch}"
+
+    - name: Update readme
+      shell: bash
+      id: update
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        DEF: "${{ steps.defaultBranch.outputs.defaultBranch }}"
+      run: |
+        make init
+        make readme/build
+        # Ignore changes if they are only whitespace
+        if ! git diff --quiet README.md && git diff --ignore-all-space --ignore-blank-lines --quiet README.md; then
+          git restore README.md
+          echo Ignoring whitespace-only changes in README
+        fi
+
+    - name: Create Pull Request
+      # This action will not create or change a pull request if there are no changes to make.
+      # If a PR of the auto-update/readme branch is open, this action will just update it, not create a new PR.
+      uses: cloudposse/actions/github/create-pull-request@0.30.0
+      with:
+        token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+        commit-message: Update README.md and docs
+        title: Update README.md and docs
+        body: |-
+          ## what
+          This is an auto-generated PR that updates the README.md and docs
+
+          ## why
+          To have most recent changes of README.md and doc from origin templates
+
+        branch: auto-update/readme
+        base: ${{ steps.defaultBranch.outputs.defaultBranch }}
+        delete-branch: true
+        labels: |
+          auto-update
+          no-release
+          readme

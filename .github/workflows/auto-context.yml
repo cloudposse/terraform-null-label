@@ -1,0 +1,57 @@
+name: "auto-context"
+on:
+  schedule:
+  # Update context.tf nightly
+  - cron:  '0 3 * * *'
+
+jobs:
+  update:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Update context.tf
+      shell: bash
+      id: update
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        if [[ -f context.tf ]]; then
+          echo "Discovered existing context.tf! Fetching most recent version to see if there is an update."
+          curl -o context.tf -fsSL https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf
+          if git diff --no-patch --exit-code context.tf; then
+            echo "No changes detected! Exiting the job..."
+          else
+            echo "context.tf file has changed. Update examples and rebuild README.md."
+            make init
+            make github/init/context.tf
+            make readme/build
+            echo "::set-output name=create_pull_request::true"
+          fi
+        else
+          echo "This module has not yet been updated to support the context.tf pattern! Please update in order to support automatic updates."
+        fi
+
+    - name: Create Pull Request
+      if: steps.update.outputs.create_pull_request == 'true'
+      uses: cloudposse/actions/github/create-pull-request@0.30.0
+      with:
+        token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+        committer: 'cloudpossebot <11232728+cloudpossebot@users.noreply.github.com>'
+        author: 'cloudpossebot <11232728+cloudpossebot@users.noreply.github.com>'
+        commit-message: Update context.tf from origin source
+        title: Update context.tf
+        body: |-
+          ## what
+          This is an auto-generated PR that updates the `context.tf` file to the latest version from `cloudposse/terraform-null-label`
+
+          ## why
+          To support all the features of the `context` interface.
+
+        branch: auto-update/context.tf
+        base: master
+        delete-branch: true
+        labels: |
+          auto-update
+          context

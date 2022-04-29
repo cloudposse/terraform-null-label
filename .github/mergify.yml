@@ -1,0 +1,65 @@
+# https://docs.mergify.io/conditions.html
+# https://docs.mergify.io/actions.html
+pull_request_rules:
+- name: "approve automated PRs that have passed checks"
+  conditions:
+  - "author~=^(cloudpossebot|renovate\\[bot\\])$"
+  - "base=master"
+  - "-closed"
+  - "head~=^(auto-update|renovate)/.*"
+  - "check-success=test/bats"
+  - "check-success=test/readme"
+  - "check-success=test/terratest"
+  - "check-success=validate-codeowners"
+  actions:
+    review:
+      type: "APPROVE"
+      bot_account: "cloudposse-mergebot"
+      message: "We've automatically approved this PR because the checks from the automated Pull Request have passed."
+
+- name: "merge automated PRs when approved and tests pass"
+  conditions:
+  - "author~=^(cloudpossebot|renovate\\[bot\\])$"
+  - "base=master"
+  - "-closed"
+  - "head~=^(auto-update|renovate)/.*"
+  - "check-success=test/bats"
+  - "check-success=test/readme"
+  - "check-success=test/terratest"
+  - "check-success=validate-codeowners"
+  - "#approved-reviews-by>=1"
+  - "#changes-requested-reviews-by=0"
+  - "#commented-reviews-by=0"
+  actions:
+    merge:
+      method: "squash"
+
+- name: "delete the head branch after merge"
+  conditions:
+  - "merged"
+  actions:
+    delete_head_branch: {}
+
+- name: "ask to resolve conflict"
+  conditions:
+  - "conflict"
+  - "-closed"
+  actions:
+    comment:
+      message: "This pull request is now in conflict. Could you fix it @{{author}}? 🙏"
+
+- name: "remove outdated reviews"
+  conditions:
+  - "base=master"
+  actions:
+    dismiss_reviews:
+      changes_requested: true
+      approved: true
+      message: "This Pull Request has been updated, so we're dismissing all reviews."
+
+- name: "close Pull Requests without files changed"
+  conditions:
+    - "#files=0"
+  actions:
+    close:
+      message: "This pull request has been automatically closed by Mergify because there are no longer any changes."
