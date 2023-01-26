@@ -8,19 +8,19 @@
 # Cloud Posse's standard configuration inputs suitable for passing
 # to Cloud Posse modules.
 #
-# curl -sL https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf -o context.tf
+# curl -sL https://raw.githubusercontent.com/cloudposse/terraform-null-label/master/exports/context.tf -o naming.tf
 #
-# Modules should access the whole context as `module.this.context`
+# Modules should access the whole context as `module.naming.context`
 # to get the input variables with nulls for defaults,
-# for example `context = module.this.context`,
-# and access individual variables as `module.this.<var>`,
+# for example `context = module.naming.context`,
+# and access individual variables as `module.naming.<var>`,
 # with final values filled in.
 #
-# For example, when using defaults, `module.this.context.delimiter`
-# will be null, and `module.this.delimiter` will be `-` (hyphen).
+# For example, when using defaults, `module.naming.context.delimiter`
+# will be null, and `module.naming.delimiter` will be `-` (hyphen).
 #
 
-module "this" {
+module "naming" {
   source  = "cloudposse/label/null"
   version = "0.25.0" # requires Terraform >= 0.13.0
 
