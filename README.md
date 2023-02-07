@@ -839,6 +839,7 @@ No resources.
 | <a name="output_enabled"></a> [enabled](#output\_enabled) | True if module is enabled, false otherwise |
 | <a name="output_environment"></a> [environment](#output\_environment) | Normalized environment |
 | <a name="output_id"></a> [id](#output\_id) | Disambiguated ID string restricted to `id_length_limit` characters in total |
+| <a name="output_id_camel_case"></a> [id\_camel\_case](#output\_id\_camel\_case) | Disambiguated ID string restricted to `id_length_limit` characters in total and with only alphanumeric characters |
 | <a name="output_id_full"></a> [id\_full](#output\_id\_full) | ID string not restricted in length |
 | <a name="output_id_length_limit"></a> [id\_length\_limit](#output\_id\_length\_limit) | The id\_length\_limit actually used to create the ID, with `0` meaning unlimited |
 | <a name="output_label_order"></a> [label\_order](#output\_label\_order) | The naming order actually used to create the ID |
@@ -926,7 +927,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
@@ -1013,7 +1014,7 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
-
+<!-- markdownlint-disable -->
   [logo]: https://cloudposse.com/logo-300x69.svg
   [docs]: https://cpco.io/docs?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-null-label&utm_content=docs
   [website]: https://cpco.io/homepage?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-null-label&utm_content=website
@@ -1044,3 +1045,4 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [share_googleplus]: https://plus.google.com/share?url=https://github.com/cloudposse/terraform-null-label
   [share_email]: mailto:?subject=terraform-null-label&body=https://github.com/cloudposse/terraform-null-label
   [beacon]: https://ga-beacon.cloudposse.com/UA-76589703-4/cloudposse/terraform-null-label?pixel&cs=github&cm=readme&an=terraform-null-label
+<!-- markdownlint-restore -->
