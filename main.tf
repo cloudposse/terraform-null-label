@@ -166,9 +166,10 @@ locals {
   id       = local.id_length_limit != 0 && length(local.id_full) > local.id_length_limit ? local.id_short : local.id_full
 
   # Create camel case for id when only alphanumeric characters are allowed
-  id_title_case = title(replace(replace(local.id, "[^0-9A-Za-z]", ""), local.delimiter, " "))
+  id_alnum      = replace(local.id, "[^0-9A-Za-z]", "")
+  id_title_case = title(replace(local.id_alnum, local.delimiter, " "))
   id_camel_case = join("", [
-    substr(local.id, 0, 1),
+    substr(local.id_alnum, 0, 1),
     replace(substr(local.id_title_case, 1, -1), " ", "")
   ])
 
