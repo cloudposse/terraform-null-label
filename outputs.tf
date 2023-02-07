@@ -8,6 +8,11 @@ output "id_full" {
   description = "ID string not restricted in length"
 }
 
+output "id_camel_case" {
+  value       = local.enabled ? local.id_camel_case : ""
+  description = "Disambiguated ID string restricted to `id_length_limit` characters in total and with only alphanumeric characters"
+}
+
 output "enabled" {
   value       = local.enabled
   description = "True if module is enabled, false otherwise"
