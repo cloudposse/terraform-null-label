@@ -1,0 +1,22 @@
+---
+name: release-branch
+on:
+  push:
+    branches:
+      - main
+      - release/**
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  terraform-module:
+    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/release-branch.yml@pass_repo
+    secrets:
+      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}

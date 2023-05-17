@@ -1,0 +1,17 @@
+---
+name: scheduled
+on:
+  workflow_dispatch: {}  # Allows manually trigger this workflow
+  schedule:
+    - cron: "0 3 * * *"
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: write
+
+jobs:
+  scheduled:
+    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/scheduled.yml@main
+    secrets:
+      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}

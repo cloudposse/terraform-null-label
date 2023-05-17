@@ -1,0 +1,14 @@
+---
+name: release-published
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  terraform-module:
+    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/release.yml@main
