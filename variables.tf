@@ -148,7 +148,10 @@ variable "label_order" {
     You can omit any of the 6 labels ("tenant" is the 6th), but at least one must be present.
     EOT
 }
-
+variable "efs_backup_policy_enabled"
+     type = bool
+     default = false
+}
 variable "regex_replace_chars" {
   type        = string
   default     = null
