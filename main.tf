@@ -96,6 +96,8 @@ locals {
   stage       = local.formatted_labels["stage"]
   name        = local.formatted_labels["name"]
 
+  root_module = var.root_module_tag_enabled ? basename(path.cwd) : null
+
   delimiter        = local.input.delimiter == null ? local.defaults.delimiter : local.input.delimiter
   label_order      = local.input.label_order == null ? local.defaults.label_order : coalescelist(local.input.label_order, local.defaults.label_order)
   id_length_limit  = local.input.id_length_limit == null ? local.defaults.id_length_limit : local.input.id_length_limit
@@ -126,15 +128,19 @@ locals {
     environment = local.environment
     stage       = local.stage
     # For AWS we need `Name` to be disambiguated since it has a special meaning
-    name       = local.id
-    attributes = local.id_context.attributes
+    name        = local.id
+    attributes  = local.id_context.attributes
+    root_module = local.root_module
   }
 
+  # Remove null values from tags_context. Required due to `root_module` that can be null.
+  tags_context_clean = { for k, v in local.tags_context : k => v if v != null }
+
   generated_tags = {
-    for l in setintersection(keys(local.tags_context), local.labels_as_tags) :
+    for l in setintersection(keys(local.tags_context_clean), local.labels_as_tags) :
     local.label_key_case == "upper" ? upper(l) : (
       local.label_key_case == "lower" ? lower(l) : title(lower(l))
-    ) => local.tags_context[l] if length(local.tags_context[l]) > 0
+    ) => local.tags_context_clean[l] if length(local.tags_context_clean[l]) > 0
   }
 
   id_context = {
@@ -165,7 +171,6 @@ locals {
   id_short = substr("${local.id_truncated}${local.id_hash}", 0, local.id_length_limit)
   id       = local.id_length_limit != 0 && length(local.id_full) > local.id_length_limit ? local.id_short : local.id_full
 
-
   # Context of this label to pass to other label modules
   output_context = {
     enabled             = local.enabled
@@ -186,5 +191,4 @@ locals {
     labels_as_tags      = local.labels_as_tags
     descriptor_formats  = local.descriptor_formats
   }
-
 }

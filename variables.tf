@@ -226,3 +226,11 @@ variable "descriptor_formats" {
     Default is `{}` (`descriptors` output will be empty).
     EOT
 }
+
+variable "root_module_tag_enabled" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+    If true, the last component of the Terraform root module directory will be added as a `Root_module` to the tags.
+    EOT
+}
