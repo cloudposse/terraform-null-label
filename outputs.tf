@@ -10,7 +10,10 @@ output "id_full" {
 
 output "id_camel_case" {
   value       = local.enabled ? local.id_camel_case : ""
-  description = "Disambiguated ID string restricted to `id_length_limit` characters in total and with only alphanumeric characters"
+  description = <<-EOT
+    Disambiguated ID string restricted to `id_length_limit` characters in total and with only alphanumeric characters.
+    Example resource [`azurerm_container_registry`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry#name) require only alphanumeric characters in name.
+    EOT
 }
 
 output "enabled" {
