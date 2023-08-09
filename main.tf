@@ -65,13 +65,3 @@ locals {
   }
 
 }
-
-locals {
-  tags_as_list_of_maps = merge(
-    {
-      "key"   = element(keys(local.tags), count.index)
-      "value" = element(values(local.tags), count.index)
-    },
-    var.additional_tag_map,
-  )
-}
