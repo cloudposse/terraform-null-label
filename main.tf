@@ -27,8 +27,15 @@ locals {
 
   generated_tags = { for l in keys(local.id_context) : title(l) => local.id_context[l] if length(local.id_context[l]) > 0 }
 
-  tags                 = merge(var.context.tags, local.generated_tags, var.tags)
-  tags_as_list_of_maps = data.null_data_source.tags_as_list_of_maps.*.outputs
+  tags = merge(var.context.tags, local.generated_tags, var.tags)
+  
+  tags_as_list_of_maps = flatten([
+    for key in keys(local.tags) : merge(
+      {
+        key   = key
+        value = local.tags[key]
+    }, local.additional_tag_map)
+  ])
 
   id_context = {
     name        = local.name
@@ -59,10 +66,8 @@ locals {
 
 }
 
-data "null_data_source" "tags_as_list_of_maps" {
-  count = local.enabled ? length(keys(local.tags)) : 0
-
-  inputs = merge(
+locals {
+  tags_as_list_of_maps = merge(
     {
       "key"   = element(keys(local.tags), count.index)
       "value" = element(values(local.tags), count.index)
