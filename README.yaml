@@ -1,23 +1,26 @@
 name: terraform-null-label
 tags:
-- aws
-- terraform
-- terraform-modules
-- naming-convention
-- name
-- namespace
-- stage
+  - aws
+  - terraform
+  - terraform-modules
+  - naming-convention
+  - name
+  - namespace
+  - stage
 categories:
-- terraform-modules/supported
+  - terraform-modules/supported
 license: APACHE2
 github_repo: cloudposse/terraform-null-label
 badges:
-- name: Latest Release
-  image: https://img.shields.io/github/release/cloudposse/terraform-null-label.svg
-  url: https://github.com/cloudposse/terraform-null-label/releases/latest
-- name: Slack Community
-  image: https://slack.cloudposse.com/badge.svg
-  url: https://slack.cloudposse.com
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-null-label.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-null-label/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-null-label.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-null-label/commits
+  - name: Slack Community
+    image: https://slack.cloudposse.com/for-the-badge.svg
+    url: https://slack.cloudposse.com
 description: |-
   Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
@@ -28,7 +31,7 @@ description: |-
   1. stage
   1. name
   1. attributes
-  
+
   This module generates IDs using the following convention by default: `{namespace}-{environment}-{stage}-{name}-{attributes}`.
   However, it is highly configurable. The delimiter (e.g. `-`) is configurable. Each label item is optional (although you must provide at least one).
   So if you prefer the term `stage` to `environment` and do not need `tenant`, you can exclude them
@@ -64,7 +67,7 @@ description: |-
   the `descriptors` output, which is a map of strings generated according to the format specified by the
   `descriptor_formats` input. This feature is intentionally simple and minimally configurable and will not be
   enhanced to add more features that are already in `null-label`. See [examples/complete/descriptors.tf](examples/complete/descriptors.tf) for examples.
-  
+
   All [Cloud Posse Terraform modules](https://github.com/cloudposse?utf8=%E2%9C%93&q=terraform-&type=&language=) use this module to ensure resources can be instantiated multiple times within an account and without conflict.
 
   The Cloud Posse convention is to use labels as follows:
@@ -73,7 +76,7 @@ description: |-
   - `environment`: A [short abbreviation](https://github.com/cloudposse/terraform-aws-utils/#introduction) for the AWS region hosting the resource, or `gbl` for resources like IAM roles that have no region
   - `stage`: The name or role of the account the resource is for, such as `prod` or `dev`
   - `name`: The name of the component that owns the resources, such as `eks` or `rds`
-  
+
   **NOTE:** The `null` originally referred to the primary Terraform [provider](https://www.terraform.io/docs/providers/null/index.html) used in this module.
   With Terraform 0.12, this module no longer needs any provider, but the name was kept for continuity.
 
@@ -99,7 +102,7 @@ usage: |-
   becomes the new default for downstream modules. Also, collections are not overwritten, they are merged,
   so once a tag is added, it will remain in the tag set and cannot be removed, although its value can
   be overwritten.
-  
+
   Because the purpose of `labels_as_tags` is primarily to prevent tags from being generated
   that would [conflict with the AWS provider's `default_tags`](https://github.com/hashicorp/terraform-provider-aws/issues/19204), it is an exception to the
   rule that variables override the setting in the context object. The value in the context
@@ -166,7 +169,7 @@ usage: |-
     source   = "cloudposse/label/null"
     # Cloud Posse recommends pinning every module to a specific version
     # version = "x.x.x"
-  
+
     namespace  = "eg"
     stage      = "prod"
     name       = "bastion"
@@ -177,14 +180,14 @@ usage: |-
       "Snapshot"     = "true"
     }
   }
-  
+
   module "eg_prod_bastion_abc_label" {
     source   = "cloudposse/label/null"
     # Cloud Posse recommends pinning every module to a specific version
     # version = "x.x.x"
-  
+
     attributes = ["abc"]
-  
+
     tags = {
       "BusinessUnit" = "ABC" # Override the Business Unit tag set in the base label
     }
@@ -192,7 +195,7 @@ usage: |-
     # Copy all other fields from the base label
     context = module.eg_prod_bastion_label.context
   }
-  
+
   resource "aws_security_group" "eg_prod_bastion_abc" {
     name = module.eg_prod_bastion_abc_label.id
     tags = module.eg_prod_bastion_abc_label.tags
@@ -216,7 +219,7 @@ usage: |-
     # version = "x.x.x"
 
     attributes = ["xyz"]
-  
+
     context = module.eg_prod_bastion_label.context
   }
 
@@ -375,7 +378,7 @@ usage: |-
     stage     = "test"
     delimiter = "+"
     regex_replace_chars = "/[^a-zA-Z0-9-+]/"
-  
+
     additional_tag_map = {
       propagate_at_launch = true
       additional_tag      = "yes"
@@ -385,7 +388,7 @@ usage: |-
       "City"        = "London"
       "Environment" = "Public"
     }
-  
+
     context   = module.label1.context
   }
 
@@ -403,7 +406,7 @@ usage: |-
       "Eat"    = "Carrot"
       "Animal" = "Rabbit"
     }
-  
+
     context   = module.label1.context
   }
   ```
@@ -697,28 +700,6 @@ usage: |-
   </details>
 
 include:
-- docs/targets.md
-- docs/terraform.md
-contributors:
-- name: Erik Osterman
-  github: osterman
-- name: Andriy Knysh
-  github: aknysh
-- name: Igor Rodionov
-  github: goruha
-- name: Sergey Vasilyev
-  github: s2504s
-- name: Michael Pereira
-  github: MichaelPereira
-- name: Jamie Nelson
-  github: Jamie-BitFlight
-- name: Vladimir
-  github: SweetOps
-- name: Daren Desjardins
-  github: darend
-- name: Maarten van der Hoef
-  github: maartenvanderhoef
-- name: Adam Tibbing
-  github: tibbing
-- name: Yonatan Koren
-  github: korenyoni
+  - docs/targets.md
+  - docs/terraform.md
+contributors: []
