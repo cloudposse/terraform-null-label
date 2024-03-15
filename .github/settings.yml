@@ -1,0 +1,7 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-null-label
+  description: Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])
+  homepage: https://cloudposse.com/accelerate
+  topics: terraform, terraform-modules, naming-convention, name, namespace, stage, hcl2, labels, conventions
