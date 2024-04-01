@@ -1,7 +1,13 @@
-# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
-_extends: .github
+# These settings are synced to GitHub by https://probot.github.io/apps/settings/
+extends: cloudposse/.github
+
 repository:
-  name: terraform-null-label
-  description: Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])
-  homepage: https://cloudposse.com/accelerate
-  topics: terraform, terraform-modules, naming-convention, name, namespace, stage, hcl2, labels, conventions
+  # A URL with more information about the repository
+  homepage: https://cloudposse.com
+
+  # Either `true` to enable projects for this repository, or `false` to disable them.
+  # If projects are disabled for the organization, passing `true` will cause an API error.
+  has_projects: false
+
+  # Either `true` to enable the wiki for this repository, `false` to disable it.
+  has_wiki: false
