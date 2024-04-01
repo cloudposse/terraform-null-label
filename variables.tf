@@ -49,6 +49,11 @@ variable "enabled" {
   type        = bool
   default     = null
   description = "Set to false to prevent the module from creating any resources"
+
+  validation {
+    condition     = var.enabled == null ? true : contains([true, false], var.enabled)
+    error_message = "enabled must be a boolean or null."
+  }
 }
 
 variable "namespace" {
