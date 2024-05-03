@@ -10,6 +10,7 @@ on:
       - 'docs/**'
       - 'examples/**'
       - 'test/**'
+      - 'README.md'
 
 permissions: {}
 
