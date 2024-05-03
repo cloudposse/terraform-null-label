@@ -14,6 +14,5 @@ permissions:
 
 jobs:
   terraform-module:
-    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/feature-branch.yml@pass_repo
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/feature-branch.yml@main
+    secrets: inherit
