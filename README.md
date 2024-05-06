@@ -1,8 +1,9 @@
 
 
 <!-- markdownlint-disable -->
-# terraform-null-label <a href="https://cpco.io/homepage?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-null-label&utm_content="><img align="right" src="https://cloudposse.com/logo-300x69.svg" width="150" /></a>
-<a href="https://github.com/cloudposse/terraform-null-label/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-null-label/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://slack.cloudposse.com"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a>
+<a href="https://cpco.io/homepage"><img src=".github/banner.png?raw=true" alt="Project Banner"/></a><br/>
+    <p align="right">
+<a href="https://github.com/cloudposse/terraform-null-label/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-null-label/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://slack.cloudposse.com"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a></p>
 <!-- markdownlint-restore -->
 
 <!--
