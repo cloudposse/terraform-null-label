@@ -1,0 +1,13 @@
+---
+name: release
+on:
+  release:
+    types:
+      - published
+
+permissions: {}
+
+jobs:
+  terraform-module:
+    uses: cloudposse/.github/.github/workflows/shared-release-branches.yml@main
+    secrets: inherit
