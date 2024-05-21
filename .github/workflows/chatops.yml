@@ -1,5 +1,5 @@
 ---
-name: feature-branch-chatops
+name: chatops
 on:
   issue_comment:
     types: [created]
@@ -11,6 +11,6 @@ permissions:
 
 jobs:
   terraform-module:
-    uses: cloudposse/github-actions-workflows-terraform-module/.github/workflows/feature-branch-chatops.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-terraform-chatops.yml@main
     secrets:
       github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
