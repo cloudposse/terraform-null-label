@@ -5,3 +5,4 @@ repository:
   description: Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])
   homepage: https://cloudposse.com/accelerate
   topics: terraform, terraform-modules, naming-convention, name, namespace, stage, hcl2, labels, conventions
+
