@@ -8,9 +8,10 @@ permissions:
   pull-requests: write
   id-token: write
   contents: write
+  statuses: write
 
 jobs:
-  terraform-module:
+  test:
     uses: cloudposse/.github/.github/workflows/shared-terraform-chatops.yml@main
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/terratest') }}
+    secrets: inherit
