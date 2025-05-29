@@ -20,7 +20,7 @@ badges:
     url: https://github.com/cloudposse/terraform-null-label/commits
   - name: Slack Community
     image: https://slack.cloudposse.com/for-the-badge.svg
-    url: https://slack.cloudposse.com
+    url: https://cloudposse.com/slack
 description: |-
   Terraform module designed to generate consistent names and tags for resources. Use `terraform-null-label` to implement a strict naming convention.
 
@@ -699,7 +699,5 @@ usage: |-
 
   </details>
 
-include:
-  - docs/targets.md
-  - docs/terraform.md
+include: []
 contributors: []
