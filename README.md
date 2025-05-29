@@ -3,7 +3,7 @@
 <!-- markdownlint-disable -->
 <a href="https://cpco.io/homepage"><img src="https://github.com/cloudposse/terraform-null-label/blob/main/.github/banner.png?raw=true" alt="Project Banner"/></a><br/>
     <p align="right">
-<a href="https://github.com/cloudposse/terraform-null-label/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-null-label/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://slack.cloudposse.com"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a></p>
+<a href="https://github.com/cloudposse/terraform-null-label/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-null-label/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-null-label.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://cloudposse.com/slack"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a></p>
 <!-- markdownlint-restore -->
 
 <!--
@@ -736,18 +736,6 @@ label3_tags = tomap({
 
 
 <!-- markdownlint-disable -->
-## Makefile Targets
-```text
-Available targets:
-
-  help                                Help screen
-  help/all                            Display help for all targets
-  help/short                          This help short screen
-  lint                                Lint terraform code
-
-```
-<!-- markdownlint-restore -->
-<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
@@ -813,6 +801,11 @@ No resources.
 | <a name="output_tags_as_list_of_maps"></a> [tags\_as\_list\_of\_maps](#output\_tags\_as\_list\_of\_maps) | This is a list with one map for each `tag`. Each map contains the tag `key`,<br/>`value`, and contents of `var.additional_tag_map`. Used in the rare cases<br/>where resources need additional configuration information for each tag. |
 | <a name="output_tenant"></a> [tenant](#output\_tenant) | Normalized tenant |
 <!-- markdownlint-restore -->
+
+
+
+
+
 
 
 
