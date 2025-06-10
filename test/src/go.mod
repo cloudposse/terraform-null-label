@@ -1,6 +1,8 @@
 module github.com/cloudposse/terraform-null-label
 
-go 1.17
+go 1.24
+
+toolchain go1.24.0
 
 require (
 	github.com/gruntwork-io/terratest v0.39.0
