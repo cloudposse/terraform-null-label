@@ -71,7 +71,7 @@ However, if you have multiple different kinds of resources (e.g. instances, secu
 
 For most purposes, the `id` output is sufficient to create an ID or label for a resource, and if you want a different
 ID or a different format, you would instantiate another instance of `null-label` and configure it accordingly. However,
-to accomodate situations where you want all the same inputs to generate multiple descriptors, this module provides
+to accommodate situations where you want all the same inputs to generate multiple descriptors, this module provides
 the `descriptors` output, which is a map of strings generated according to the format specified by the
 `descriptor_formats` input. This feature is intentionally simple and minimally configurable and will not be
 enhanced to add more features that are already in `null-label`. See [examples/complete/descriptors.tf](examples/complete/descriptors.tf) for examples.
